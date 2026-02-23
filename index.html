@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DISCIPLINE</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: black;
+  overflow: hidden;
+  color: white;
+}
+
+/* Animated red candle background */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Center container */
+#container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Card */
+.card {
+  background: rgba(10,10,10,0.95);
+  padding: 40px;
+  width: 520px;
+  max-width: 95%;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(255,0,0,0.2);
+  text-align: center;
+}
+
+/* Intro */
+#intro h1 {
+  font-size: 48px;
+  letter-spacing: 6px;
+  color: #ff1a1a;
+  margin: 0;
+}
+
+#intro h2 {
+  margin-top: 10px;
+  letter-spacing: 4px;
+  color: #aaa;
+}
+
+button {
+  padding: 14px 24px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  background: #b30000;
+  color: white;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #ff1a1a;
+}
+
+.choice {
+  background: #1a1a1a;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.choice.selected {
+  border: 2px solid #ff1a1a;
+}
+
+.word-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.word {
+  background: #990000;
+  padding: 8px 14px;
+  margin: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#result {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+#streakBox {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 14px;
+
+#credit {
+  position: fixed;
+  bottom: 20px;
+  right: 25px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 1px;
+  font-weight: 500;
+  z-index: 9999;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div id="streakBox"></div>
+
+<div id="container">
+  <div class="card" id="intro">
+    <h1>DISCIPLINE</h1>
+    <h2>YOU VS YOU</h2>
+    <button onclick="startGame()">START SESSION →</button>
+  </div>
+</div>
+
+<script>
+/* Candle Background Animation */
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let candles = [];
+
+for (let i = 0; i < 40; i++) {
+  candles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    height: Math.random() * 60 + 20,
+    speed: Math.random() * 1 + 0.5
+  });
+}
+
+function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  candles.forEach(c => {
+    ctx.fillStyle = "rgba(255,0,0,0.4)";
+    ctx.fillRect(c.x, c.y, 6, c.height);
+    c.y += c.speed;
+    if (c.y > canvas.height) c.y = -c.height;
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* Game Logic */
+
+const sentences = [
+  "I feel you, bro. I’ve also been through a lot.",
+"You don’t need motivation. you just need discipline, bro.",
+"You just need to control yourself. it’s you vs you, bro.",
+"I want you to succeed, bro. I fucking believe in you.",
+"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.",
+"I know it’s hard but dude nothing is easy in this world. You gotta work hard.",
+"Go ghost, bro. You can’t grow when people are around you.",
+"Lock the fuck in. You wanna be rich or not?",
+"I don’t wanna be an NPC ass person, bro. That’s why I’m working fucking hard.",
+"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.",
+"You live only one life, bro. Nothing can stop you. do what you want.",
+"If you want big money, make a big move. You can’t get rich with a 9 to 5 ass job, you know that.",
+"If you wanna be different, you gotta be fucking emotionless, bro. Learn to control your emotions",
+"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life"
+
+];
+
+let used = [];
+let currentIndex;
+let score = 0;
+let round = 0;
+let selectedChoice = null;
+let audio = null;
+
+/* Daily Streak */
+function updateStreak() {
+  let today = new Date().toDateString();
+  let last = localStorage.getItem("lastDate");
+  let streak = parseInt(localStorage.getItem("streak") || "0");
+
+  if (last !== today) {
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (last === yesterday.toDateString()) {
+      streak++;
+    } else {
+      streak = 1;
+    }
+    localStorage.setItem("streak", streak);
+    localStorage.setItem("lastDate", today);
+  }
+
+  document.getElementById("streakBox").innerText = "🔥 Streak: " + (localStorage.getItem("streak") || 1);
+}
+updateStreak();
+
+function startGame() {
+  document.getElementById("container").innerHTML =
+    '<div class="card"><h2 id="mode"></h2><button onclick="playAudio()">PLAY</button><div id="content"></div><div id="result"></div></div>';
+  nextRound();
+}
+
+function normalize(t){
+  return t.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
+}
+
+function nextRound(){
+  if(round >= sentences.length){
+    document.getElementById("content").innerHTML =
+      "<h2>Session Complete</h2><p>Score: "+score+" / "+sentences.length+"</p><button onclick='location.reload()'>Restart</button>";
+    return;
+  }
+
+  round++;
+  selectedChoice = null;
+  document.getElementById("result").innerText="";
+  document.getElementById("content").innerHTML="";
+
+  do {
+    currentIndex = Math.floor(Math.random()*sentences.length);
+  } while(used.includes(currentIndex));
+
+  used.push(currentIndex);
+
+  if(Math.random()>0.5) buildListen();
+  else buildDrag();
+}
+
+function buildListen(){
+  document.getElementById("mode").innerText="Listen & Decide";
+
+  let correct = sentences[currentIndex];
+  let options=[correct];
+
+  while(options.length<4){
+    let r=sentences[Math.floor(Math.random()*sentences.length)];
+    if(!options.includes(r)) options.push(r);
+  }
+
+  options.sort(()=>0.5-Math.random());
+
+  options.forEach(o=>{
+    let div=document.createElement("div");
+    div.className="choice";
+    div.innerText=o;
+    div.onclick=()=>{
+      document.querySelectorAll(".choice").forEach(c=>c.classList.remove("selected"));
+      div.classList.add("selected");
+      selectedChoice=o;
+    };
+    document.getElementById("content").appendChild(div);
+  });
+
+  let btn=document.createElement("button");
+  btn.innerText="CHECK";
+  btn.onclick=()=>{
+    if(!selectedChoice) return;
+    if(normalize(selectedChoice)===normalize(sentences[currentIndex])) success();
+    else fail();
+  };
+  document.getElementById("content").appendChild(btn);
+}
+
+function buildDrag(){
+  document.getElementById("mode").innerText="Build With Focus";
+
+  let words=sentences[currentIndex].split(" ");
+  let shuffled=[...words].sort(()=>0.5-Math.random());
+
+  let top=document.createElement("div");
+  top.className="word-container";
+  top.id="top";
+
+  let bottom=document.createElement("div");
+  bottom.className="word-container";
+  bottom.id="bottom";
+
+  shuffled.forEach(w=>{
+    let span=document.createElement("div");
+    span.className="word";
+    span.innerText=w;
+    span.onclick=()=>{
+      if(span.parentElement.id==="bottom") top.appendChild(span);
+      else bottom.appendChild(span);
+    };
+    bottom.appendChild(span);
+  });
+
+  let btn=document.createElement("button");
+  btn.innerText="CHECK";
+  btn.onclick=()=>{
+    let built="";
+    document.querySelectorAll("#top .word").forEach(w=>built+=w.innerText+" ");
+    if(normalize(built)===normalize(sentences[currentIndex])) success();
+    else fail();
+  };
+
+  document.getElementById("content").appendChild(top);
+  document.getElementById("content").appendChild(bottom);
+  document.getElementById("content").appendChild(btn);
+}
+
+function success(){
+  playSound(true);
+  score++;
+  document.getElementById("result").innerText="Strong.";
+  stopAudio();
+  setTimeout(nextRound,1200);
+}
+
+function fail(){
+  playSound(false);
+  document.getElementById("result").innerText="Reset. Focus.";
+  stopAudio();
+  setTimeout(nextRound,1500);
+}
+
+function playAudio(){
+  stopAudio();
+  audio=new Audio("audio"+(currentIndex+1)+".mp3");
+  audio.play();
+}
+
+function stopAudio(){
+  if(audio){audio.pause();audio.currentTime=0;}
+}
+
+/* Soft sound */
+function playSound(success){
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const osc=ctx.createOscillator();
+  const gain=ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.value= success?600:200;
+  gain.gain.value=0.05;
+  osc.start();
+  setTimeout(()=>osc.stop(),100);
+}
+</script>
+<div id="credit">made by Frihet</div>
+</body>
+</html>
