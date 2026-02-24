@@ -274,7 +274,7 @@ let round = 0;
 let selectedChoice = null;
 let audio = null;
 
-let nativeLang = "en"; // "en" or "de"
+let nativeLang = localStorage.getItem("nativeLang") || "en";
   
 const LANGS = [
   { code: "en", label: "🇬🇧 English" },
@@ -370,7 +370,45 @@ function startGame() {
 
 function chooseLang(lang) {
   nativeLang = lang;
+  localStorage.setItem("nativeLang", lang);
+ 
+ used = [];
+score = 0;
+round = 0;
+selectedChoice = null;
 
+// load last mode or default mix
+selectedMode = localStorage.getItem("mode") || "mix";
+
+showModeSelect();
+}
+  
+let selectedMode = "mix"; // "listen" | "drag" | "mix"
+
+function showModeSelect(){
+  document.getElementById("container").innerHTML =
+    `<div class="card">
+      <h2 style="margin-top:0;">${nativeLang==="de" ? "Wähle den Modus" : nativeLang==="es" ? "Elige el modo" : "Choose a mode"}</h2>
+
+      <button onclick="setMode('mix')" style="margin:8px;">${nativeLang==="de" ? "MIX (wie ein Spiel)" : nativeLang==="es" ? "MIX (como juego)" : "MIX (game style)"}</button>
+      <button onclick="setMode('listen')" style="margin:8px;">${nativeLang==="de" ? "Nur Hören" : nativeLang==="es" ? "Solo escuchar" : "Listen only"}</button>
+      <button onclick="setMode('drag')" style="margin:8px;">${nativeLang==="de" ? "Nur Bauen" : nativeLang==="es" ? "Solo construir" : "Build only"}</button>
+
+      <p style="color:#aaa; margin-top:12px; font-size:13px;">
+        ${nativeLang==="de" ? "Audio bleibt Englisch." : nativeLang==="es" ? "El audio sigue en inglés." : "Audio stays English."}
+      </p>
+
+      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
+    </div>`;
+}
+
+function setMode(m){
+  selectedMode = m;
+  localStorage.setItem("mode", m);
+  startSession();
+}
+  
+function startSession(){
   document.getElementById("container").innerHTML =
     `<div class="card">
        <h2 id="mode"></h2>
@@ -378,15 +416,9 @@ function chooseLang(lang) {
        <div id="content"></div>
        <div id="result"></div>
      </div>`;
-
-  used = [];
-  score = 0;
-  round = 0;
-  selectedChoice = null;
-
   nextRound();
-}
-
+}  
+  
 function normalize(s){
   return s
     .toLowerCase()
@@ -414,7 +446,9 @@ function nextRound(){
   } while(used.includes(currentIndex));
 
   used.push(currentIndex);
-
+if(selectedMode === "listen") buildListen();
+else if(selectedMode === "drag") buildDrag();
+else {
   if(Math.random()>0.5) buildListen();
   else buildDrag();
 }
@@ -553,6 +587,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
