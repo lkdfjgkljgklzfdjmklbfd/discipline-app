@@ -195,20 +195,76 @@ animate();
 
 /* ✅ Data (English audio always, text changes by nativeLang) */
 const items = [
-  { en: "I feel you, bro. I’ve also been through a lot.", de: "Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht." },
-  { en: "You don’t need motivation. you just need discipline, bro.", de: "Du brauchst keine Motivation. Du brauchst Disziplin, Bro." },
-  { en: "You just need to control yourself. it’s you vs you, bro.", de: "Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro." },
-  { en: "I want you to succeed, bro. I believe in you.", de: "Ich will, dass du Erfolg hast, Bro. Ich glaub an dich." },
-  { en: "But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.", de: "Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär." },
-  { en: "I know it’s hard but dude nothing is easy in this world. You gotta work hard.", de: "Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten." },
-  { en: "Go ghost, bro. You can’t grow when people are around you.", de: "Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind." },
-  { en: "Lock in. You wanna be rich or not?", de: "Fokussier dich. Willst du reich werden oder nicht?" },
-  { en: "I don’t wanna be an NPC, bro. That’s why I’m working this hard.", de: "Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart." },
-  { en: "You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.", de: "Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht." },
-  { en: "You live only one life, bro. Nothing can stop you. do what you want.", de: "Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst." },
-  { en: "If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.", de: "Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du." },
-  { en: "If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions", de: "Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren." },
-  { en: "Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de: "Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben." }
+{
+en:"I feel you, bro. I’ve also been through a lot.",
+de:"Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht.",
+es:"Te entiendo, bro. Yo también he pasado por mucho."
+},
+{
+en:"You don’t need motivation. you just need discipline, bro.",
+de:"Du brauchst keine Motivation. Du brauchst Disziplin, Bro.",
+es:"No necesitas motivación. Necesitas disciplina, bro."
+},
+{
+en:"You just need to control yourself. it’s you vs you, bro.",
+de:"Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro.",
+es:"Solo tienes que controlarte. Es tú contra tú, bro."
+},
+{
+en:"I want you to succeed, bro. I believe in you.",
+de:"Ich will, dass du Erfolg hast, Bro. Ich glaub an dich.",
+es:"Quiero que tengas éxito, bro. Creo en ti."
+},
+{
+en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.",
+de:"Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär.",
+es:"Pero ya sabes, alguien tiene que trabajar de 9 a 5. No todos van a ser millonarios."
+},
+{
+en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard.",
+de:"Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten.",
+es:"Sé que es difícil, pero nada en este mundo es fácil. Tienes que trabajar duro."
+},
+{
+en:"Go ghost, bro. You can’t grow when people are around you.",
+de:"Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind.",
+es:"Desaparece un rato, bro. No puedes crecer si la gente siempre está alrededor."
+},
+{
+en:"Lock in. You wanna be rich or not?",
+de:"Fokussier dich. Willst du reich werden oder nicht?",
+es:"Concéntrate. ¿Quieres ser rico o no?"
+},
+{
+en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard.",
+de:"Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart.",
+es:"No quiero ser un NPC, bro. Por eso estoy trabajando así de duro."
+},
+{
+en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.",
+de:"Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht.",
+es:"¿Crees que disfruto ir al gym todos los días? Hell nah, bro. De verdad que no."
+},
+{
+en:"You live only one life, bro. Nothing can stop you. do what you want.",
+de:"Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst.",
+es:"Solo tienes una vida, bro. Nada puede detenerte. Haz lo que quieras."
+},
+{
+en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.",
+de:"Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du.",
+es:"Si quieres mucho dinero, haz un gran movimiento. No te vas a hacer rico con un trabajo de 9 a 5, tú lo sabes."
+},
+{
+en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions",
+de:"Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren.",
+es:"Si quieres ser diferente, tienes que ser frío, bro. Aprende a controlar tus emociones."
+},
+{
+en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life",
+de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.",
+es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida."
+}
 ];
 
 let used = [];
@@ -242,7 +298,18 @@ const UI = {
     sessionComplete: "Session beendet",
     score: "Punktzahl",
     restart: "Neustart"
-  }
+  },
+  es: {
+  chooseNative: "Elige tu idioma nativo",
+  audioNote: "El audio sigue en inglés. El texto cambia.",
+  play: "PLAY",
+  check: "COMPROBAR",
+  listenDecide: "Escucha y decide",
+  buildFocus: "Construye la frase",
+  sessionComplete: "Sesión terminada",
+  score: "Puntuación",
+  restart: "Reiniciar"
+}
 };
 
 function t(key) {
@@ -250,7 +317,9 @@ function t(key) {
 }
 
 function displayText(i){
-  return nativeLang === "de" ? items[i].de : items[i].en;
+  if(nativeLang === "de") return items[i].de;
+  if(nativeLang === "es") return items[i].es;
+  return items[i].en;
 }
 
 /* Daily Streak */
@@ -285,6 +354,7 @@ function startGame() {
 
       <button onclick="chooseLang('en')">🇬🇧 English</button>
       <button onclick="chooseLang('de')" style="margin-left:10px;">🇩🇪 Deutsch</button>
+      <button onclick="chooseLang('es')" style="margin-left:10px;">🇪🇸 Español</button>
 
       <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
         made by Frihet
@@ -478,6 +548,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
