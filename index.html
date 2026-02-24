@@ -61,9 +61,8 @@ body::before{
   transform: translateZ(0);
 }
 
-/* Trading terminal intro branding */
+/* ===== Intro ===== */
 #intro h1{
-  font-family: "SF Pro Display", "Segoe UI", Arial, sans-serif;
   font-size: clamp(42px, 7vw, 66px);
   font-weight: 800;
   letter-spacing: 0.22em;
@@ -94,7 +93,6 @@ body::before{
 #mode{
   font-size:22px;
   margin:6px 0 12px;
-  letter-spacing:0.5px;
 }
 
 button{
@@ -114,9 +112,7 @@ button{
 }
 button:hover{ filter:brightness(1.08); }
 button:active{ transform: scale(0.98); }
-.card button{ margin:10px 8px 0; }
 
-/* darker solid choice cards */
 .choice{
   background: rgba(28,28,28,0.92);
   border: 1px solid rgba(255,255,255,0.14);
@@ -126,12 +122,10 @@ button:active{ transform: scale(0.98); }
   cursor: pointer;
   font-size: 19px;
   line-height: 1.35;
-  text-align: left;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
 }
 .choice.selected{
   border-color: rgba(255,26,26,0.90);
-  box-shadow: 0 0 0 2px rgba(255,26,26,0.28), 0 12px 34px rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 2px rgba(255,26,26,0.28);
 }
 
 .word-container{
@@ -153,56 +147,36 @@ button:active{ transform: scale(0.98); }
   border-radius:16px;
   font-size:17px;
   font-weight:700;
-  user-select:none;
 }
-
-#hud{
-  margin-bottom:14px;
-  padding-right: 120px; /* reserve space so streak never overlaps */
-}
-#hud *{ font-size:14px !important; }
 
 #result{
   margin-top:14px;
   font-size:18px;
   font-weight:900;
-  letter-spacing:0.5px;
 }
 
-.hint{
-  margin-top:12px;
-  color:var(--muted);
-  font-size:13px;
-}
-
+/* ===== HUD ===== */
 #streakBox{
   position:fixed;
-  top: calc(env(safe-area-inset-top) + 12px);
-  right: 12px;
+  top:12px;
+  right:12px;
   font-size:13px;
-  color:rgba(255,255,255,0.85);
-  z-index:99999;
-  pointer-events:none;
+  z-index:9999;
 }
 
 #credit{
   position:fixed;
-  bottom: calc(env(safe-area-inset-bottom) + 12px);
+  bottom:12px;
   right:12px;
   font-size:12px;
   color:rgba(255,255,255,0.55);
-  letter-spacing:1px;
-  z-index:9999;
-  pointer-events:none;
 }
 
-/* ====== GAME FEEL UPGRADES ====== */
-
-/* 1) Trophy pop animation */
+/* ===== MONEY POP (FHT) ===== */
 #toast{
   position: fixed;
   left: 50%;
-  top: calc(env(safe-area-inset-top) + 20px);
+  top: 18px;
   transform: translateX(-50%);
   z-index: 999999;
   pointer-events: none;
@@ -216,154 +190,71 @@ button:active{ transform: scale(0.98); }
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 999px;
   padding: 10px 14px;
-  box-shadow: 0 16px 50px rgba(0,0,0,0.55);
   font-weight: 900;
-  letter-spacing: 0.6px;
-}
-.toast-inner .delta{
-  color: rgba(255,255,255,0.95);
-}
-.toast-inner.good{
-  border-color: rgba(255,26,26,0.45);
-  box-shadow: 0 0 0 2px rgba(255,26,26,0.14), 0 16px 50px rgba(0,0,0,0.55);
-}
-.toast-inner.bad{
-  border-color: rgba(255,255,255,0.12);
-  opacity: 0.95;
 }
 .toast-show{
-  animation: toastInOut 1.0s ease forwards;
+  animation: toastInOut 1s ease forwards;
 }
 @keyframes toastInOut{
   0%{ opacity:0; transform: translateX(-50%) translateY(-8px) scale(0.96); }
   15%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
-  80%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
-  100%{ opacity:0; transform: translateX(-50%) translateY(-10px) scale(0.98); }
+  80%{ opacity:1; }
+  100%{ opacity:0; transform: translateX(-50%) translateY(-10px); }
 }
 
-/* 2) Rank-up screen overlay */
+/* ===== Rank Up ===== */
 #rankUpOverlay{
   position: fixed;
   inset: 0;
-  z-index: 999998;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  background: rgba(0,0,0,0.78);
-  backdrop-filter: blur(8px);
-}
-.rankup-card{
-  width: min(520px, 100%);
-  border-radius: 24px;
-  padding: 22px;
-  background: linear-gradient(180deg, rgba(16,16,16,0.96), rgba(8,8,8,0.96));
-  border: 1px solid rgba(255,26,26,0.20);
-  box-shadow: 0 22px 80px rgba(255,0,0,0.14);
-  text-align: center;
-}
-.rankup-badge{
-  width: 92px;
-  height: 92px;
-  border-radius: 22px;
-  margin: 0 auto 14px;
-  background: radial-gradient(circle at 30% 30%, rgba(255,26,26,0.45), rgba(255,26,26,0.10));
-  border: 1px solid rgba(255,26,26,0.25);
-  display:flex;
+  display:none;
   align-items:center;
   justify-content:center;
-  font-size: 40px;
-  box-shadow: 0 0 0 6px rgba(255,26,26,0.06);
+  background: rgba(0,0,0,0.78);
+  z-index:999998;
 }
-.rankup-title{
-  font-weight: 900;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.95);
-  margin: 0 0 6px;
+.rankup-card{
+  width:min(520px,100%);
+  background:#111;
+  border:1px solid rgba(255,26,26,0.25);
+  border-radius:24px;
+  padding:22px;
+  text-align:center;
 }
 .rankup-name{
-  font-size: 26px;
-  font-weight: 900;
-  color: var(--red);
-  letter-spacing: 1px;
-  margin: 0 0 12px;
-  text-shadow: 0 0 12px rgba(255,0,0,0.25);
-}
-.rankup-sub{
-  color: rgba(255,255,255,0.70);
-  margin: 0 0 14px;
-}
-.rankup-btn{
-  width: 100%;
-  min-width: unset;
-  height: 56px;
-  border-radius: 18px;
+  font-size:28px;
+  color:var(--red);
+  font-weight:900;
 }
 
-/* 3) Shake effect on wrong */
-.shake{
-  animation: shake 0.35s ease;
+/* ===== Trophy Road ===== */
+#road{
+  margin-top:14px;
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  padding-bottom:6px;
 }
-@keyframes shake{
-  0%{ transform: translateX(0); }
-  20%{ transform: translateX(-10px); }
-  40%{ transform: translateX(10px); }
-  60%{ transform: translateX(-7px); }
-  80%{ transform: translateX(7px); }
-  100%{ transform: translateX(0); }
+.road-item{
+  min-width:110px;
+  background:#1a1a1a;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px;
+  padding:8px;
+  text-align:center;
+  font-size:12px;
+}
+.road-item.active{
+  border-color:var(--red);
+  box-shadow:0 0 0 2px rgba(255,0,0,0.25);
 }
 
-/* FULLSCREEN MOBILE */
-@media (max-width: 520px){
-  #container{
-    padding: 0 !important;
-    height: 100dvh;
-    align-items: stretch;
-  }
-
+@media (max-width:520px){
+  #container{ padding:0; }
   .card{
-    width: 100%;
-    min-height: 100dvh;
-    border-radius: 0 !important;
-    padding:
-      calc(env(safe-area-inset-top) + 16px)
-      16px
-      calc(env(safe-area-inset-bottom) + 18px)
-      16px !important;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-  }
-
-  #content{
-    flex:1;
-    overflow:auto;
-    padding-bottom: 86px;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .btn.play{
-    width: 64%;
-    max-width: 320px;
-    min-width: unset;
-    height: 52px;
-    font-size: 15px;
-    border-radius: 18px;
-    align-self:center;
-    margin-left:auto;
-    margin-right:auto;
-  }
-
-  .btn.check{
-    position: sticky;
-    bottom: calc(env(safe-area-inset-bottom) + 10px);
-    width: 100%;
-    min-width: unset;
-    height: 58px;
-    font-size: 16px;
-    border-radius: 18px;
-    margin: 14px 0 0;
+    width:100%;
+    min-height:100vh;
+    border-radius:0;
+    padding:16px;
   }
 }
 </style>
@@ -371,20 +262,24 @@ button:active{ transform: scale(0.98); }
 
 <body>
 <canvas id="bg"></canvas>
+
 <div id="streakBox"></div>
 <div id="credit">made by Frihet</div>
 
-<!-- Trophy toast -->
-<div id="toast"><div id="toastInner" class="toast-inner"><span>🏆</span><span class="delta" id="toastText">+2</span></div></div>
+<!-- MONEY POP -->
+<div id="toast">
+  <div id="toastInner" class="toast-inner">
+    <span>💰</span>
+    <span id="toastText">+2 FHT</span>
+  </div>
+</div>
 
-<!-- Rank up overlay -->
+<!-- RANK UP -->
 <div id="rankUpOverlay">
   <div class="rankup-card">
-    <div class="rankup-badge">🏆</div>
-    <h3 class="rankup-title">RANK UP</h3>
+    <h3>RANK UP</h3>
     <div class="rankup-name" id="rankUpName">Millionaire</div>
-    <p class="rankup-sub" id="rankUpSub">Locked.</p>
-    <button class="rankup-btn" onclick="closeRankUp()">CONTINUE →</button>
+    <button onclick="closeRankUp()">CONTINUE →</button>
   </div>
 </div>
 
@@ -393,429 +288,237 @@ button:active{ transform: scale(0.98); }
     <h1>DISCIPLINE</h1>
     <h2>YOU VS YOU</h2>
     <div class="terminal-line"></div>
-    <button class="btn" onclick="startGame()">START SESSION →</button>
-    <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
-      made by Frihet
-    </p>
+    <button onclick="startGame()">START SESSION →</button>
   </div>
 </div>
 
 <script>
-/* ===== Background (candles) ===== */
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
+/* ===== BACKGROUND ===== */
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resize(); addEventListener("resize",resize);
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+let candles=[];
+for(let i=0;i<40;i++){
+  candles.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,h:20+Math.random()*60,s:0.5+Math.random()});
 }
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-
-let candles = [];
-function initCandles(){
-  candles = [];
-  for (let i = 0; i < 40; i++) {
-    candles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      height: Math.random() * 60 + 20,
-      speed: Math.random() * 1 + 0.5
-    });
-  }
-}
-initCandles();
-
-function animate() {
+function anim(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  candles.forEach(c => {
-    ctx.fillStyle = "rgba(255,0,0,0.35)";
-    ctx.fillRect(c.x, c.y, 6, c.height);
-    c.y += c.speed;
-    if (c.y > canvas.height) c.y = -c.height;
+  candles.forEach(c=>{
+    ctx.fillStyle="rgba(255,0,0,0.35)";
+    ctx.fillRect(c.x,c.y,6,c.h);
+    c.y+=c.s;
+    if(c.y>innerHeight)c.y=-c.h;
   });
-  requestAnimationFrame(animate);
+  requestAnimationFrame(anim);
 }
-animate();
+anim();
 
-/* ===== Content ===== */
-const items = [
-  { en:"I feel you, bro. I’ve also been through a lot.", de:"Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht.", es:"Te entiendo, bro. Yo también he pasado por mucho." },
-  { en:"You don’t need motivation. you just need discipline, bro.", de:"Du brauchst keine Motivation. Du brauchst Disziplin, Bro.", es:"No necesitas motivación. Necesitas disciplina, bro." },
-  { en:"You just need to control yourself. it’s you vs you, bro.", de:"Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro.", es:"Solo tienes que controlarte. Es tú contra tú, bro." },
-  { en:"I want you to succeed, bro. I believe in you.", de:"Ich will, dass du Erfolg hast, Bro. Ich glaub an dich.", es:"Quiero que tengas éxito, bro. Creo en ti." },
-  { en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.", de:"Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär.", es:"Pero ya sabes, alguien tiene que trabajar de 9 a 5. No todos van a ser millonarios." },
-  { en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard.", de:"Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten.", es:"Sé que es difícil, pero nada en este mundo es fácil. Tienes que trabajar duro." },
-  { en:"Go ghost, bro. You can’t grow when people are around you.", de:"Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind.", es:"Desaparece un rato, bro. No puedes crecer si la gente siempre está alrededor." },
-  { en:"Lock in. You wanna be rich or not?", de:"Fokussier dich. Willst du reich werden oder nicht?", es:"Concéntrate. ¿Quieres ser rico o no?" },
-  { en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard.", de:"Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart.", es:"No quiero ser un NPC, bro. Por eso estoy trabajando así de duro." },
-  { en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.", de:"Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht.", es:"¿Crees que disfruto ir al gym todos los días? Hell nah, bro. De verdad que no." },
-  { en:"You live only one life, bro. Nothing can stop you. do what you want.", de:"Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst.", es:"Solo tienes una vida, bro. Nada puede detenerte. Haz lo que quieras." },
-  { en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.", de:"Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du.", es:"Si quieres mucho dinero, haz un gran movimiento. No te vas a hacer rico con un trabajo de 9 a 5, tú lo sabes." },
-  { en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions", de:"Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren.", es:"Si quieres ser diferente, tienes que ser frío, bro. Aprende a controlar tus emociones." },
-  { en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.", es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida." }
+/* ===== DATA ===== */
+const items=[
+{en:"I feel you, bro. I’ve also been through a lot."},
+{en:"You don’t need motivation. you just need discipline, bro."},
+{en:"You just need to control yourself. it’s you vs you, bro."},
+{en:"I want you to succeed, bro. I believe in you."},
+{en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire."},
+{en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard."},
+{en:"Go ghost, bro. You can’t grow when people are around you."},
+{en:"Lock in. You wanna be rich or not?"},
+{en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard."},
+{en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t."},
+{en:"You live only one life, bro. Nothing can stop you. do what you want."},
+{en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that."},
+{en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions"},
+{en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life"}
 ];
 
-/* ===== State ===== */
-let used = [];
-let currentIndex = 0;
-let score = 0;
-let round = 0;
-let selectedChoice = null;
-let audio = null;
+/* ===== STATE ===== */
+let used=[],currentIndex=0,score=0,round=0,audio=null,selectedChoice=null;
 
-let nativeLang = localStorage.getItem("nativeLang") || "en";
-let selectedMode = localStorage.getItem("mode") || "mix";
-
-/* ===== TROPHIES (persistent) ===== */
-const TROPHY_KEY = "trophies_forever";
-function getTrophies(){ return parseInt(localStorage.getItem(TROPHY_KEY) || "0"); }
-function setTrophies(v){
-  if (v < 0) v = 0; // keeps it clean; still applies -1, just not below zero
-  localStorage.setItem(TROPHY_KEY, String(v));
-}
-function addTrophies(delta){
-  const old = getTrophies();
-  setTrophies(old + delta);
-  return { old, now: getTrophies() };
+/* ===== FHT MONEY SYSTEM ===== */
+const MONEY_KEY="FHT_money";
+function getMoney(){ return parseInt(localStorage.getItem(MONEY_KEY)||"0"); }
+function setMoney(v){ if(v<0)v=0; localStorage.setItem(MONEY_KEY,v); }
+function addMoney(v){
+  const old=getMoney();
+  setMoney(old+v);
+  return {old,now:getMoney()};
 }
 
-/* Your rank names */
-const RANKS = [
-  { name: "Loser",       min: 0,    max: 49 },
-  { name: "NPC",         min: 50,   max: 149 },
-  { name: "Human",       min: 150,  max: 299 },
-  { name: "Rich",        min: 300,  max: 599 },
-  { name: "Millionaire", min: 600,  max: 999 },
-  { name: "Billionaire", min: 1000, max: 999999 }
+/* ===== RANKS ===== */
+const RANKS=[
+{name:"Loser",min:0},
+{name:"NPC",min:50},
+{name:"Human",min:150},
+{name:"Rich",min:300},
+{name:"Millionaire",min:600},
+{name:"Billionaire",min:1000}
 ];
-
-function rankFor(t){
-  for(const r of RANKS){
-    if(t >= r.min && t <= r.max) return r;
-  }
-  return RANKS[0];
-}
-function nextRankInfo(t){
-  const r = rankFor(t);
-  const idx = RANKS.indexOf(r);
-  if(idx === RANKS.length - 1){
-    return { nextName: "MAX", need: 0, pct: 100, label: "MAX" };
-  }
-  const next = RANKS[idx+1];
-  const needTotal = next.min - r.min;
-  const have = t - r.min;
-  const pct = Math.max(0, Math.min(100, Math.round((have / needTotal) * 100)));
-  return { nextName: next.name, need: next.min - t, pct, label: `${t}/${next.min}` };
+function rankFor(v){
+  let r=RANKS[0];
+  for(let i=0;i<RANKS.length;i++) if(v>=RANKS[i].min) r=RANKS[i];
+  return r;
 }
 
-/* ===== Language UI ===== */
-const LANGS = [
-  { code: "en", label: "🇬🇧 English" },
-  { code: "de", label: "🇩🇪 Deutsch" },
-  { code: "es", label: "🇪🇸 Español" }
-];
-
-const UI = {
-  en: {
-    chooseNative: "Choose your native language",
-    chooseMode: "Choose a mode",
-    mix: "MIX",
-    listenOnly: "Listen",
-    buildOnly: "Build",
-    play: "PLAY",
-    check: "CHECK",
-    listenDecide: "Listen & Decide",
-    buildFocus: "Build With Focus",
-    sessionComplete: "Session Complete",
-    score: "Score",
-    restart: "Restart",
-    strong: "LOCKED.",
-    reset: "-1. Refocus.",
-    trophies: "Trophies",
-    rank: "Rank",
-    next: "Next",
-    progress: "Progress"
-  },
-  de: {
-    chooseNative: "Wähle deine Muttersprache",
-    chooseMode: "Wähle den Modus",
-    mix: "MIX",
-    listenOnly: "Hören",
-    buildOnly: "Bauen",
-    play: "PLAY",
-    check: "PRÜFEN",
-    listenDecide: "Hören & Entscheiden",
-    buildFocus: "Satz bauen",
-    sessionComplete: "Session beendet",
-    score: "Punktzahl",
-    restart: "Neustart",
-    strong: "LOCKED.",
-    reset: "-1. Fokus.",
-    trophies: "Trophäen",
-    rank: "Rang",
-    next: "Nächster",
-    progress: "Fortschritt"
-  },
-  es: {
-    chooseNative: "Elige tu idioma nativo",
-    chooseMode: "Elige el modo",
-    mix: "MIX",
-    listenOnly: "Escuchar",
-    buildOnly: "Construir",
-    play: "PLAY",
-    check: "COMPROBAR",
-    listenDecide: "Escucha y decide",
-    buildFocus: "Construye la frase",
-    sessionComplete: "Sesión terminada",
-    score: "Puntuación",
-    restart: "Reiniciar",
-    strong: "LOCKED.",
-    reset: "-1. Enfócate.",
-    trophies: "Trofeos",
-    rank: "Rango",
-    next: "Siguiente",
-    progress: "Progreso"
+/* ===== STREAK ===== */
+function updateStreak(){
+  let today=new Date().toDateString();
+  let last=localStorage.getItem("lastDate");
+  let streak=parseInt(localStorage.getItem("streak")||"0");
+  if(last!==today){
+    let y=new Date(); y.setDate(y.getDate()-1);
+    streak=(last===y.toDateString())?streak+1:1;
+    localStorage.setItem("streak",streak);
+    localStorage.setItem("lastDate",today);
   }
-};
-
-function t(key){
-  return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key;
-}
-function displayText(i){
-  const obj = items[i];
-  return obj[nativeLang] || obj.en;
-}
-
-/* ===== Streak ===== */
-function updateStreak() {
-  let today = new Date().toDateString();
-  let last = localStorage.getItem("lastDate");
-  let streak = parseInt(localStorage.getItem("streak") || "0");
-
-  if (last !== today) {
-    let yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    if (last === yesterday.toDateString()) streak++;
-    else streak = 1;
-    localStorage.setItem("streak", streak);
-    localStorage.setItem("lastDate", today);
-  }
-
-  document.getElementById("streakBox").innerText =
-    "🔥 Streak: " + (localStorage.getItem("streak") || 1);
+  document.getElementById("streakBox").innerText="🔥 Streak: "+(localStorage.getItem("streak")||1);
 }
 updateStreak();
 
-/* ===== Screens ===== */
+/* ===== START ===== */
 function startGame(){
-  const buttons = LANGS.map(l =>
-    `<button class="btn" onclick="chooseLang('${l.code}')" style="margin:8px;">${l.label}</button>`
-  ).join("");
-
-  document.getElementById("container").innerHTML =
-    `<div class="card">
-      <h2 style="margin-top:0;">${t("chooseNative")}</h2>
-      <div style="margin-top:18px;">${buttons}</div>
-      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
-    </div>`;
-}
-
-function chooseLang(lang){
-  nativeLang = lang;
-  localStorage.setItem("nativeLang", lang);
-
-  used = [];
-  score = 0;
-  round = 0;
-  selectedChoice = null;
-
-  showModeSelect();
-}
-
-function showModeSelect(){
-  document.getElementById("container").innerHTML =
-    `<div class="card">
-      <h2 style="margin-top:0;">${t("chooseMode")}</h2>
-
-      <button class="btn" onclick="setMode('mix')" style="margin:8px;">${t("mix")}</button>
-      <button class="btn" onclick="setMode('listen')" style="margin:8px;">${t("listenOnly")}</button>
-      <button class="btn" onclick="setMode('drag')" style="margin:8px;">${t("buildOnly")}</button>
-
-      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
-    </div>`;
-}
-
-function setMode(m){
-  selectedMode = m;
-  localStorage.setItem("mode", m);
-  startSession();
-}
-
-function startSession(){
-  document.getElementById("container").innerHTML =
-    `<div class="card" id="gameCard">
-      <div id="hud" style="text-align:left; margin-bottom:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
-          <div style="font-size:13px; color:#aaa;">
-            ${t("progress")}: <span id="progressText">0/${items.length}</span>
-          </div>
-
-          <div style="font-size:13px; color:#aaa; text-align:right;">
-            🏆 ${t("trophies")}: <span id="trophyText">0</span><br>
-            ${t("rank")}: <span id="rankText">Loser</span>
-          </div>
-        </div>
-
-        <div style="margin-top:10px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
-          <div id="progressBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
-        </div>
-
-        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-size:13px; color:#aaa;">
-            ${t("next")}: <span id="nextRankText">0/50</span>
-          </div>
-        </div>
-
-        <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
-          <div id="rankBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
-        </div>
-      </div>
-
-      <h2 id="mode"></h2>
-      <button class="btn play" onclick="playAudio()">${t("play")}</button>
-
-      <div id="content"></div>
-      <div id="result"></div>
-    </div>`;
-
-  nextRound();
+  document.getElementById("container").innerHTML=
+  `<div class="card" id="gameCard">
+    <div id="hud"></div>
+    <h2 id="mode">MIX</h2>
+    <button onclick="playAudio()">PLAY</button>
+    <div id="content"></div>
+    <div id="result"></div>
+    <div id="road"></div>
+  </div>`;
+  used=[]; score=0; round=0;
   updateHUD();
+  updateRoad();
+  nextRound();
 }
 
 /* ===== HUD ===== */
 function updateHUD(){
-  const done = used.length;
-
-  const progressText = document.getElementById("progressText");
-  const progressBar = document.getElementById("progressBar");
-  if(progressText) progressText.innerText = done + "/" + items.length;
-  if(progressBar){
-    const pct = Math.round((done / items.length) * 100);
-    progressBar.style.width = pct + "%";
-  }
-
-  const trophies = getTrophies();
-  const trophyText = document.getElementById("trophyText");
-  const rankText = document.getElementById("rankText");
-  const nextRankText = document.getElementById("nextRankText");
-  const rankBar = document.getElementById("rankBar");
-
-  const r = rankFor(trophies);
-  const nxt = nextRankInfo(trophies);
-
-  if(trophyText) trophyText.innerText = trophies;
-  if(rankText) rankText.innerText = r.name;
-  if(nextRankText) nextRankText.innerText = nxt.label;
-  if(rankBar) rankBar.style.width = (nxt.pct || 0) + "%";
+  const money=getMoney();
+  const rank=rankFor(money);
+  document.getElementById("hud").innerHTML=
+  `💰 FHT: <b id="moneyNum">${money}</b> | Rank: <b>${rank.name}</b>`;
 }
 
-/* ===== Game helpers ===== */
-function normalize(s){
-  return s.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
+/* money animation */
+function animateMoney(from,to){
+  const el=document.getElementById("moneyNum");
+  if(!el) return;
+  let start=from;
+  const diff=to-from;
+  const steps=12;
+  let i=0;
+  const iv=setInterval(()=>{
+    i++;
+    el.innerText=Math.round(start + diff*(i/steps));
+    if(i>=steps) clearInterval(iv);
+  },20);
 }
 
-/* ===== Random rounds ===== */
+/* ===== ROAD ===== */
+function updateRoad(){
+  const road=document.getElementById("road");
+  if(!road) return;
+  const money=getMoney();
+  road.innerHTML="";
+  RANKS.forEach(r=>{
+    const d=document.createElement("div");
+    d.className="road-item"+(money>=r.min?" active":"");
+    d.innerHTML=`💰<br>${r.name}<br>${r.min}+`;
+    road.appendChild(d);
+  });
+}
+
+/* ===== TOAST ===== */
+function showToast(v){
+  const toast=document.getElementById("toast");
+  const text=document.getElementById("toastText");
+  text.innerText=(v>0?`+${v}`:`${v}`)+" FHT";
+  toast.classList.remove("toast-show");
+  void toast.offsetWidth;
+  toast.classList.add("toast-show");
+}
+
+/* ===== RANK UP ===== */
+let pendingNext=null;
+function showRankUp(name){
+  document.getElementById("rankUpName").innerText=name;
+  document.getElementById("rankUpOverlay").style.display="flex";
+}
+function closeRankUp(){
+  document.getElementById("rankUpOverlay").style.display="none";
+  if(pendingNext){ pendingNext(); pendingNext=null; }
+}
+
+/* ===== GAME ===== */
+function normalize(t){
+  return t.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
+}
+
 function nextRound(){
-  if(round >= items.length){
-    const trophies = getTrophies();
-    const r = rankFor(trophies);
-    document.getElementById("content").innerHTML =
-      `<h2>${t("sessionComplete")}</h2>
-       <p>${t("score")}: ${score} / ${items.length}</p>
-       <p>🏆 ${t("trophies")}: ${trophies} (${t("rank")}: ${r.name})</p>
-       <button class="btn" onclick="location.reload()">${t("restart")}</button>`;
+  if(round>=items.length){
+    document.getElementById("content").innerHTML=
+    `<h2>Session Complete</h2>
+     <p>Score: ${score}/${items.length}</p>
+     <button onclick="location.reload()">Restart</button>`;
     return;
   }
 
   round++;
-  selectedChoice = null;
+  selectedChoice=null;
   document.getElementById("result").innerText="";
   document.getElementById("content").innerHTML="";
 
-  do {
-    currentIndex = Math.floor(Math.random()*items.length);
-  } while(used.includes(currentIndex));
+  do{
+    currentIndex=Math.floor(Math.random()*items.length);
+  }while(used.includes(currentIndex));
   used.push(currentIndex);
 
-  updateHUD();
-
-  if(selectedMode === "listen") buildListen();
-  else if(selectedMode === "drag") buildDrag();
-  else {
-    if(Math.random()>0.5) buildListen();
-    else buildDrag();
-  }
+  if(Math.random()>0.5) buildListen();
+  else buildDrag();
 }
 
-/* ===== Listen & Decide ===== */
 function buildListen(){
-  document.getElementById("mode").innerText = t("listenDecide");
-
-  const correctText = displayText(currentIndex);
-
-  let optionIndexes = [currentIndex];
-  while(optionIndexes.length < 4){
-    const r = Math.floor(Math.random() * items.length);
-    if(!optionIndexes.includes(r)) optionIndexes.push(r);
+  const correct=items[currentIndex].en;
+  let options=[correct];
+  while(options.length<4){
+    let r=items[Math.floor(Math.random()*items.length)].en;
+    if(!options.includes(r)) options.push(r);
   }
-  optionIndexes.sort(()=>0.5 - Math.random());
+  options.sort(()=>0.5-Math.random());
 
-  optionIndexes.forEach(idx=>{
-    let div = document.createElement("div");
+  options.forEach(o=>{
+    let div=document.createElement("div");
     div.className="choice";
-    div.innerText = displayText(idx);
+    div.innerText=o;
     div.onclick=()=>{
       document.querySelectorAll(".choice").forEach(c=>c.classList.remove("selected"));
       div.classList.add("selected");
-      selectedChoice = displayText(idx);
+      selectedChoice=o;
     };
-    document.getElementById("content").appendChild(div);
+    content.appendChild(div);
   });
 
-  let btn = document.createElement("button");
-  btn.className = "btn check";
-  btn.innerText = t("check");
+  let btn=document.createElement("button");
+  btn.innerText="CHECK";
   btn.onclick=()=>{
     if(!selectedChoice) return;
-    if(normalize(selectedChoice)===normalize(correctText)) success();
+    if(normalize(selectedChoice)===normalize(correct)) success();
     else fail();
   };
-  document.getElementById("content").appendChild(btn);
-
-  if(nativeLang !== "en"){
-    const hint = document.createElement("div");
-    hint.className = "hint";
-    hint.innerText = "English: " + items[currentIndex].en;
-    document.getElementById("content").appendChild(hint);
-  }
+  content.appendChild(btn);
 }
 
-/* ===== Build With Focus ===== */
 function buildDrag(){
-  document.getElementById("mode").innerText = t("buildFocus");
-
-  const targetSentence = displayText(currentIndex);
-  let words = targetSentence.split(" ");
-  let shuffled = [...words].sort(()=>0.5-Math.random());
+  const sentence=items[currentIndex].en;
+  let words=sentence.split(" ");
+  let shuffled=[...words].sort(()=>0.5-Math.random());
 
   let top=document.createElement("div");
-  top.className="word-container";
-  top.id="top";
-
+  top.className="word-container"; top.id="top";
   let bottom=document.createElement("div");
-  bottom.className="word-container";
-  bottom.id="bottom";
+  bottom.className="word-container"; bottom.id="bottom";
 
   shuffled.forEach(w=>{
     let span=document.createElement("div");
@@ -829,102 +532,38 @@ function buildDrag(){
   });
 
   let btn=document.createElement("button");
-  btn.className = "btn check";
-  btn.innerText = t("check");
+  btn.innerText="CHECK";
   btn.onclick=()=>{
     let built="";
     document.querySelectorAll("#top .word").forEach(w=>built+=w.innerText+" ");
-    if(normalize(built)===normalize(targetSentence)) success();
+    if(normalize(built)===normalize(sentence)) success();
     else fail();
   };
 
-  document.getElementById("content").appendChild(top);
-  document.getElementById("content").appendChild(bottom);
-  document.getElementById("content").appendChild(btn);
-
-  if(nativeLang !== "en"){
-    const hint = document.createElement("div");
-    hint.className = "hint";
-    hint.innerText = "English: " + items[currentIndex].en;
-    document.getElementById("content").appendChild(hint);
-  }
+  content.appendChild(top);
+  content.appendChild(bottom);
+  content.appendChild(btn);
 }
 
-/* ===== GAME FEEL FUNCTIONS ===== */
-function showToast(delta){
-  const toast = document.getElementById("toast");
-  const inner = document.getElementById("toastInner");
-  const text = document.getElementById("toastText");
-
-  // reset classes
-  toast.classList.remove("toast-show");
-  inner.classList.remove("good","bad");
-
-  if(delta > 0){
-    inner.classList.add("good");
-    text.textContent = `+${delta} TROPHY`;
-  } else {
-    inner.classList.add("bad");
-    text.textContent = `${delta} TROPHY`;
-  }
-
-  // force reflow
-  void toast.offsetWidth;
-  toast.classList.add("toast-show");
-}
-
-function shakeCard(){
-  const card = document.getElementById("gameCard");
-  if(!card) return;
-  card.classList.remove("shake");
-  void card.offsetWidth;
-  card.classList.add("shake");
-}
-
-let pendingNext = null;
-
-function showRankUp(newRankName){
-  const overlay = document.getElementById("rankUpOverlay");
-  const nameEl = document.getElementById("rankUpName");
-  const subEl = document.getElementById("rankUpSub");
-  nameEl.textContent = newRankName;
-  subEl.textContent = "Upgrade secured. Keep going.";
-  overlay.style.display = "flex";
-}
-
-function closeRankUp(){
-  const overlay = document.getElementById("rankUpOverlay");
-  overlay.style.display = "none";
-  if(typeof pendingNext === "function"){
-    const fn = pendingNext;
-    pendingNext = null;
-    fn();
-  }
-}
-
-/* ===== Scoring rules =====
-   Correct: +2 trophies
-   Wrong:   -1 trophy
-*/
+/* ===== SUCCESS / FAIL ===== */
 function success(){
-  playSound(true);
   score++;
+  const before=getMoney();
+  const oldRank=rankFor(before).name;
 
-  const beforeRank = rankFor(getTrophies()).name;
-
-  const res = addTrophies(+2);
+  const res=addMoney(2);
+  animateMoney(before,res.now);
   showToast(+2);
 
-  const afterRank = rankFor(res.now).name;
   updateHUD();
+  updateRoad();
 
-  document.getElementById("result").innerText = t("strong");
-  stopAudio();
+  const newRank=rankFor(res.now).name;
+  document.getElementById("result").innerText="LOCKED.";
 
-  // Rank-up screen
-  if(afterRank !== beforeRank){
-    pendingNext = () => setTimeout(nextRound, 250);
-    showRankUp(afterRank);
+  if(newRank!==oldRank){
+    pendingNext=()=>setTimeout(nextRound,250);
+    showRankUp(newRank);
     return;
   }
 
@@ -932,52 +571,29 @@ function success(){
 }
 
 function fail(){
-  playSound(false);
+  const before=getMoney();
+  addMoney(-1);
+  const after=getMoney();
 
-  const beforeRank = rankFor(getTrophies()).name;
-
-  const res = addTrophies(-1);
+  animateMoney(before,after);
   showToast(-1);
-  shakeCard();
 
-  const afterRank = rankFor(res.now).name;
   updateHUD();
+  updateRoad();
 
-  document.getElementById("result").innerText = t("reset");
-  stopAudio();
-
-  // If rank drops, we do NOT show rank-down overlay (keeps it fast).
-  setTimeout(nextRound,1500);
+  document.getElementById("result").innerText="-1. Refocus.";
+  setTimeout(nextRound,1400);
 }
 
+/* ===== AUDIO ===== */
 function playAudio(){
-  stopAudio();
-  audio = new Audio("audio"+(currentIndex+1)+".mp3");
+  if(audio){audio.pause();audio.currentTime=0;}
+  audio=new Audio("audio"+(currentIndex+1)+".mp3");
   audio.play();
-}
-
-function stopAudio(){
-  if(audio){ audio.pause(); audio.currentTime = 0; }
-}
-
-/* Soft click sound */
-function playSound(success){
-  const aCtx=new (window.AudioContext||window.webkitAudioContext)();
-  const osc=aCtx.createOscillator();
-  const gain=aCtx.createGain();
-  osc.connect(gain);
-  gain.connect(aCtx.destination);
-  osc.frequency.value= success?600:220;
-  gain.gain.value=0.05;
-  osc.start();
-  setTimeout(()=>osc.stop(),100);
 }
 </script>
 </body>
 </html>
-
-
-
 
 
 
