@@ -2,598 +2,397 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#000000">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DISCIPLINE</title>
 
 <style>
-:root{
-  --red:#ff1a1a;
-  --red2:#b30000;
-  --panel: rgba(10,10,10,0.92);
-  --panel2: rgba(18,18,18,0.92);
-  --text: rgba(255,255,255,0.92);
-  --muted: rgba(255,255,255,0.65);
-}
-
-*{ box-sizing:border-box; }
-html, body{ height:100%; }
-
 body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background:#000;
-  color:var(--text);
-  overflow:hidden;
+margin:0;
+font-family:Arial;
+background:black;
+color:white;
+overflow:hidden;
 }
-
 canvas{
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  z-index:-2;
+position:fixed;
+top:0;left:0;
+z-index:-1;
 }
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.25), rgba(0,0,0,0.82));
-  z-index:-1;
-}
-
 #container{
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:16px;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:12px;
 }
-
 .card{
-  width:min(820px, 100%);
-  background: linear-gradient(180deg, var(--panel), var(--panel2));
-  border:1px solid rgba(255,26,26,0.14);
-  border-radius:24px;
-  box-shadow: 0 18px 70px rgba(255,0,0,0.18);
-  padding:28px;
-  transform: translateZ(0);
+background:rgba(12,12,12,0.95);
+padding:24px;
+border-radius:20px;
+width:min(800px,100%);
+box-shadow:0 0 40px rgba(255,0,0,0.2);
+text-align:center;
 }
-
-/* ===== Intro ===== */
-#intro h1{
-  font-size: clamp(42px, 7vw, 66px);
-  font-weight: 800;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  margin: 0;
-  line-height: 1;
-  color: #ff1a1a;
-  text-shadow:
-    0 0 8px rgba(255,0,0,0.35),
-    0 0 20px rgba(255,0,0,0.18);
+h1{
+font-size:56px;
+letter-spacing:8px;
+color:#ff1a1a;
+margin:0;
 }
-#intro h2{
-  margin-top: 12px;
-  font-size: 12px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.65);
-  font-weight: 600;
-}
-.terminal-line{
-  width: min(360px, 85%);
-  height: 2px;
-  margin: 16px auto 10px;
-  background: linear-gradient(90deg, transparent, rgba(255,0,0,0.95), transparent);
-  box-shadow: 0 0 14px rgba(255,0,0,0.4);
-}
-
-#mode{
-  font-size:22px;
-  margin:6px 0 12px;
-}
+h2{color:#aaa;}
 
 button{
-  appearance:none;
-  border:none;
-  cursor:pointer;
-  background: linear-gradient(180deg, var(--red2), #7a0000);
-  color:white;
-  font-weight:800;
-  letter-spacing:1px;
-  border-radius:16px;
-  height:54px;
-  padding:0 18px;
-  min-width: 220px;
-  box-shadow: 0 10px 26px rgba(255,0,0,0.18);
-  transition: transform .08s ease, filter .15s ease;
+background:#b30000;
+border:none;
+color:white;
+padding:14px 20px;
+border-radius:12px;
+margin-top:14px;
+font-weight:bold;
+cursor:pointer;
 }
-button:hover{ filter:brightness(1.08); }
-button:active{ transform: scale(0.98); }
+button:hover{background:#ff1a1a;}
 
 .choice{
-  background: rgba(28,28,28,0.92);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 20px;
-  padding: 18px 16px;
-  margin: 12px 0;
-  cursor: pointer;
-  font-size: 19px;
-  line-height: 1.35;
+background:#1a1a1a;
+padding:14px;
+margin:10px 0;
+border-radius:12px;
+cursor:pointer;
+border:2px solid transparent;
 }
 .choice.selected{
-  border-color: rgba(255,26,26,0.90);
-  box-shadow: 0 0 0 2px rgba(255,26,26,0.28);
+border:2px solid #ff1a1a;
 }
 
 .word-container{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-  margin:16px 0;
-  min-height:64px;
-  padding:10px;
-  border-radius:16px;
-  background: rgba(28,28,28,0.75);
-  border:1px solid rgba(255,255,255,0.10);
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:8px;
+margin:12px 0;
 }
 .word{
-  background: rgba(255,26,26,0.18);
-  border:1px solid rgba(255,26,26,0.28);
-  padding:10px 14px;
-  border-radius:16px;
-  font-size:17px;
-  font-weight:700;
+background:#990000;
+padding:8px 12px;
+border-radius:10px;
+cursor:pointer;
 }
 
-#result{
-  margin-top:14px;
-  font-size:18px;
-  font-weight:900;
+#hud{
+display:flex;
+justify-content:space-between;
+font-size:14px;
+margin-bottom:12px;
+color:#aaa;
 }
 
-/* ===== HUD ===== */
-#streakBox{
-  position:fixed;
-  top:12px;
-  right:12px;
-  font-size:13px;
-  z-index:9999;
+#rankPopup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.8);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
 }
-
-#credit{
-  position:fixed;
-  bottom:12px;
-  right:12px;
-  font-size:12px;
-  color:rgba(255,255,255,0.55);
+.popupCard{
+background:#111;
+padding:30px;
+border-radius:20px;
+text-align:center;
 }
-
-/* ===== MONEY POP (FHT) ===== */
-#toast{
-  position: fixed;
-  left: 50%;
-  top: 18px;
-  transform: translateX(-50%);
-  z-index: 999999;
-  pointer-events: none;
-  opacity: 0;
-}
-.toast-inner{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  background: rgba(20,20,20,0.92);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 999px;
-  padding: 10px 14px;
-  font-weight: 900;
-}
-.toast-show{
-  animation: toastInOut 1s ease forwards;
-}
-@keyframes toastInOut{
-  0%{ opacity:0; transform: translateX(-50%) translateY(-8px) scale(0.96); }
-  15%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
-  80%{ opacity:1; }
-  100%{ opacity:0; transform: translateX(-50%) translateY(-10px); }
-}
-
-/* ===== Rank Up ===== */
-#rankUpOverlay{
-  position: fixed;
-  inset: 0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background: rgba(0,0,0,0.78);
-  z-index:999998;
-}
-.rankup-card{
-  width:min(520px,100%);
-  background:#111;
-  border:1px solid rgba(255,26,26,0.25);
-  border-radius:24px;
-  padding:22px;
-  text-align:center;
-}
-.rankup-name{
-  font-size:28px;
-  color:var(--red);
-  font-weight:900;
-}
-
-/* ===== Trophy Road ===== */
-#road{
-  margin-top:14px;
-  display:flex;
-  gap:8px;
-  overflow:auto;
-  padding-bottom:6px;
-}
-.road-item{
-  min-width:110px;
-  background:#1a1a1a;
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:12px;
-  padding:8px;
-  text-align:center;
-  font-size:12px;
-}
-.road-item.active{
-  border-color:var(--red);
-  box-shadow:0 0 0 2px rgba(255,0,0,0.25);
-}
-
-@media (max-width:520px){
-  #container{ padding:0; }
-  .card{
-    width:100%;
-    min-height:100vh;
-    border-radius:0;
-    padding:16px;
-  }
+.rankName{
+font-size:28px;
+color:#ff1a1a;
+font-weight:bold;
 }
 </style>
 </head>
 
 <body>
+
 <canvas id="bg"></canvas>
 
-<div id="streakBox"></div>
-<div id="credit">made by Frihet</div>
-
-<!-- MONEY POP -->
-<div id="toast">
-  <div id="toastInner" class="toast-inner">
-    <span>💰</span>
-    <span id="toastText">+2 FHT</span>
-  </div>
+<div id="rankPopup">
+<div class="popupCard">
+<div style="font-size:40px">🪙</div>
+<h2>RANK UP</h2>
+<div class="rankName" id="popupRank"></div>
+<button onclick="closePopup()">CONTINUE →</button>
 </div>
-
-<!-- RANK UP -->
-<div id="rankUpOverlay">
-  <div class="rankup-card">
-    <h3>RANK UP</h3>
-    <div class="rankup-name" id="rankUpName">Millionaire</div>
-    <button onclick="closeRankUp()">CONTINUE →</button>
-  </div>
 </div>
 
 <div id="container">
-  <div class="card" id="intro">
-    <h1>DISCIPLINE</h1>
-    <h2>YOU VS YOU</h2>
-    <div class="terminal-line"></div>
-    <button onclick="startGame()">START SESSION →</button>
-  </div>
+<div class="card" id="intro">
+<h1>DISCIPLINE</h1>
+<h2>YOU VS YOU</h2>
+<button onclick="showRankScreen()">START SESSION →</button>
+<p style="font-size:12px;color:#777">made by Frihet</p>
+</div>
 </div>
 
 <script>
+
 /* ===== BACKGROUND ===== */
 const canvas=document.getElementById("bg");
 const ctx=canvas.getContext("2d");
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
-resize(); addEventListener("resize",resize);
+function resize(){
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+}
+resize();
+addEventListener("resize",resize);
 
 let candles=[];
 for(let i=0;i<40;i++){
-  candles.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,h:20+Math.random()*60,s:0.5+Math.random()});
+candles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+h:Math.random()*60+20,
+s:Math.random()*1+0.5
+});
 }
 function anim(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  candles.forEach(c=>{
-    ctx.fillStyle="rgba(255,0,0,0.35)";
-    ctx.fillRect(c.x,c.y,6,c.h);
-    c.y+=c.s;
-    if(c.y>innerHeight)c.y=-c.h;
-  });
-  requestAnimationFrame(anim);
+ctx.clearRect(0,0,canvas.width,canvas.height);
+candles.forEach(c=>{
+ctx.fillStyle="rgba(255,0,0,0.35)";
+ctx.fillRect(c.x,c.y,6,c.h);
+c.y+=c.s;
+if(c.y>canvas.height)c.y=-c.h;
+});
+requestAnimationFrame(anim);
 }
 anim();
 
 /* ===== DATA ===== */
 const items=[
-{en:"I feel you, bro. I’ve also been through a lot."},
-{en:"You don’t need motivation. you just need discipline, bro."},
-{en:"You just need to control yourself. it’s you vs you, bro."},
-{en:"I want you to succeed, bro. I believe in you."},
-{en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire."},
-{en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard."},
-{en:"Go ghost, bro. You can’t grow when people are around you."},
-{en:"Lock in. You wanna be rich or not?"},
-{en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard."},
-{en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t."},
-{en:"You live only one life, bro. Nothing can stop you. do what you want."},
-{en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that."},
-{en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions"},
-{en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life"}
+"I feel you, bro. I’ve also been through a lot.",
+"You don’t need motivation. you just need discipline, bro.",
+"You just need to control yourself. it’s you vs you, bro.",
+"I want you to succeed, bro. I believe in you.",
+"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.",
+"I know it’s hard but dude nothing is easy in this world. You gotta work hard.",
+"Go ghost, bro. You can’t grow when people are around you.",
+"Lock in. You wanna be rich or not?",
+"I don’t wanna be an NPC, bro. That’s why I’m working this hard.",
+"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.",
+"You live only one life, bro. Nothing can stop you. do what you want.",
+"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.",
+"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions",
+"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life"
 ];
 
-/* ===== STATE ===== */
-let used=[],currentIndex=0,score=0,round=0,audio=null,selectedChoice=null;
+/* ===== FHT SYSTEM ===== */
+const KEY="FHT";
+function getFHT(){return parseInt(localStorage.getItem(KEY)||"0")}
+function setFHT(v){if(v<0)v=0;localStorage.setItem(KEY,v)}
 
-/* ===== FHT MONEY SYSTEM ===== */
-const MONEY_KEY="FHT_money";
-function getMoney(){ return parseInt(localStorage.getItem(MONEY_KEY)||"0"); }
-function setMoney(v){ if(v<0)v=0; localStorage.setItem(MONEY_KEY,v); }
-function addMoney(v){
-  const old=getMoney();
-  setMoney(old+v);
-  return {old,now:getMoney()};
-}
-
-/* ===== RANKS ===== */
 const RANKS=[
-{name:"Loser",min:0},
-{name:"NPC",min:50},
-{name:"Human",min:150},
-{name:"Rich",min:300},
-{name:"Millionaire",min:600},
-{name:"Billionaire",min:1000}
+{n:"LOSER",min:0},
+{n:"NPC",min:50},
+{n:"HUMAN",min:150},
+{n:"RICH",min:300},
+{n:"MILLIONAIRE",min:600},
+{n:"BILLIONAIRE",min:1000}
 ];
-function rankFor(v){
-  let r=RANKS[0];
-  for(let i=0;i<RANKS.length;i++) if(v>=RANKS[i].min) r=RANKS[i];
-  return r;
+
+function rankOf(v){
+let r=RANKS[0];
+RANKS.forEach(x=>{if(v>=x.min)r=x});
+return r;
+}
+function nextRank(v){
+for(let r of RANKS){
+if(v<r.min)return r;
+}
+return null;
 }
 
-/* ===== STREAK ===== */
-function updateStreak(){
-  let today=new Date().toDateString();
-  let last=localStorage.getItem("lastDate");
-  let streak=parseInt(localStorage.getItem("streak")||"0");
-  if(last!==today){
-    let y=new Date(); y.setDate(y.getDate()-1);
-    streak=(last===y.toDateString())?streak+1:1;
-    localStorage.setItem("streak",streak);
-    localStorage.setItem("lastDate",today);
-  }
-  document.getElementById("streakBox").innerText="🔥 Streak: "+(localStorage.getItem("streak")||1);
-}
-updateStreak();
+/* ===== START FLOW ===== */
+function showRankScreen(){
+let f=getFHT();
+let r=rankOf(f);
+let n=nextRank(f);
 
-/* ===== START ===== */
-function startGame(){
-  document.getElementById("container").innerHTML=
-  `<div class="card" id="gameCard">
-    <div id="hud"></div>
-    <h2 id="mode">MIX</h2>
-    <button onclick="playAudio()">PLAY</button>
-    <div id="content"></div>
-    <div id="result"></div>
-    <div id="road"></div>
-  </div>`;
-  used=[]; score=0; round=0;
-  updateHUD();
-  updateRoad();
-  nextRound();
-}
-
-/* ===== HUD ===== */
-function updateHUD(){
-  const money=getMoney();
-  const rank=rankFor(money);
-  document.getElementById("hud").innerHTML=
-  `💰 FHT: <b id="moneyNum">${money}</b> | Rank: <b>${rank.name}</b>`;
-}
-
-/* money animation */
-function animateMoney(from,to){
-  const el=document.getElementById("moneyNum");
-  if(!el) return;
-  let start=from;
-  const diff=to-from;
-  const steps=12;
-  let i=0;
-  const iv=setInterval(()=>{
-    i++;
-    el.innerText=Math.round(start + diff*(i/steps));
-    if(i>=steps) clearInterval(iv);
-  },20);
-}
-
-/* ===== ROAD ===== */
-function updateRoad(){
-  const road=document.getElementById("road");
-  if(!road) return;
-  const money=getMoney();
-  road.innerHTML="";
-  RANKS.forEach(r=>{
-    const d=document.createElement("div");
-    d.className="road-item"+(money>=r.min?" active":"");
-    d.innerHTML=`💰<br>${r.name}<br>${r.min}+`;
-    road.appendChild(d);
-  });
-}
-
-/* ===== TOAST ===== */
-function showToast(v){
-  const toast=document.getElementById("toast");
-  const text=document.getElementById("toastText");
-  text.innerText=(v>0?`+${v}`:`${v}`)+" FHT";
-  toast.classList.remove("toast-show");
-  void toast.offsetWidth;
-  toast.classList.add("toast-show");
-}
-
-/* ===== RANK UP ===== */
-let pendingNext=null;
-function showRankUp(name){
-  document.getElementById("rankUpName").innerText=name;
-  document.getElementById("rankUpOverlay").style.display="flex";
-}
-function closeRankUp(){
-  document.getElementById("rankUpOverlay").style.display="none";
-  if(pendingNext){ pendingNext(); pendingNext=null; }
+document.getElementById("container").innerHTML=
+`<div class="card">
+<h2>YOUR RANK</h2>
+<p style="font-size:22px">🪙 FHT: <b>${f}</b></p>
+<p>RANK: <b>${r.n}</b></p>
+<p>NEXT: <b>${n?n.n:"MAX"}</b></p>
+<button onclick="startGame()">NEXT →</button>
+</div>`;
 }
 
 /* ===== GAME ===== */
+let used=[],score=0,round=0,current=0,selected=null,audio=null;
+
+function startGame(){
+document.getElementById("container").innerHTML=
+`<div class="card">
+<div id="hud">
+<div>Round: <span id="roundTxt">0/${items.length}</span></div>
+<div>🪙 FHT: <span id="fhtTxt">${getFHT()}</span></div>
+</div>
+<h2 id="mode"></h2>
+<button onclick="playAudio()">PLAY</button>
+<div id="content"></div>
+<div id="result"></div>
+</div>`;
+nextRound();
+}
+
 function normalize(t){
-  return t.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
+return t.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"");
 }
 
 function nextRound(){
-  if(round>=items.length){
-    document.getElementById("content").innerHTML=
-    `<h2>Session Complete</h2>
-     <p>Score: ${score}/${items.length}</p>
-     <button onclick="location.reload()">Restart</button>`;
-    return;
-  }
-
-  round++;
-  selectedChoice=null;
-  document.getElementById("result").innerText="";
-  document.getElementById("content").innerHTML="";
-
-  do{
-    currentIndex=Math.floor(Math.random()*items.length);
-  }while(used.includes(currentIndex));
-  used.push(currentIndex);
-
-  if(Math.random()>0.5) buildListen();
-  else buildDrag();
+if(round>=items.length){
+document.getElementById("content").innerHTML=
+`<h2>Session Complete</h2>
+<p>Score: ${score}/${items.length}</p>
+<button onclick="location.reload()">Restart</button>`;
+return;
 }
 
+round++;
+document.getElementById("roundTxt").innerText=`${round}/${items.length}`;
+selected=null;
+document.getElementById("result").innerText="";
+document.getElementById("content").innerHTML="";
+
+do{
+current=Math.floor(Math.random()*items.length);
+}while(used.includes(current));
+used.push(current);
+
+if(Math.random()>0.5) buildListen();
+else buildDrag();
+}
+
+/* ===== LISTEN ===== */
 function buildListen(){
-  const correct=items[currentIndex].en;
-  let options=[correct];
-  while(options.length<4){
-    let r=items[Math.floor(Math.random()*items.length)].en;
-    if(!options.includes(r)) options.push(r);
-  }
-  options.sort(()=>0.5-Math.random());
+document.getElementById("mode").innerText="Listen & Decide";
 
-  options.forEach(o=>{
-    let div=document.createElement("div");
-    div.className="choice";
-    div.innerText=o;
-    div.onclick=()=>{
-      document.querySelectorAll(".choice").forEach(c=>c.classList.remove("selected"));
-      div.classList.add("selected");
-      selectedChoice=o;
-    };
-    content.appendChild(div);
-  });
+let correct=items[current];
+let options=[correct];
+while(options.length<4){
+let r=items[Math.floor(Math.random()*items.length)];
+if(!options.includes(r))options.push(r);
+}
+options.sort(()=>0.5-Math.random());
 
-  let btn=document.createElement("button");
-  btn.innerText="CHECK";
-  btn.onclick=()=>{
-    if(!selectedChoice) return;
-    if(normalize(selectedChoice)===normalize(correct)) success();
-    else fail();
-  };
-  content.appendChild(btn);
+options.forEach(o=>{
+let d=document.createElement("div");
+d.className="choice";
+d.innerText=o;
+d.onclick=()=>{
+document.querySelectorAll(".choice").forEach(c=>c.classList.remove("selected"));
+d.classList.add("selected");
+selected=o;
+};
+document.getElementById("content").appendChild(d);
+});
+
+let btn=document.createElement("button");
+btn.innerText="CHECK";
+btn.onclick=()=>{
+if(!selected)return;
+if(normalize(selected)==normalize(items[current])) success();
+else fail();
+};
+document.getElementById("content").appendChild(btn);
 }
 
+/* ===== DRAG ===== */
 function buildDrag(){
-  const sentence=items[currentIndex].en;
-  let words=sentence.split(" ");
-  let shuffled=[...words].sort(()=>0.5-Math.random());
+document.getElementById("mode").innerText="Build With Focus";
 
-  let top=document.createElement("div");
-  top.className="word-container"; top.id="top";
-  let bottom=document.createElement("div");
-  bottom.className="word-container"; bottom.id="bottom";
+let words=items[current].split(" ");
+let shuffled=[...words].sort(()=>0.5-Math.random());
 
-  shuffled.forEach(w=>{
-    let span=document.createElement("div");
-    span.className="word";
-    span.innerText=w;
-    span.onclick=()=>{
-      if(span.parentElement.id==="bottom") top.appendChild(span);
-      else bottom.appendChild(span);
-    };
-    bottom.appendChild(span);
-  });
+let top=document.createElement("div");
+top.className="word-container";
+top.id="top";
 
-  let btn=document.createElement("button");
-  btn.innerText="CHECK";
-  btn.onclick=()=>{
-    let built="";
-    document.querySelectorAll("#top .word").forEach(w=>built+=w.innerText+" ");
-    if(normalize(built)===normalize(sentence)) success();
-    else fail();
-  };
+let bottom=document.createElement("div");
+bottom.className="word-container";
+bottom.id="bottom";
 
-  content.appendChild(top);
-  content.appendChild(bottom);
-  content.appendChild(btn);
+shuffled.forEach(w=>{
+let s=document.createElement("div");
+s.className="word";
+s.innerText=w;
+s.onclick=()=>{
+if(s.parentElement.id==="bottom")top.appendChild(s);
+else bottom.appendChild(s);
+};
+bottom.appendChild(s);
+});
+
+let btn=document.createElement("button");
+btn.innerText="CHECK";
+btn.onclick=()=>{
+let built="";
+document.querySelectorAll("#top .word").forEach(w=>built+=w.innerText+" ");
+if(normalize(built)==normalize(items[current])) success();
+else fail();
+};
+
+document.getElementById("content").append(top,bottom,btn);
 }
 
-/* ===== SUCCESS / FAIL ===== */
+/* ===== FHT ANIMATION ===== */
+function animateFHT(target){
+let el=document.getElementById("fhtTxt");
+let cur=parseInt(el.innerText);
+let step=target>cur?1:-1;
+let i=setInterval(()=>{
+cur+=step;
+el.innerText=cur;
+if(cur==target)clearInterval(i);
+},20);
+}
+
+/* ===== RESULT ===== */
 function success(){
-  score++;
-  const before=getMoney();
-  const oldRank=rankFor(before).name;
+score++;
+let before=rankOf(getFHT()).n;
+let val=getFHT()+2;
+setFHT(val);
+animateFHT(val);
 
-  const res=addMoney(2);
-  animateMoney(before,res.now);
-  showToast(+2);
+let after=rankOf(val).n;
+document.getElementById("result").innerText="LOCKED.";
 
-  updateHUD();
-  updateRoad();
-
-  const newRank=rankFor(res.now).name;
-  document.getElementById("result").innerText="LOCKED.";
-
-  if(newRank!==oldRank){
-    pendingNext=()=>setTimeout(nextRound,250);
-    showRankUp(newRank);
-    return;
-  }
-
-  setTimeout(nextRound,1200);
+if(before!=after){
+document.getElementById("popupRank").innerText=after;
+document.getElementById("rankPopup").style.display="flex";
+}else{
+setTimeout(nextRound,1200);
+}
 }
 
 function fail(){
-  const before=getMoney();
-  addMoney(-1);
-  const after=getMoney();
-
-  animateMoney(before,after);
-  showToast(-1);
-
-  updateHUD();
-  updateRoad();
-
-  document.getElementById("result").innerText="-1. Refocus.";
-  setTimeout(nextRound,1400);
+let val=getFHT()-1;
+setFHT(val);
+animateFHT(getFHT());
+document.getElementById("result").innerText="-1. Refocus.";
+setTimeout(nextRound,1400);
 }
 
-/* ===== AUDIO ===== */
+function closePopup(){
+document.getElementById("rankPopup").style.display="none";
+nextRound();
+}
+
 function playAudio(){
-  if(audio){audio.pause();audio.currentTime=0;}
-  audio=new Audio("audio"+(currentIndex+1)+".mp3");
-  audio.play();
+if(audio){audio.pause();audio.currentTime=0;}
+audio=new Audio("audio"+(current+1)+".mp3");
+audio.play();
 }
 </script>
+
 </body>
 </html>
-
-
-
