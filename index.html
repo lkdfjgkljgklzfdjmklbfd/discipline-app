@@ -331,10 +331,7 @@ let round = 0;
 let selectedChoice = null;
 let audio = null;
 
-const XP_PER_WIN = 10;
-const DAILY_GOAL = 50;
 
-let xp = 0;
 let nativeLang = localStorage.getItem("nativeLang") || "en";
 let selectedMode = localStorage.getItem("mode") || "mix";
 
@@ -405,7 +402,6 @@ const UI = {
     restart: "Restart",
     strong: "LOCKED.",
     reset: "Penalty. Refocus.",
-    xp: "XP",
     trophies: "Trophies",
     rank: "Rank",
     next: "Next",
@@ -428,7 +424,6 @@ const UI = {
     restart: "Neustart",
     strong: "LOCKED.",
     reset: "Strafe. Fokus.",
-    xp: "XP",
     trophies: "Trophäen",
     rank: "Rang",
     next: "Nächster",
@@ -451,7 +446,6 @@ const UI = {
     restart: "Reiniciar",
     strong: "LOCKED.",
     reset: "Penalización. Enfócate.",
-    xp: "XP",
     trophies: "Trofeos",
     rank: "Rango",
     next: "Siguiente",
@@ -469,26 +463,6 @@ function displayText(i){
   return obj[nativeLang] || obj.en;
 }
 
-/* ===== Daily XP storage ===== */
-function todayKey(){ return new Date().toDateString(); }
-
-function getDailyXP(){
-  const savedDay = localStorage.getItem("dailyXP_day");
-  const today = todayKey();
-  if(savedDay !== today){
-    localStorage.setItem("dailyXP_day", today);
-    localStorage.setItem("dailyXP_value", "0");
-    return 0;
-  }
-  return parseInt(localStorage.getItem("dailyXP_value") || "0");
-}
-function addDailyXP(amount){
-  const savedDay = localStorage.getItem("dailyXP_day");
-  const today = todayKey();
-  if(savedDay !== today){
-    localStorage.setItem("dailyXP_day", today);
-    localStorage.setItem("dailyXP_value", "0");
-  }
   let v = parseInt(localStorage.getItem("dailyXP_value") || "0");
   v += amount;
   localStorage.setItem("dailyXP_value", String(v));
@@ -568,7 +542,7 @@ function startSession(){
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
           <div style="font-size:13px; color:#aaa;">
             ${t("progress")}: <span id="progressText">0/${items.length}</span><br>
-            ${t("xp")}: <span id="xpText">0</span>
+            
           </div>
 
           <div style="font-size:13px; color:#aaa; text-align:right;">
@@ -583,8 +557,8 @@ function startSession(){
 
         <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
           <div style="font-size:13px; color:#aaa;">
-            <span id="goalLabel">${t("dailyGoal")}: </span>
-            <span id="goalText">0/${DAILY_GOAL} XP</span>
+           
+          
           </div>
           <div style="font-size:13px; color:#aaa;">
             ${t("next")}: <span id="nextRankText">0/50</span>
@@ -592,7 +566,7 @@ function startSession(){
         </div>
 
         <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
-          <div id="goalBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
+         
         </div>
 
         <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
@@ -616,35 +590,17 @@ function updateHUD(){
   const done = used.length;
 
   const progressText = document.getElementById("progressText");
-  const xpText = document.getElementById("xpText");
+ 
   const progressBar = document.getElementById("progressBar");
 
   if(progressText) progressText.innerText = done + "/" + items.length;
-  if(xpText) xpText.innerText = xp;
+ 
   if(progressBar){
     const pct = Math.round((done / items.length) * 100);
     progressBar.style.width = pct + "%";
   }
 
-  // Daily goal
-  const dailyXP = getDailyXP();
-  const goalPct = Math.min(100, Math.round((dailyXP / DAILY_GOAL) * 100));
 
-  const goalTextEl = document.getElementById("goalText");
-  const goalBarEl = document.getElementById("goalBar");
-  const goalLabelEl = document.getElementById("goalLabel");
-
-  if(goalTextEl && goalBarEl){
-    goalBarEl.style.width = goalPct + "%";
-
-    if(dailyXP >= DAILY_GOAL){
-      if(goalLabelEl) goalLabelEl.innerText = "";
-      goalTextEl.innerText = t("goalComplete");
-    } else {
-      if(goalLabelEl) goalLabelEl.innerText = t("dailyGoal") + ": ";
-      goalTextEl.innerText = dailyXP + "/" + DAILY_GOAL + " XP";
-    }
-  }
 
   // Trophies + Rank
   const trophies = getTrophies();
@@ -674,7 +630,7 @@ function nextRound(){
     document.getElementById("content").innerHTML =
       `<h2>${t("sessionComplete")}</h2>
        <p>${t("score")}: ${score} / ${items.length}</p>
-       <p>${t("xp")}: ${xp}</p>
+       
        <p>🏆 ${t("trophies")}: ${trophies} (${t("rank")}: ${r.name})</p>
        <button class="btn" onclick="location.reload()">${t("restart")}</button>`;
     return;
@@ -791,14 +747,12 @@ function buildDrag(){
 }
 
 /* ===== Scoring rules =====
-   Correct: +10 XP, +2 trophies
+   Correct: +2 trophies
    Wrong:   -1 trophy
 */
 function success(){
   playSound(true);
   score++;
-  xp += XP_PER_WIN;
-  addDailyXP(XP_PER_WIN);
 
   addTrophies(+2);
 
@@ -843,6 +797,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
