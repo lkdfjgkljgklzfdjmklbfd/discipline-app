@@ -275,6 +275,12 @@ let selectedChoice = null;
 let audio = null;
 
 let nativeLang = "en"; // "en" or "de"
+  
+const LANGS = [
+  { code: "en", label: "🇬🇧 English" },
+  { code: "de", label: "🇩🇪 Deutsch" },
+  { code: "es", label: "🇪🇸 Español" }
+];
 
 const UI = {
   en: {
@@ -313,13 +319,12 @@ const UI = {
 };
 
 function t(key) {
-  return (UI[nativeLang] && UI[nativeLang][key]) ? UI[nativeLang][key] : UI.en[key];
+  return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key;
 }
 
 function displayText(i){
-  if(nativeLang === "de") return items[i].de;
-  if(nativeLang === "es") return items[i].es;
-  return items[i].en;
+  const obj = items[i];
+  return obj[nativeLang] || obj.en;  // if translation missing, fallback to English
 }
 
 /* Daily Streak */
@@ -346,16 +351,16 @@ updateStreak();
 
 /* Start -> language select */
 function startGame() {
+  const buttons = LANGS.map(l =>
+    `<button onclick="chooseLang('${l.code}')" style="margin:8px;">${l.label}</button>`
+  ).join("");
+
   document.getElementById("container").innerHTML =
     `
     <div class="card">
       <h2 style="margin-top:0;">${t("chooseNative")}</h2>
-  
-
-      <button onclick="chooseLang('en')">🇬🇧 English</button>
-      <button onclick="chooseLang('de')" style="margin-left:10px;">🇩🇪 Deutsch</button>
-      <button onclick="chooseLang('es')" style="margin-left:10px;">🇪🇸 Español</button>
-
+      <p style="color:#aaa; margin-top:8px;">${t("audioNote")}</p>
+      <div style="margin-top:18px;">${buttons}</div>
       <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
         made by Frihet
       </p>
@@ -548,6 +553,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
