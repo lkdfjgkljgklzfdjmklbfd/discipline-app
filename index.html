@@ -470,7 +470,7 @@ const LEVELS = [
   { id: "L2", name: "⚠️Bro",
   idx: [3,5,6,7] },
   { id: "L3", name: "🚫King",
-   [4,8,9,11,12] } 
+ idx:  [4,8,9,11,12] } 
   ];
 
   // active pool 
@@ -644,12 +644,14 @@ function startGame(){
 
 function chooseLang(lang){
   nativeLang = lang;
-
+localStorage.setItem("nativeLang", lang);
+  
   // Show LEVEL SELECT screen
 
-  document,getElementById("container").innerH
-  TML = <div class="card">
-    <h2 style='margin-top:0;">Choose your level</h2>
+  document.getElementById("container").innerH
+  TML = '
+    <div class="card">
+    <h2 style="margin-top:0;">Choose your level</h2>
     <p style="color:#aaa;
     margin-top:8px;">Harder level = stronger mindest + harder English</p>
 
@@ -657,7 +659,9 @@ function chooseLang(lang){
   style="display:flex; flex-direction:column;
     gap:12px; margin-top:16px;"></div>
 
-  <p class="credit">made by Frihet</p>
+  <p style="color:
+    rgba(255,255,255,0.65); font-size: 12px;
+    margin-top: 20px;">made by Frihet</p>
     </div>
   ';
 
@@ -666,6 +670,7 @@ function chooseLang(lang){
   LEVELS.forEach(lv => {
     const b =
       document.createElement("button");
+    b.className = "btn";
     b.textContent = lv.name;
     b.onclick = () => startLevel(lv.id);
     wrap.appendChild(b);
@@ -675,16 +680,18 @@ function chooseLang(lang){
 function startLevel(levelId){
   activeLevel = levelId;
 
-  // Build active pool from LEVEL idx
+  // set active pool
   const lv = LEVELS.find(x => x.id === levelId);
-  activeItems = lv.idx.map(i => items[i]); // <-- IMPORTANT: your main list must be named 'items'
-
-  // Reset session state
+  activeItems = lv.idx.slice(); // store indexes
+  
+  // Reset 
   used = [];
   score = 0;
   round = 0;
   selectedChoice = null;
   stopAudio();
+
+  showModeSelect();}
 
   // Now render the game screen
 
@@ -766,9 +773,9 @@ function updateHUD(){
 
   const progressText = document.getElementById("progressText");
   const progressBar = document.getElementById("progressBar");
-  if(progressText) progressText.innerText = done + "/" + items.length;
+  if(progressText) progressText.innerText = done + "/" + activeItems.length;
   if(progressBar){
-    const pct = Math.round((done / items.length) * 100);
+    const pct = Math.round((done / activeItems.length) * 100);
     progressBar.style.width = pct + "%";
   }
 
@@ -810,10 +817,14 @@ function nextRound(){
   document.getElementById("result").innerText="";
   document.getElementById("content").innerHTML="";
 
+ let pick;
   do {
-    currentIndex = Math.floor(Math.random()*items.length);
-  } while(used.includes(currentIndex));
-  used.push(currentIndex);
+    pick=
+    activeItems[Math.floor(Math.random()*activeitems.length)];
+  } while(used.includes(pick));
+
+  currentIndex = pick;
+  used.push(pick);
 
   updateHUD();
 
@@ -1042,6 +1053,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
