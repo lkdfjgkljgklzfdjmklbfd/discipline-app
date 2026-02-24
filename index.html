@@ -17,6 +17,8 @@ canvas {
   position: fixed;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: -1;
 }
 
@@ -87,6 +89,7 @@ button:hover {
   flex-wrap: wrap;
   justify-content: center;
   margin: 15px 0;
+  min-height: 50px;
 }
 
 .word {
@@ -95,6 +98,7 @@ button:hover {
   margin: 6px;
   border-radius: 10px;
   cursor: pointer;
+  user-select: none;
 }
 
 #result {
@@ -102,12 +106,17 @@ button:hover {
   font-weight: bold;
 }
 
+/* ✅ FIXED: streakBox had missing } before */
 #streakBox {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
   font-size: 14px;
+  color: rgba(255,255,255,0.9);
+  z-index: 9999;
+}
 
+/* Credit fixed bottom-right */
 #credit {
   position: fixed;
   bottom: 20px;
@@ -119,12 +128,18 @@ button:hover {
   z-index: 9999;
   pointer-events: none;
 }
+
+/* small hint line */
+.hint {
+  margin-top: 12px;
+  color: #aaa;
+  font-size: 13px;
+}
 </style>
 </head>
 <body>
 
 <canvas id="bg"></canvas>
-
 <div id="streakBox"></div>
 
 <div id="container">
@@ -132,28 +147,39 @@ button:hover {
     <h1>DISCIPLINE</h1>
     <h2>YOU VS YOU</h2>
     <button onclick="startGame()">START SESSION →</button>
-    <p class="color: white; font-size: 12px; margin-top: 20px;">
-      made by Frihet </p>
+    <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
+      made by Frihet
+    </p>
   </div>
 </div>
+
+<div id="credit">made by Frihet</div>
 
 <script>
 /* Candle Background Animation */
 const canvas = document.getElementById("bg");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 let candles = [];
-
-for (let i = 0; i < 40; i++) {
-  candles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    height: Math.random() * 60 + 20,
-    speed: Math.random() * 1 + 0.5
-  });
+function initCandles(){
+  candles = [];
+  for (let i = 0; i < 40; i++) {
+    candles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      height: Math.random() * 60 + 20,
+      speed: Math.random() * 1 + 0.5
+    });
+  }
 }
+initCandles();
 
 function animate() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -167,10 +193,8 @@ function animate() {
 }
 animate();
 
-/* Game Logic */
-
-const sentences = [
-  const items = [
+/* ✅ Data (English audio always, text changes by nativeLang) */
+const items = [
   { en: "I feel you, bro. I’ve also been through a lot.", de: "Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht." },
   { en: "You don’t need motivation. you just need discipline, bro.", de: "Du brauchst keine Motivation. Du brauchst Disziplin, Bro." },
   { en: "You just need to control yourself. it’s you vs you, bro.", de: "Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro." },
@@ -187,45 +211,48 @@ const sentences = [
   { en: "Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de: "Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben." }
 ];
 
-];
-
 let used = [];
-let currentIndex;
+let currentIndex = 0;
 let score = 0;
 let round = 0;
 let selectedChoice = null;
 let audio = null;
 
-let nativeLang = "en"; // "en" = English, "de" = German
+let nativeLang = "en"; // "en" or "de"
+
 const UI = {
   en: {
     chooseNative: "Choose your native language",
     audioNote: "Audio stays English. Text support changes.",
-    startSession: "START SESSION →",
     play: "PLAY",
     check: "CHECK",
     listenDecide: "Listen & Decide",
     buildFocus: "Build With Focus",
     sessionComplete: "Session Complete",
-    score: "Score"
+    score: "Score",
+    restart: "Restart"
   },
   de: {
     chooseNative: "Wähle deine Muttersprache",
     audioNote: "Audio bleibt Englisch. Der Text ändert sich.",
-    startSession: "SESSION STARTEN →",
     play: "PLAY",
     check: "PRÜFEN",
     listenDecide: "Hören & Entscheiden",
     buildFocus: "Satz bauen",
     sessionComplete: "Session beendet",
-    score: "Punktzahl"
+    score: "Punktzahl",
+    restart: "Neustart"
   }
 };
 
 function t(key) {
   return (UI[nativeLang] && UI[nativeLang][key]) ? UI[nativeLang][key] : UI.en[key];
 }
-  
+
+function displayText(i){
+  return nativeLang === "de" ? items[i].de : items[i].en;
+}
+
 /* Daily Streak */
 function updateStreak() {
   let today = new Date().toDateString();
@@ -248,6 +275,7 @@ function updateStreak() {
 }
 updateStreak();
 
+/* Start -> language select */
 function startGame() {
   document.getElementById("container").innerHTML =
     `
@@ -258,37 +286,46 @@ function startGame() {
       <button onclick="chooseLang('en')">🇬🇧 English</button>
       <button onclick="chooseLang('de')" style="margin-left:10px;">🇩🇪 Deutsch</button>
 
-      <p class="credit">made by Frihet</p>
+      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
+        made by Frihet
+      </p>
     </div>
     `;
 }
-  
+
 function chooseLang(lang) {
   nativeLang = lang;
 
-document.getElementById("container").innerHTML =
-  `<div class="card">
-     <h2 id="mode"></h2>
-     <button onclick="playAudio()">${t("play")}</button>
-     <div id="content"></div>
-     <div id="result"></div>
-   </div>`;
-  
+  document.getElementById("container").innerHTML =
+    `<div class="card">
+       <h2 id="mode"></h2>
+       <button onclick="playAudio()">${t("play")}</button>
+       <div id="content"></div>
+       <div id="result"></div>
+     </div>`;
+
   used = [];
   score = 0;
   round = 0;
+  selectedChoice = null;
 
   nextRound();
 }
-  
-function normalize(t){
-  return t.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
+
+function normalize(s){
+  return s
+    .toLowerCase()
+    .replace(/[.,!?]/g,"")
+    .replace(/\s+/g,"")
+    .trim();
 }
 
 function nextRound(){
-  if(round >= sentences.length){
+  if(round >= items.length){
     document.getElementById("content").innerHTML =
-      "<h2>Session Complete</h2><p>Score: "+score+" / "+sentences.length+"</p><button onclick='location.reload()'>Restart</button>";
+      `<h2>${t("sessionComplete")}</h2>
+       <p>${t("score")}: ${score} / ${items.length}</p>
+       <button onclick="location.reload()">${t("restart")}</button>`;
     return;
   }
 
@@ -298,7 +335,7 @@ function nextRound(){
   document.getElementById("content").innerHTML="";
 
   do {
-    currentIndex = Math.floor(Math.random()*sentences.length);
+    currentIndex = Math.floor(Math.random()*items.length);
   } while(used.includes(currentIndex));
 
   used.push(currentIndex);
@@ -310,43 +347,54 @@ function nextRound(){
 function buildListen(){
   document.getElementById("mode").innerText = t("listenDecide");
 
-  let correct = sentences[currentIndex];
-  let options=[correct];
+  const correctText = displayText(currentIndex);
 
-  while(options.length<4){
-    let r=sentences[Math.floor(Math.random()*sentences.length)];
-    if(!options.includes(r)) options.push(r);
+  // choose 4 unique indexes
+  let optionIndexes = [currentIndex];
+  while(optionIndexes.length < 4){
+    const r = Math.floor(Math.random() * items.length);
+    if(!optionIndexes.includes(r)) optionIndexes.push(r);
   }
 
-  options.sort(()=>0.5-Math.random());
+  optionIndexes.sort(()=>0.5 - Math.random());
 
-  options.forEach(o=>{
+  optionIndexes.forEach(idx=>{
     let div=document.createElement("div");
     div.className="choice";
-    div.innerText=o;
+    div.innerText = displayText(idx);
     div.onclick=()=>{
       document.querySelectorAll(".choice").forEach(c=>c.classList.remove("selected"));
       div.classList.add("selected");
-      selectedChoice=o;
+      selectedChoice = displayText(idx);
     };
     document.getElementById("content").appendChild(div);
   });
 
   let btn=document.createElement("button");
-  \
   btn.innerText = t("check");
   btn.onclick=()=>{
     if(!selectedChoice) return;
-    if(normalize(selectedChoice)===normalize(sentences[currentIndex])) success();
+    if(normalize(selectedChoice)===normalize(correctText)) success();
     else fail();
   };
   document.getElementById("content").appendChild(btn);
+
+  // optional hint: show English under German mode (keeps learning)
+  if(nativeLang === "de"){
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.innerText = "English: " + items[currentIndex].en;
+    document.getElementById("content").appendChild(hint);
+  }
 }
 
 function buildDrag(){
   document.getElementById("mode").innerText = t("buildFocus");
 
-  let words=sentences[currentIndex].split(" ");
+  // In German mode, build the German sentence. In English mode, build English.
+  const targetSentence = displayText(currentIndex);
+
+  let words = targetSentence.split(" ");
   let shuffled=[...words].sort(()=>0.5-Math.random());
 
   let top=document.createElement("div");
@@ -373,32 +421,40 @@ function buildDrag(){
   btn.onclick=()=>{
     let built="";
     document.querySelectorAll("#top .word").forEach(w=>built+=w.innerText+" ");
-    if(normalize(built)===normalize(sentences[currentIndex])) success();
+    if(normalize(built)===normalize(targetSentence)) success();
     else fail();
   };
 
   document.getElementById("content").appendChild(top);
   document.getElementById("content").appendChild(bottom);
   document.getElementById("content").appendChild(btn);
+
+  if(nativeLang === "de"){
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.innerText = "English: " + items[currentIndex].en;
+    document.getElementById("content").appendChild(hint);
+  }
 }
 
 function success(){
   playSound(true);
   score++;
-  document.getElementById("result").innerText="Strong.";
+  document.getElementById("result").innerText = (nativeLang === "de") ? "Stark." : "Strong.";
   stopAudio();
   setTimeout(nextRound,1200);
 }
 
 function fail(){
   playSound(false);
-  document.getElementById("result").innerText="Reset. Focus.";
+  document.getElementById("result").innerText = (nativeLang === "de") ? "Reset. Fokus." : "Reset. Focus.";
   stopAudio();
   setTimeout(nextRound,1500);
 }
 
 function playAudio(){
   stopAudio();
+  // audio files must match item order: audio1.mp3 ... audio14.mp3
   audio=new Audio("audio"+(currentIndex+1)+".mp3");
   audio.play();
 }
@@ -409,21 +465,20 @@ function stopAudio(){
 
 /* Soft sound */
 function playSound(success){
-  const ctx=new (window.AudioContext||window.webkitAudioContext)();
-  const osc=ctx.createOscillator();
-  const gain=ctx.createGain();
+  const aCtx=new (window.AudioContext||window.webkitAudioContext)();
+  const osc=aCtx.createOscillator();
+  const gain=aCtx.createGain();
   osc.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect(aCtx.destination);
   osc.frequency.value= success?600:200;
   gain.gain.value=0.05;
   osc.start();
   setTimeout(()=>osc.stop(),100);
 }
 </script>
-<div id="credit">made by Frihet</div>
 </body>
-
 </html>
+
 
 
 
