@@ -648,8 +648,7 @@ localStorage.setItem("nativeLang", lang);
   
   // Show LEVEL SELECT screen
 
-  document.getElementById("container").innerH
-  TML = '
+  document.getElementById("container").innerHTML = '
     <div class="card">
     <h2 style="margin-top:0;">Choose your level</h2>
     <p style="color:#aaa;
@@ -697,8 +696,7 @@ function startLevel(levelId){
 
   // Now render the game screen
 
-  document.getElementById("container").innerH
-  TML =
+  document.getElementById("container").innerHTML =
     '<div class="card">
     <h2 id="mode"><h2>
     <button onclick="playAudio()">$
@@ -1055,6 +1053,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
