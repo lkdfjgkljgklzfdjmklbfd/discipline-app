@@ -12,7 +12,6 @@ body {
   color: white;
 }
 
-/* Animated red candle background */
 canvas {
   position: fixed;
   top: 0;
@@ -22,7 +21,6 @@ canvas {
   z-index: -1;
 }
 
-/* Center container */
 #container {
   display: flex;
   justify-content: center;
@@ -30,7 +28,6 @@ canvas {
   height: 100vh;
 }
 
-/* Card */
 .card {
   background: rgba(10,10,10,0.95);
   padding: 40px;
@@ -41,7 +38,6 @@ canvas {
   text-align: center;
 }
 
-/* Intro */
 #intro h1 {
   font-size: 48px;
   letter-spacing: 6px;
@@ -57,7 +53,7 @@ canvas {
 
 button {
   padding: 14px 24px;
-  margin-top: 20px;
+  margin-top: 14px;
   border: none;
   border-radius: 12px;
   font-size: 15px;
@@ -67,9 +63,7 @@ button {
   transition: 0.2s;
 }
 
-button:hover {
-  background: #ff1a1a;
-}
+button:hover { background: #ff1a1a; }
 
 .choice {
   background: #1a1a1a;
@@ -80,16 +74,14 @@ button:hover {
   border: 2px solid transparent;
 }
 
-.choice.selected {
-  border: 2px solid #ff1a1a;
-}
+.choice.selected { border: 2px solid #ff1a1a; }
 
 .word-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   margin: 15px 0;
-  min-height: 50px;
+  min-height: 54px;
 }
 
 .word {
@@ -101,12 +93,8 @@ button:hover {
   user-select: none;
 }
 
-#result {
-  margin-top: 15px;
-  font-weight: bold;
-}
+#result { margin-top: 15px; font-weight: bold; }
 
-/* ✅ FIXED: streakBox had missing } before */
 #streakBox {
   position: fixed;
   top: 20px;
@@ -116,7 +104,6 @@ button:hover {
   z-index: 9999;
 }
 
-/* Credit fixed bottom-right */
 #credit {
   position: fixed;
   bottom: 20px;
@@ -129,7 +116,6 @@ button:hover {
   pointer-events: none;
 }
 
-/* small hint line */
 .hint {
   margin-top: 12px;
   color: #aaa;
@@ -156,11 +142,11 @@ button:hover {
 <div id="credit">made by Frihet</div>
 
 <script>
-/* Candle Background Animation */
+/* ===== Background (candles) ===== */
 const canvas = document.getElementById("bg");
 const ctx = canvas.getContext("2d");
 
-function resizeCanvas(){
+function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
@@ -193,80 +179,25 @@ function animate() {
 }
 animate();
 
-/* ✅ Data (English audio always, text changes by nativeLang) */
+/* ===== Content ===== */
 const items = [
-{
-en:"I feel you, bro. I’ve also been through a lot.",
-de:"Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht.",
-es:"Te entiendo, bro. Yo también he pasado por mucho."
-},
-{
-en:"You don’t need motivation. you just need discipline, bro.",
-de:"Du brauchst keine Motivation. Du brauchst Disziplin, Bro.",
-es:"No necesitas motivación. Necesitas disciplina, bro."
-},
-{
-en:"You just need to control yourself. it’s you vs you, bro.",
-de:"Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro.",
-es:"Solo tienes que controlarte. Es tú contra tú, bro."
-},
-{
-en:"I want you to succeed, bro. I believe in you.",
-de:"Ich will, dass du Erfolg hast, Bro. Ich glaub an dich.",
-es:"Quiero que tengas éxito, bro. Creo en ti."
-},
-{
-en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.",
-de:"Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär.",
-es:"Pero ya sabes, alguien tiene que trabajar de 9 a 5. No todos van a ser millonarios."
-},
-{
-en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard.",
-de:"Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten.",
-es:"Sé que es difícil, pero nada en este mundo es fácil. Tienes que trabajar duro."
-},
-{
-en:"Go ghost, bro. You can’t grow when people are around you.",
-de:"Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind.",
-es:"Desaparece un rato, bro. No puedes crecer si la gente siempre está alrededor."
-},
-{
-en:"Lock in. You wanna be rich or not?",
-de:"Fokussier dich. Willst du reich werden oder nicht?",
-es:"Concéntrate. ¿Quieres ser rico o no?"
-},
-{
-en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard.",
-de:"Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart.",
-es:"No quiero ser un NPC, bro. Por eso estoy trabajando así de duro."
-},
-{
-en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.",
-de:"Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht.",
-es:"¿Crees que disfruto ir al gym todos los días? Hell nah, bro. De verdad que no."
-},
-{
-en:"You live only one life, bro. Nothing can stop you. do what you want.",
-de:"Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst.",
-es:"Solo tienes una vida, bro. Nada puede detenerte. Haz lo que quieras."
-},
-{
-en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.",
-de:"Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du.",
-es:"Si quieres mucho dinero, haz un gran movimiento. No te vas a hacer rico con un trabajo de 9 a 5, tú lo sabes."
-},
-{
-en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions",
-de:"Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren.",
-es:"Si quieres ser diferente, tienes que ser frío, bro. Aprende a controlar tus emociones."
-},
-{
-en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life",
-de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.",
-es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida."
-}
+  { en:"I feel you, bro. I’ve also been through a lot.", de:"Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht.", es:"Te entiendo, bro. Yo también he pasado por mucho." },
+  { en:"You don’t need motivation. you just need discipline, bro.", de:"Du brauchst keine Motivation. Du brauchst Disziplin, Bro.", es:"No necesitas motivación. Necesitas disciplina, bro." },
+  { en:"You just need to control yourself. it’s you vs you, bro.", de:"Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro.", es:"Solo tienes que controlarte. Es tú contra tú, bro." },
+  { en:"I want you to succeed, bro. I believe in you.", de:"Ich will, dass du Erfolg hast, Bro. Ich glaub an dich.", es:"Quiero que tengas éxito, bro. Creo en ti." },
+  { en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.", de:"Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär.", es:"Pero ya sabes, alguien tiene que trabajar de 9 a 5. No todos van a ser millonarios." },
+  { en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard.", de:"Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten.", es:"Sé que es difícil, pero nada en este mundo es fácil. Tienes que trabajar duro." },
+  { en:"Go ghost, bro. You can’t grow when people are around you.", de:"Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind.", es:"Desaparece un rato, bro. No puedes crecer si la gente siempre está alrededor." },
+  { en:"Lock in. You wanna be rich or not?", de:"Fokussier dich. Willst du reich werden oder nicht?", es:"Concéntrate. ¿Quieres ser rico o no?" },
+  { en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard.", de:"Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart.", es:"No quiero ser un NPC, bro. Por eso estoy trabajando así de duro." },
+  { en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.", de:"Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht.", es:"¿Crees que disfruto ir al gym todos los días? Hell nah, bro. De verdad que no." },
+  { en:"You live only one life, bro. Nothing can stop you. do what you want.", de:"Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst.", es:"Solo tienes una vida, bro. Nada puede detenerte. Haz lo que quieras." },
+  { en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.", de:"Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du.", es:"Si quieres mucho dinero, haz un gran movimiento. No te vas a hacer rico con un trabajo de 9 a 5, tú lo sabes." },
+  { en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions", de:"Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren.", es:"Si quieres ser diferente, tienes que ser frío, bro. Aprende a controlar tus emociones." },
+  { en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.", es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida." }
 ];
 
+/* ===== State ===== */
 let used = [];
 let currentIndex = 0;
 let score = 0;
@@ -275,59 +206,80 @@ let selectedChoice = null;
 let audio = null;
 
 let nativeLang = localStorage.getItem("nativeLang") || "en";
-  
+let selectedMode = localStorage.getItem("mode") || "mix";
+
+/* ===== Languages list (auto buttons) ===== */
 const LANGS = [
   { code: "en", label: "🇬🇧 English" },
   { code: "de", label: "🇩🇪 Deutsch" },
   { code: "es", label: "🇪🇸 Español" }
 ];
 
+/* ===== UI translations ===== */
 const UI = {
   en: {
     chooseNative: "Choose your native language",
     audioNote: "Audio stays English. Text support changes.",
+    chooseMode: "Choose a mode",
+    mix: "MIX (game style)",
+    listenOnly: "Listen only",
+    buildOnly: "Build only",
     play: "PLAY",
     check: "CHECK",
     listenDecide: "Listen & Decide",
     buildFocus: "Build With Focus",
     sessionComplete: "Session Complete",
     score: "Score",
-    restart: "Restart"
+    restart: "Restart",
+    strong: "Strong.",
+    reset: "Reset. Focus."
   },
   de: {
     chooseNative: "Wähle deine Muttersprache",
     audioNote: "Audio bleibt Englisch. Der Text ändert sich.",
+    chooseMode: "Wähle den Modus",
+    mix: "MIX (wie ein Spiel)",
+    listenOnly: "Nur Hören",
+    buildOnly: "Nur Bauen",
     play: "PLAY",
     check: "PRÜFEN",
     listenDecide: "Hören & Entscheiden",
     buildFocus: "Satz bauen",
     sessionComplete: "Session beendet",
     score: "Punktzahl",
-    restart: "Neustart"
+    restart: "Neustart",
+    strong: "Stark.",
+    reset: "Reset. Fokus."
   },
   es: {
-  chooseNative: "Elige tu idioma nativo",
-  audioNote: "El audio sigue en inglés. El texto cambia.",
-  play: "PLAY",
-  check: "COMPROBAR",
-  listenDecide: "Escucha y decide",
-  buildFocus: "Construye la frase",
-  sessionComplete: "Sesión terminada",
-  score: "Puntuación",
-  restart: "Reiniciar"
-}
+    chooseNative: "Elige tu idioma nativo",
+    audioNote: "El audio sigue en inglés. El texto cambia.",
+    chooseMode: "Elige el modo",
+    mix: "MIX (como juego)",
+    listenOnly: "Solo escuchar",
+    buildOnly: "Solo construir",
+    play: "PLAY",
+    check: "COMPROBAR",
+    listenDecide: "Escucha y decide",
+    buildFocus: "Construye la frase",
+    sessionComplete: "Sesión terminada",
+    score: "Puntuación",
+    restart: "Reiniciar",
+    strong: "Fuerte.",
+    reset: "Reset. Enfócate."
+  }
 };
 
-function t(key) {
+function t(key){
   return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key;
 }
 
 function displayText(i){
   const obj = items[i];
-  return obj[nativeLang] || obj.en;  // if translation missing, fallback to English
+  return obj[nativeLang] || obj.en;
 }
 
-/* Daily Streak */
+/* ===== Streak ===== */
 function updateStreak() {
   let today = new Date().toDateString();
   let last = localStorage.getItem("lastDate");
@@ -336,68 +288,54 @@ function updateStreak() {
   if (last !== today) {
     let yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    if (last === yesterday.toDateString()) {
-      streak++;
-    } else {
-      streak = 1;
-    }
+    if (last === yesterday.toDateString()) streak++;
+    else streak = 1;
     localStorage.setItem("streak", streak);
     localStorage.setItem("lastDate", today);
   }
 
-  document.getElementById("streakBox").innerText = "🔥 Streak: " + (localStorage.getItem("streak") || 1);
+  document.getElementById("streakBox").innerText =
+    "🔥 Streak: " + (localStorage.getItem("streak") || 1);
 }
 updateStreak();
 
-/* Start -> language select */
-function startGame() {
+/* ===== Screens ===== */
+function startGame(){
   const buttons = LANGS.map(l =>
     `<button onclick="chooseLang('${l.code}')" style="margin:8px;">${l.label}</button>`
   ).join("");
 
   document.getElementById("container").innerHTML =
-    `
-    <div class="card">
+    `<div class="card">
       <h2 style="margin-top:0;">${t("chooseNative")}</h2>
       <p style="color:#aaa; margin-top:8px;">${t("audioNote")}</p>
       <div style="margin-top:18px;">${buttons}</div>
-      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
-        made by Frihet
-      </p>
-    </div>
-    `;
+      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
+    </div>`;
 }
 
-function chooseLang(lang) {
+function chooseLang(lang){
   nativeLang = lang;
   localStorage.setItem("nativeLang", lang);
- 
- used = [];
-score = 0;
-round = 0;
-selectedChoice = null;
 
-// load last mode or default mix
-selectedMode = localStorage.getItem("mode") || "mix";
+  used = [];
+  score = 0;
+  round = 0;
+  selectedChoice = null;
 
-showModeSelect();
+  showModeSelect();
 }
-  
-let selectedMode = "mix"; // "listen" | "drag" | "mix"
 
 function showModeSelect(){
   document.getElementById("container").innerHTML =
     `<div class="card">
-      <h2 style="margin-top:0;">${nativeLang==="de" ? "Wähle den Modus" : nativeLang==="es" ? "Elige el modo" : "Choose a mode"}</h2>
+      <h2 style="margin-top:0;">${t("chooseMode")}</h2>
 
-      <button onclick="setMode('mix')" style="margin:8px;">${nativeLang==="de" ? "MIX (wie ein Spiel)" : nativeLang==="es" ? "MIX (como juego)" : "MIX (game style)"}</button>
-      <button onclick="setMode('listen')" style="margin:8px;">${nativeLang==="de" ? "Nur Hören" : nativeLang==="es" ? "Solo escuchar" : "Listen only"}</button>
-      <button onclick="setMode('drag')" style="margin:8px;">${nativeLang==="de" ? "Nur Bauen" : nativeLang==="es" ? "Solo construir" : "Build only"}</button>
+      <button onclick="setMode('mix')" style="margin:8px;">${t("mix")}</button>
+      <button onclick="setMode('listen')" style="margin:8px;">${t("listenOnly")}</button>
+      <button onclick="setMode('drag')" style="margin:8px;">${t("buildOnly")}</button>
 
-      <p style="color:#aaa; margin-top:12px; font-size:13px;">
-        ${nativeLang==="de" ? "Audio bleibt Englisch." : nativeLang==="es" ? "El audio sigue en inglés." : "Audio stays English."}
-      </p>
-
+      <p style="color:#aaa; margin-top:12px; font-size:13px;">${t("audioNote")}</p>
       <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
     </div>`;
 }
@@ -407,24 +345,21 @@ function setMode(m){
   localStorage.setItem("mode", m);
   startSession();
 }
-  
+
 function startSession(){
   document.getElementById("container").innerHTML =
     `<div class="card">
-       <h2 id="mode"></h2>
-       <button onclick="playAudio()">${t("play")}</button>
-       <div id="content"></div>
-       <div id="result"></div>
-     </div>`;
+      <h2 id="mode"></h2>
+      <button onclick="playAudio()">${t("play")}</button>
+      <div id="content"></div>
+      <div id="result"></div>
+    </div>`;
   nextRound();
-}  
-  
+}
+
+/* ===== Game ===== */
 function normalize(s){
-  return s
-    .toLowerCase()
-    .replace(/[.,!?]/g,"")
-    .replace(/\s+/g,"")
-    .trim();
+  return s.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
 }
 
 function nextRound(){
@@ -444,13 +379,14 @@ function nextRound(){
   do {
     currentIndex = Math.floor(Math.random()*items.length);
   } while(used.includes(currentIndex));
-
   used.push(currentIndex);
-if(selectedMode === "listen") buildListen();
-else if(selectedMode === "drag") buildDrag();
-else {
-  if(Math.random()>0.5) buildListen();
-  else buildDrag();
+
+  if(selectedMode === "listen") buildListen();
+  else if(selectedMode === "drag") buildDrag();
+  else {
+    if(Math.random()>0.5) buildListen();
+    else buildDrag();
+  }
 }
 
 function buildListen(){
@@ -458,17 +394,15 @@ function buildListen(){
 
   const correctText = displayText(currentIndex);
 
-  // choose 4 unique indexes
   let optionIndexes = [currentIndex];
   while(optionIndexes.length < 4){
     const r = Math.floor(Math.random() * items.length);
     if(!optionIndexes.includes(r)) optionIndexes.push(r);
   }
-
   optionIndexes.sort(()=>0.5 - Math.random());
 
   optionIndexes.forEach(idx=>{
-    let div=document.createElement("div");
+    let div = document.createElement("div");
     div.className="choice";
     div.innerText = displayText(idx);
     div.onclick=()=>{
@@ -479,7 +413,7 @@ function buildListen(){
     document.getElementById("content").appendChild(div);
   });
 
-  let btn=document.createElement("button");
+  let btn = document.createElement("button");
   btn.innerText = t("check");
   btn.onclick=()=>{
     if(!selectedChoice) return;
@@ -488,8 +422,7 @@ function buildListen(){
   };
   document.getElementById("content").appendChild(btn);
 
-  // optional hint: show English under German mode (keeps learning)
-  if(nativeLang === "de"){
+  if(nativeLang !== "en"){
     const hint = document.createElement("div");
     hint.className = "hint";
     hint.innerText = "English: " + items[currentIndex].en;
@@ -500,11 +433,9 @@ function buildListen(){
 function buildDrag(){
   document.getElementById("mode").innerText = t("buildFocus");
 
-  // In German mode, build the German sentence. In English mode, build English.
   const targetSentence = displayText(currentIndex);
-
   let words = targetSentence.split(" ");
-  let shuffled=[...words].sort(()=>0.5-Math.random());
+  let shuffled = [...words].sort(()=>0.5-Math.random());
 
   let top=document.createElement("div");
   top.className="word-container";
@@ -538,7 +469,7 @@ function buildDrag(){
   document.getElementById("content").appendChild(bottom);
   document.getElementById("content").appendChild(btn);
 
-  if(nativeLang === "de"){
+  if(nativeLang !== "en"){
     const hint = document.createElement("div");
     hint.className = "hint";
     hint.innerText = "English: " + items[currentIndex].en;
@@ -549,27 +480,26 @@ function buildDrag(){
 function success(){
   playSound(true);
   score++;
-  document.getElementById("result").innerText = (nativeLang === "de") ? "Stark." : "Strong.";
+  document.getElementById("result").innerText = t("strong");
   stopAudio();
   setTimeout(nextRound,1200);
 }
 
 function fail(){
   playSound(false);
-  document.getElementById("result").innerText = (nativeLang === "de") ? "Reset. Fokus." : "Reset. Focus.";
+  document.getElementById("result").innerText = t("reset");
   stopAudio();
   setTimeout(nextRound,1500);
 }
 
 function playAudio(){
   stopAudio();
-  // audio files must match item order: audio1.mp3 ... audio14.mp3
-  audio=new Audio("audio"+(currentIndex+1)+".mp3");
+  audio = new Audio("audio"+(currentIndex+1)+".mp3");
   audio.play();
 }
 
 function stopAudio(){
-  if(audio){audio.pause();audio.currentTime=0;}
+  if(audio){ audio.pause(); audio.currentTime = 0; }
 }
 
 /* Soft sound */
@@ -587,15 +517,5 @@ function playSound(success){
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
 
