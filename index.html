@@ -33,22 +33,30 @@ canvas {
   padding: 44px;
   width: min(720px, 94vw);
   max-width: 94vw;
+
+  min-height: 78vh;        
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* center content vertically */
+
   border-radius: 22px;
   box-shadow: 0 0 40px rgba(255,0,0,0.2);
   text-align: center;
+}
   @media (max-width: 520px) {
-  .card {
-    width: 96vw;
-    padding: 26px;
-    border-radius: 18px;
-  }
+ .card {
+  width: 96vw;
+  min-height: 86vh;   /* ⭐ taller on phone */
+  padding: 26px;
+  border-radius: 18px;
+}
 
   #intro h1 { font-size: 40px; letter-spacing: 4px; }
   #intro h2 { font-size: 14px; letter-spacing: 3px; }
 
   button { width: 100%; }
 }
-}
+
 
 #intro h1 {
   font-size: 48px;
@@ -639,6 +647,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
