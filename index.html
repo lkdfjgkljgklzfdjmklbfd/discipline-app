@@ -357,52 +357,84 @@
 
 <script>
 /* ===== Background (candles) ===== */
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
-
-function resizeCanvas(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-
-// ===== Candlestick Background (real-looking) =====
+// ===== Trading Chart Background (scrolling candles) =====
 let candles = [];
-const CANDLE_COUNT = 55;
+const CANDLE_COUNT = 70;
 
 function rand(min, max){ return Math.random() * (max - min) + min; }
 
-function makeCandle(spawnTop=false){
-  const bodyH = rand(14, 70);
-  const wickTop = rand(6, 32);
-  const wickBot = rand(6, 26);
-  const w = rand(6, 11);           // body width
-  const speed = rand(0.35, 1.05);  // slow = premium
-  const x = rand(0, canvas.width);
-  const y = spawnTop ? rand(-canvas.height, 0) : rand(0, canvas.height);
+// Controls (tweak these)
+const SPEED = 0.55;          // chart scroll speed
+const GAP_MIN = 6;           // gap between candles
+const GAP_MAX = 14;
+const BODY_W_MIN = 6;
+const BODY_W_MAX = 12;
 
-  // Mostly red (down candles), but with slight variation in shade
-  const r = Math.floor(rand(200, 255));
-  const g = Math.floor(rand(0, 40));
-  const b = Math.floor(rand(0, 40));
+// Opacity (진하게 here)
+const UP_BODY_A = 0.20;
+const UP_WICK_A = 0.16;
+const DOWN_BODY_A = 0.24;
+const DOWN_WICK_A = 0.18;
 
-  return { x, y, w, bodyH, wickTop, wickBot, speed, r, g, b };
+function makeCandle(spawnRight=false){
+  const w = rand(BODY_W_MIN, BODY_W_MAX);
+  const gap = rand(GAP_MIN, GAP_MAX);
+
+  // candle height parts
+  const bodyH = rand(14, 80);
+  const wickTop = rand(6, 34);
+  const wickBot = rand(6, 30);
+
+  // random y baseline so it looks like a real chart band
+  const bandTop = canvas.height * 0.18;
+  const bandBot = canvas.height * 0.88;
+  const y = rand(bandTop, bandBot - bodyH);
+
+  // Mix up/down candles (more red than green if you want)
+  const isUp = Math.random() < 0.42; // 42% green, 58% red
+
+  // choose color
+  const upRGB = { r: 40,  g: 220, b: 120 };
+  const dnRGB = { r: 255, g: 40,  b: 40  };
+
+  const c = {
+    x: spawnRight ? canvas.width + rand(0, 200) : rand(0, canvas.width),
+    y,
+    w,
+    gap,
+    bodyH,
+    wickTop,
+    wickBot,
+    isUp,
+    r: isUp ? upRGB.r : dnRGB.r,
+    g: isUp ? upRGB.g : dnRGB.g,
+    b: isUp ? upRGB.b : dnRGB.b
+  };
+
+  return c;
 }
 
-function initCandles(){
+function initChartCandles(){
   candles = [];
-  for(let i=0;i<CANDLE_COUNT;i++) candles.push(makeCandle(false));
+  let x = -50;
+  while(x < canvas.width + 250){
+    const c = makeCandle(false);
+    c.x = x;
+    candles.push(c);
+    x += c.w + c.gap;
+  }
 }
-initCandles();
+initChartCandles();
 
-function drawCandle(c){
-  const centerX = c.x;
-  const bodyX = centerX - c.w/2;
+function drawChartCandle(c){
+  const centerX = c.x + c.w/2;
+  const bodyX = c.x;
   const wickX = centerX;
 
-  // overall opacity (controls "진하게")
-  const bodyA = 0.28;      // body opacity
-  const wickA = 0.26;      // wick opacity
+  const bodyA = c.isUp ? UP_BODY_A : DOWN_BODY_A;
+  const wickA = c.isUp ? UP_WICK_A : DOWN_WICK_A;
 
-  // Wick (thin line)
+  // Wick
   ctx.lineWidth = 1.2;
   ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${wickA})`;
   ctx.beginPath();
@@ -414,30 +446,44 @@ function drawCandle(c){
   ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${bodyA})`;
   ctx.fillRect(bodyX, c.y, c.w, c.bodyH);
 
-  // subtle highlight line on body (makes it feel like a candle)
-  ctx.fillStyle = `rgba(255,255,255,0.04)`;
-  ctx.fillRect(bodyX + 1, c.y + 2, 1, Math.max(6, c.bodyH - 4));
+  // subtle highlight (premium feel)
+  ctx.fillStyle = `rgba(255,255,255,0.035)`;
+  ctx.fillRect(bodyX + 1, c.y + 2, 1, Math.max(8, c.bodyH - 4));
 }
 
-function animateCandles(){
+function animateChart(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  candles.forEach(c=>{
-    drawCandle(c);
-    c.y += c.speed;
+  // draw
+  candles.forEach(drawChartCandle);
 
-    // respawn when it leaves bottom
-    if(c.y - c.wickTop > canvas.height + 30){
-      const nc = makeCandle(true);
-      c.x = nc.x; c.y = nc.y; c.w = nc.w;
-      c.bodyH = nc.bodyH; c.wickTop = nc.wickTop; c.wickBot = nc.wickBot;
-      c.speed = nc.speed; c.r = nc.r; c.g = nc.g; c.b = nc.b;
-    }
-  });
+  // move left
+  candles.forEach(c => { c.x -= SPEED; });
 
-  requestAnimationFrame(animateCandles);
+  // if leftmost candle is off screen, remove and add new to right
+  while(candles.length && candles[0].x + candles[0].w < -60){
+    candles.shift();
+  }
+
+  // keep filling to the right
+  let last = candles[candles.length - 1];
+  while(last && last.x < canvas.width + 200){
+    const nc = makeCandle(true);
+    nc.x = last.x + last.w + last.gap;
+    candles.push(nc);
+    last = nc;
+  }
+
+  requestAnimationFrame(animateChart);
 }
-animateCandles();
+animateChart();
+
+// re-init on resize to keep spacing clean
+window.addEventListener("resize", () => {
+  // (your resizeCanvas() probably exists already)
+  // make sure canvas size is updated before this:
+  initChartCandles();
+});
 
 /* ===== Content (14) ===== */
 const items = [
@@ -894,6 +940,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
