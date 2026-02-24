@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#000000">
-<link rel="manifest" href="/manifest.json">
 <title>DISCIPLINE</title>
-  <style>
+
+<style>
 :root{
   --red:#ff1a1a;
   --red2:#b30000;
@@ -17,6 +16,10 @@
 }
 
 *{ box-sizing:border-box; }
+
+html, body{
+  height:100%;
+}
 
 body{
   margin:0;
@@ -39,7 +42,7 @@ body::before{
   content:"";
   position:fixed;
   inset:0;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.25), rgba(0,0,0,0.78));
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.25), rgba(0,0,0,0.82));
   z-index:-1;
 }
 
@@ -51,7 +54,7 @@ body::before{
   padding:16px;
 }
 
-/* CARD = app screen */
+/* CARD */
 .card{
   width:min(820px, 100%);
   background: linear-gradient(180deg, var(--panel), var(--panel2));
@@ -61,7 +64,7 @@ body::before{
   padding:28px;
 }
 
-/* intro titles */
+/* Intro titles */
 #intro h1{
   font-size:52px;
   letter-spacing:6px;
@@ -76,14 +79,14 @@ body::before{
   font-size:16px;
 }
 
-/* mode title */
+/* Mode title */
 #mode{
   font-size:22px;
   margin:6px 0 12px;
   letter-spacing:0.5px;
 }
 
-/* APP BUTTONS */
+/* Buttons (base) */
 button{
   appearance:none;
   border:none;
@@ -93,21 +96,19 @@ button{
   font-weight:800;
   letter-spacing:1px;
   border-radius:16px;
-
   height:54px;
   padding:0 18px;
   min-width: 220px;
-
   box-shadow: 0 10px 26px rgba(255,0,0,0.18);
   transition: transform .08s ease, filter .15s ease;
 }
 button:hover{ filter:brightness(1.08); }
 button:active{ transform: scale(0.98); }
 
-/* make groups of buttons look neat */
+/* Button spacing */
 .card button{ margin:10px 8px 0; }
 
-/* CHOICES = tappable app cards */
+/* Choices */
 .choice{
   background: rgba(255,255,255,0.06);
   border:1px solid rgba(255,255,255,0.10);
@@ -115,13 +116,12 @@ button:active{ transform: scale(0.98); }
   padding:16px 16px;
   margin:12px 0;
   cursor:pointer;
-
   font-size:18px;
   line-height:1.35;
   text-align:left;
 }
 .choice.selected{
-  border-color: rgba(255,26,26,0.8);
+  border-color: rgba(255,26,26,0.85);
   box-shadow: 0 0 0 2px rgba(255,26,26,0.25);
 }
 
@@ -133,7 +133,7 @@ button:active{ transform: scale(0.98); }
   gap:10px;
   margin:16px 0;
   min-height:64px;
-  padding:6px;
+  padding:10px;
   border-radius:16px;
   background: rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.08);
@@ -148,15 +148,13 @@ button:active{ transform: scale(0.98); }
   user-select:none;
 }
 
-/* HUD text bigger + clearer */
+/* HUD */
 #hud{
   margin-bottom:14px;
 }
 #hud *{
   font-size:14px !important;
 }
-#hud .muted{ color: var(--muted); }
-
 #result{
   margin-top:14px;
   font-size:18px;
@@ -184,69 +182,108 @@ button:active{ transform: scale(0.98); }
   pointer-events:none;
 }
 
+.hint{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* ===== TRUE APP FULLSCREEN MOBILE (Duolingo-ish) ===== */
 @media (max-width: 520px){
   #container{
-    padding: 0;
-    height: 100dvh;     /* real mobile viewport */
+    padding: 0 !important;
+    height: 100dvh;
     align-items: stretch;
   }
 
   .card{
     width: 100%;
-    min-height: 100dvh; /* FULL SCREEN */
-    border-radius: 0;   /* removes “card” feeling */
-    padding: 18px 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    min-height: 100dvh;
+    border-radius: 0 !important;
+
+    padding:
+      calc(env(safe-area-inset-top) + 16px)
+      16px
+      calc(env(safe-area-inset-bottom) + 18px)
+      16px !important;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
   }
 
-  /* Bigger readable text like Duolingo */
-  #mode{ font-size: 22px; margin: 10px 0 14px; }
+  /* Make the main area scroll like an app */
+  #content{
+    flex: 1;
+    overflow: auto;
+    padding-bottom: 86px; /* space for sticky CHECK */
+    -webkit-overflow-scrolling: touch;
+  }
 
+  #intro h1{ font-size:48px; letter-spacing:5px; }
+  #intro h2{ font-size:15px; letter-spacing:3px; }
+
+  #mode{ font-size:22px; margin: 10px 0 14px; }
+
+  /* Big readable cards */
   .choice{
-    font-size: 19px;
-    padding: 18px 16px;
-    border-radius: 20px;
+    font-size:19px;
+    padding:18px 16px;
+    border-radius:20px;
   }
 
   .word{
-    font-size: 18px;
-    padding: 12px 14px;
-    border-radius: 18px;
+    font-size:18px;
+    padding:12px 14px;
+    border-radius:18px;
   }
 
-  /* Buttons like app: full-width & tall */
-  button{
+  /* PLAY = smaller, centered */
+  .btn.play{
+    width: 64%;
+    max-width: 320px;
+    min-width: unset;
+    height: 52px;
+    font-size: 15px;
+    border-radius: 18px;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* CHECK = sticky bottom CTA */
+  .btn.check{
+    position: sticky;
+    bottom: calc(env(safe-area-inset-bottom) + 10px);
     width: 100%;
+    min-width: unset;
     height: 58px;
     font-size: 16px;
     border-radius: 18px;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 14px 0 0;
   }
 
-  #result{ font-size: 18px; }
+  #hud *{ font-size:14px !important; }
+  #result{ font-size:18px; }
 }
 </style>
 </head>
-<body>
 
+<body>
 <canvas id="bg"></canvas>
 <div id="streakBox"></div>
+<div id="credit">made by Frihet</div>
 
 <div id="container">
   <div class="card" id="intro">
     <h1>DISCIPLINE</h1>
     <h2>YOU VS YOU</h2>
-    <button onclick="startGame()">START SESSION →</button>
+    <button class="btn" onclick="startGame()">START SESSION →</button>
     <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
       made by Frihet
     </p>
   </div>
 </div>
-
-<div id="credit">made by Frihet</div>
 
 <script>
 /* ===== Background (candles) ===== */
@@ -277,7 +314,7 @@ initCandles();
 function animate() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   candles.forEach(c => {
-    ctx.fillStyle = "rgba(255,0,0,0.4)";
+    ctx.fillStyle = "rgba(255,0,0,0.35)";
     ctx.fillRect(c.x, c.y, 6, c.height);
     c.y += c.speed;
     if (c.y > canvas.height) c.y = -c.height;
@@ -319,7 +356,6 @@ const DAILY_GOAL = 50;
 let nativeLang = localStorage.getItem("nativeLang") || "en";
 let selectedMode = localStorage.getItem("mode") || "mix";
 
-/* ===== Languages (auto buttons) ===== */
 const LANGS = [
   { code: "en", label: "🇬🇧 English" },
   { code: "de", label: "🇩🇪 Deutsch" },
@@ -330,11 +366,10 @@ const LANGS = [
 const UI = {
   en: {
     chooseNative: "Choose your native language",
-    audioNote: "",
     chooseMode: "Choose a mode",
     mix: "MIX",
-    listenOnly: "Listen only",
-    buildOnly: "Build only",
+    listenOnly: "Listen",
+    buildOnly: "Build",
     play: "PLAY",
     check: "CHECK",
     listenDecide: "Listen & Decide",
@@ -342,7 +377,7 @@ const UI = {
     sessionComplete: "Session Complete",
     score: "Score",
     restart: "Restart",
-    strong: "LOCKED",
+    strong: "LOCKED.",
     reset: "Reset. Focus.",
     xp: "XP",
     progress: "Progress",
@@ -351,11 +386,10 @@ const UI = {
   },
   de: {
     chooseNative: "Wähle deine Muttersprache",
-    audioNote: "",
     chooseMode: "Wähle den Modus",
     mix: "MIX",
-    listenOnly: "Nur Hören",
-    buildOnly: "Nur Bauen",
+    listenOnly: "Hören",
+    buildOnly: "Bauen",
     play: "PLAY",
     check: "PRÜFEN",
     listenDecide: "Hören & Entscheiden",
@@ -363,7 +397,7 @@ const UI = {
     sessionComplete: "Session beendet",
     score: "Punktzahl",
     restart: "Neustart",
-    strong: "LOCKED",
+    strong: "LOCKED.",
     reset: "Reset. Fokus.",
     xp: "XP",
     progress: "Fortschritt",
@@ -372,11 +406,10 @@ const UI = {
   },
   es: {
     chooseNative: "Elige tu idioma nativo",
-    audioNote: "",
     chooseMode: "Elige el modo",
     mix: "MIX",
-    listenOnly: "Solo escuchar",
-    buildOnly: "Solo construir",
+    listenOnly: "Escuchar",
+    buildOnly: "Construir",
     play: "PLAY",
     check: "COMPROBAR",
     listenDecide: "Escucha y decide",
@@ -384,7 +417,7 @@ const UI = {
     sessionComplete: "Sesión terminada",
     score: "Puntuación",
     restart: "Reiniciar",
-    strong: "LOCKED",
+    strong: "LOCKED.",
     reset: "Reset. Enfócate.",
     xp: "XP",
     progress: "Progreso",
@@ -403,9 +436,7 @@ function displayText(i){
 }
 
 /* ===== Daily XP storage ===== */
-function todayKey(){
-  return new Date().toDateString();
-}
+function todayKey(){ return new Date().toDateString(); }
 
 function getDailyXP(){
   const savedDay = localStorage.getItem("dailyXP_day");
@@ -454,7 +485,7 @@ updateStreak();
 /* ===== Screens ===== */
 function startGame(){
   const buttons = LANGS.map(l =>
-    `<button onclick="chooseLang('${l.code}')" style="margin:8px;">${l.label}</button>`
+    `<button class="btn" onclick="chooseLang('${l.code}')" style="margin:8px;">${l.label}</button>`
   ).join("");
 
   document.getElementById("container").innerHTML =
@@ -483,9 +514,9 @@ function showModeSelect(){
     `<div class="card">
       <h2 style="margin-top:0;">${t("chooseMode")}</h2>
 
-      <button onclick="setMode('mix')" style="margin:8px;">${t("mix")}</button>
-      <button onclick="setMode('listen')" style="margin:8px;">${t("listenOnly")}</button>
-      <button onclick="setMode('drag')" style="margin:8px;">${t("buildOnly")}</button>
+      <button class="btn" onclick="setMode('mix')" style="margin:8px;">${t("mix")}</button>
+      <button class="btn" onclick="setMode('listen')" style="margin:8px;">${t("listenOnly")}</button>
+      <button class="btn" onclick="setMode('drag')" style="margin:8px;">${t("buildOnly")}</button>
 
       <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
     </div>`;
@@ -523,7 +554,8 @@ function startSession(){
       </div>
 
       <h2 id="mode"></h2>
-      <button onclick="playAudio()">${t("play")}</button>
+      <button class="btn play" onclick="playAudio()">${t("play")}</button>
+
       <div id="content"></div>
       <div id="result"></div>
     </div>`;
@@ -579,7 +611,7 @@ function nextRound(){
       `<h2>${t("sessionComplete")}</h2>
        <p>${t("score")}: ${score} / ${items.length}</p>
        <p>${t("xp")}: ${xp}</p>
-       <button onclick="location.reload()">${t("restart")}</button>`;
+       <button class="btn" onclick="location.reload()">${t("restart")}</button>`;
     return;
   }
 
@@ -628,6 +660,7 @@ function buildListen(){
   });
 
   let btn = document.createElement("button");
+  btn.className = "btn check";
   btn.innerText = t("check");
   btn.onclick=()=>{
     if(!selectedChoice) return;
@@ -671,6 +704,7 @@ function buildDrag(){
   });
 
   let btn=document.createElement("button");
+  btn.className = "btn check";
   btn.innerText = t("check");
   btn.onclick=()=>{
     let built="";
@@ -719,7 +753,7 @@ function stopAudio(){
   if(audio){ audio.pause(); audio.currentTime = 0; }
 }
 
-/* Soft sound */
+/* Soft click sound */
 function playSound(success){
   const aCtx=new (window.AudioContext||window.webkitAudioContext)();
   const osc=aCtx.createOscillator();
@@ -734,8 +768,6 @@ function playSound(success){
 </script>
 </body>
 </html>
-
-
 
 
 
