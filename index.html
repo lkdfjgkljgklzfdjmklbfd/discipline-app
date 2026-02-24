@@ -17,7 +17,6 @@
 }
 
 *{ box-sizing:border-box; }
-
 html, body{ height:100%; }
 
 body{
@@ -36,7 +35,6 @@ canvas{
   z-index:-2;
 }
 
-/* overlay so UI pops */
 body::before{
   content:"";
   position:fixed;
@@ -53,7 +51,6 @@ body::before{
   padding:16px;
 }
 
-/* card */
 .card{
   width:min(820px, 100%);
   background: linear-gradient(180deg, var(--panel), var(--panel2));
@@ -63,45 +60,42 @@ body::before{
   padding:28px;
 }
 
-/* intro */
-/* Premium brand title */
+/* Trading terminal intro branding */
 #intro h1{
-  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif;
-  font-size: clamp(44px, 7vw, 64px);
-  letter-spacing: 0.18em;
+  font-family: "SF Pro Display", "Segoe UI", Arial, sans-serif;
+  font-size: clamp(42px, 7vw, 66px);
+  font-weight: 800;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   margin: 0;
   line-height: 1;
-
-  /* premium red gradient */
-  background: linear-gradient(180deg, #ff3b3b 0%, #b30000 55%, #6a0000 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-
-  /* subtle glow (not cringe) */
+  color: #ff1a1a;
   text-shadow:
-    0 8px 30px rgba(255, 0, 0, 0.18),
-    0 2px 10px rgba(255, 0, 0, 0.12);
+    0 0 8px rgba(255,0,0,0.35),
+    0 0 20px rgba(255,0,0,0.18);
 }
-
-/* Premium subtitle */
 #intro h2{
-  margin-top: 14px;
-  font-size: 13px;
-  letter-spacing: 0.28em;
+  margin-top: 12px;
+  font-size: 12px;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.72);
+  color: rgba(255,255,255,0.65);
+  font-weight: 600;
+}
+.terminal-line{
+  width: min(360px, 85%);
+  height: 2px;
+  margin: 16px auto 10px;
+  background: linear-gradient(90deg, transparent, rgba(255,0,0,0.95), transparent);
+  box-shadow: 0 0 14px rgba(255,0,0,0.4);
 }
 
-/* mode title */
 #mode{
   font-size:22px;
   margin:6px 0 12px;
   letter-spacing:0.5px;
 }
 
-/* buttons */
 button{
   appearance:none;
   border:none;
@@ -119,10 +113,9 @@ button{
 }
 button:hover{ filter:brightness(1.08); }
 button:active{ transform: scale(0.98); }
-
 .card button{ margin:10px 8px 0; }
 
-/* ✅ FIX: darker solid choice cards (consistent across Samsung/Chrome/Safari) */
+/* darker solid choice cards */
 .choice{
   background: rgba(28,28,28,0.92);
   border: 1px solid rgba(255,255,255,0.14);
@@ -140,7 +133,6 @@ button:active{ transform: scale(0.98); }
   box-shadow: 0 0 0 2px rgba(255,26,26,0.28), 0 12px 34px rgba(0,0,0,0.5);
 }
 
-/* drag words */
 .word-container{
   display:flex;
   flex-wrap:wrap;
@@ -163,10 +155,9 @@ button:active{ transform: scale(0.98); }
   user-select:none;
 }
 
-/* HUD */
 #hud{
   margin-bottom:14px;
-  padding-right: 120px; /* ✅ FIX: reserve space so streak never overlaps XP */
+  padding-right: 120px; /* reserve space so streak never overlaps */
 }
 #hud *{ font-size:14px !important; }
 
@@ -183,7 +174,6 @@ button:active{ transform: scale(0.98); }
   font-size:13px;
 }
 
-/* ✅ FIX: Streak position safe across Samsung/Chrome/Safari */
 #streakBox{
   position:fixed;
   top: calc(env(safe-area-inset-top) + 12px);
@@ -205,7 +195,7 @@ button:active{ transform: scale(0.98); }
   pointer-events:none;
 }
 
-/* ===== TRUE FULLSCREEN MOBILE ===== */
+/* FULLSCREEN MOBILE */
 @media (max-width: 520px){
   #container{
     padding: 0 !important;
@@ -222,13 +212,11 @@ button:active{ transform: scale(0.98); }
       16px
       calc(env(safe-area-inset-bottom) + 18px)
       16px !important;
-
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
   }
 
-  /* scroll like an app */
   #content{
     flex:1;
     overflow:auto;
@@ -236,11 +224,6 @@ button:active{ transform: scale(0.98); }
     -webkit-overflow-scrolling: touch;
   }
 
-  #intro h1{ font-size:48px; letter-spacing:5px; }
-  #intro h2{ font-size:15px; letter-spacing:3px; }
-  #mode{ font-size:22px; margin: 10px 0 14px; }
-
-  /* play smaller centered */
   .btn.play{
     width: 64%;
     max-width: 320px;
@@ -253,7 +236,6 @@ button:active{ transform: scale(0.98); }
     margin-right:auto;
   }
 
-  /* check sticky bottom */
   .btn.check{
     position: sticky;
     bottom: calc(env(safe-area-inset-bottom) + 10px);
@@ -264,10 +246,6 @@ button:active{ transform: scale(0.98); }
     border-radius: 18px;
     margin: 14px 0 0;
   }
-
-  /* hud slightly bigger */
-  #hud *{ font-size:14px !important; }
-  #result{ font-size:18px; }
 }
 </style>
 </head>
@@ -281,22 +259,13 @@ button:active{ transform: scale(0.98); }
   <div class="card" id="intro">
     <h1>DISCIPLINE</h1>
     <h2>YOU VS YOU</h2>
-    <div class="brand-line"></div>
-    <button onclick="startGame()">START SESSION →</button>
+    <div class="terminal-line"></div>
+    <button class="btn" onclick="startGame()">START SESSION →</button>
     <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
       made by Frihet
     </p>
   </div>
 </div>
-
-  .brand-line{
-  width: min(340px, 80%);
-  height: 2px;
-  margin: 18px auto 6px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, transparent, rgba(255,26,26,0.95), transparent);
-  box-shadow: 0 10px 24px rgba(255,0,0,0.14);
-}
 
 <script>
 /* ===== Background (candles) ===== */
@@ -362,20 +331,63 @@ let round = 0;
 let selectedChoice = null;
 let audio = null;
 
-let xp = 0;
 const XP_PER_WIN = 10;
 const DAILY_GOAL = 50;
 
+let xp = 0;
 let nativeLang = localStorage.getItem("nativeLang") || "en";
 let selectedMode = localStorage.getItem("mode") || "mix";
 
+/* ===== TROPHIES (persistent) ===== */
+const TROPHY_KEY = "trophies_forever";
+function getTrophies(){
+  return parseInt(localStorage.getItem(TROPHY_KEY) || "0");
+}
+function setTrophies(v){
+  // still applies -1 on wrong, but we prevent negative (optional safety)
+  if (v < 0) v = 0;
+  localStorage.setItem(TROPHY_KEY, String(v));
+}
+function addTrophies(delta){
+  const v = getTrophies() + delta;
+  setTrophies(v);
+  return getTrophies();
+}
+
+const RANKS = [
+  { name: "Rookie", min: 0, max: 49 },
+  { name: "Focused", min: 50, max: 149 },
+  { name: "Discipline", min: 150, max: 299 },
+  { name: "Locked In", min: 300, max: 599 },
+  { name: "Elite", min: 600, max: 999999 }
+];
+
+function rankFor(t){
+  for(const r of RANKS){
+    if(t >= r.min && t <= r.max) return r;
+  }
+  return RANKS[0];
+}
+function nextRankInfo(t){
+  const r = rankFor(t);
+  const idx = RANKS.indexOf(r);
+  if(idx === RANKS.length - 1){
+    return { nextName: "MAX", need: 0, pct: 100, label: "MAX" };
+  }
+  const next = RANKS[idx+1];
+  const needTotal = next.min - r.min;
+  const have = t - r.min;
+  const pct = Math.max(0, Math.min(100, Math.round((have / needTotal) * 100)));
+  return { nextName: next.name, need: next.min - t, pct, label: `${t}/${next.min}` };
+}
+
+/* ===== Language UI ===== */
 const LANGS = [
   { code: "en", label: "🇬🇧 English" },
   { code: "de", label: "🇩🇪 Deutsch" },
   { code: "es", label: "🇪🇸 Español" }
 ];
 
-/* ===== UI ===== */
 const UI = {
   en: {
     chooseNative: "Choose your native language",
@@ -391,8 +403,11 @@ const UI = {
     score: "Score",
     restart: "Restart",
     strong: "LOCKED.",
-    reset: "Reset. Focus.",
+    reset: "Penalty. Refocus.",
     xp: "XP",
+    trophies: "Trophies",
+    rank: "Rank",
+    next: "Next",
     progress: "Progress",
     dailyGoal: "Daily Goal",
     goalComplete: "Daily Goal Complete ✅"
@@ -411,8 +426,11 @@ const UI = {
     score: "Punktzahl",
     restart: "Neustart",
     strong: "LOCKED.",
-    reset: "Reset. Fokus.",
+    reset: "Strafe. Fokus.",
     xp: "XP",
+    trophies: "Trophäen",
+    rank: "Rang",
+    next: "Nächster",
     progress: "Fortschritt",
     dailyGoal: "Tagesziel",
     goalComplete: "Tagesziel geschafft ✅"
@@ -431,8 +449,11 @@ const UI = {
     score: "Puntuación",
     restart: "Reiniciar",
     strong: "LOCKED.",
-    reset: "Reset. Enfócate.",
+    reset: "Penalización. Enfócate.",
     xp: "XP",
+    trophies: "Trofeos",
+    rank: "Rango",
+    next: "Siguiente",
     progress: "Progreso",
     dailyGoal: "Meta diaria",
     goalComplete: "Meta diaria completada ✅"
@@ -442,7 +463,6 @@ const UI = {
 function t(key){
   return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key;
 }
-
 function displayText(i){
   const obj = items[i];
   return obj[nativeLang] || obj.en;
@@ -461,7 +481,6 @@ function getDailyXP(){
   }
   return parseInt(localStorage.getItem("dailyXP_value") || "0");
 }
-
 function addDailyXP(amount){
   const savedDay = localStorage.getItem("dailyXP_day");
   const today = todayKey();
@@ -545,9 +564,16 @@ function startSession(){
   document.getElementById("container").innerHTML =
     `<div class="card">
       <div id="hud" style="text-align:left; margin-bottom:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-size:13px; color:#aaa;">${t("progress")}: <span id="progressText">0/${items.length}</span></div>
-          <div style="font-size:13px; color:#aaa;">${t("xp")}: <span id="xpText">0</span></div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+          <div style="font-size:13px; color:#aaa;">
+            ${t("progress")}: <span id="progressText">0/${items.length}</span><br>
+            ${t("xp")}: <span id="xpText">0</span>
+          </div>
+
+          <div style="font-size:13px; color:#aaa; text-align:right;">
+            🏆 ${t("trophies")}: <span id="trophyText">0</span><br>
+            ${t("rank")}: <span id="rankText">Rookie</span>
+          </div>
         </div>
 
         <div style="margin-top:10px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
@@ -559,10 +585,17 @@ function startSession(){
             <span id="goalLabel">${t("dailyGoal")}: </span>
             <span id="goalText">0/${DAILY_GOAL} XP</span>
           </div>
+          <div style="font-size:13px; color:#aaa;">
+            ${t("next")}: <span id="nextRankText">0/50</span>
+          </div>
         </div>
 
         <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
           <div id="goalBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
+        </div>
+
+        <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
+          <div id="rankBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
         </div>
       </div>
 
@@ -592,6 +625,7 @@ function updateHUD(){
     progressBar.style.width = pct + "%";
   }
 
+  // Daily goal
   const dailyXP = getDailyXP();
   const goalPct = Math.min(100, Math.round((dailyXP / DAILY_GOAL) * 100));
 
@@ -610,6 +644,21 @@ function updateHUD(){
       goalTextEl.innerText = dailyXP + "/" + DAILY_GOAL + " XP";
     }
   }
+
+  // Trophies + Rank
+  const trophies = getTrophies();
+  const trophyText = document.getElementById("trophyText");
+  const rankText = document.getElementById("rankText");
+  const nextRankText = document.getElementById("nextRankText");
+  const rankBar = document.getElementById("rankBar");
+
+  const r = rankFor(trophies);
+  const nxt = nextRankInfo(trophies);
+
+  if(trophyText) trophyText.innerText = trophies;
+  if(rankText) rankText.innerText = r.name;
+  if(nextRankText) nextRankText.innerText = nxt.label;
+  if(rankBar) rankBar.style.width = (nxt.pct || 0) + "%";
 }
 
 /* ===== Game ===== */
@@ -619,10 +668,13 @@ function normalize(s){
 
 function nextRound(){
   if(round >= items.length){
+    const trophies = getTrophies();
+    const r = rankFor(trophies);
     document.getElementById("content").innerHTML =
       `<h2>${t("sessionComplete")}</h2>
        <p>${t("score")}: ${score} / ${items.length}</p>
        <p>${t("xp")}: ${xp}</p>
+       <p>🏆 ${t("trophies")}: ${trophies} (${t("rank")}: ${r.name})</p>
        <button class="btn" onclick="location.reload()">${t("restart")}</button>`;
     return;
   }
@@ -737,11 +789,18 @@ function buildDrag(){
   }
 }
 
+/* ===== Scoring rules =====
+   Correct: +10 XP, +2 trophies
+   Wrong:   -1 trophy
+*/
 function success(){
   playSound(true);
   score++;
   xp += XP_PER_WIN;
   addDailyXP(XP_PER_WIN);
+
+  addTrophies(+2);
+
   updateHUD();
   document.getElementById("result").innerText = t("strong");
   stopAudio();
@@ -750,6 +809,10 @@ function success(){
 
 function fail(){
   playSound(false);
+
+  addTrophies(-1);
+
+  updateHUD();
   document.getElementById("result").innerText = t("reset");
   stopAudio();
   setTimeout(nextRound,1500);
@@ -779,13 +842,6 @@ function playSound(success){
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
 
 
 
