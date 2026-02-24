@@ -31,7 +31,7 @@ canvas {
 .card {
   background: rgba(10,10,10,0.95);
   padding: 40px;
-  width: 560px;
+  width: 520px;
   max-width: 95%;
   border-radius: 20px;
   box-shadow: 0 0 40px rgba(255,0,0,0.2);
@@ -72,7 +72,6 @@ button:hover { background: #ff1a1a; }
   border-radius: 12px;
   cursor: pointer;
   border: 2px solid transparent;
-  text-align: left;
 }
 
 .choice.selected { border: 2px solid #ff1a1a; }
@@ -83,9 +82,6 @@ button:hover { background: #ff1a1a; }
   justify-content: center;
   margin: 15px 0;
   min-height: 54px;
-  padding: 8px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.03);
 }
 
 .word {
@@ -124,14 +120,6 @@ button:hover { background: #ff1a1a; }
   margin-top: 12px;
   color: #aaa;
   font-size: 13px;
-  text-align: left;
-}
-
-.smallNote {
-  color: rgba(255,255,255,0.65);
-  font-size: 12px;
-  margin-top: 18px;
-  letter-spacing: 1px;
 }
 </style>
 </head>
@@ -145,7 +133,9 @@ button:hover { background: #ff1a1a; }
     <h1>DISCIPLINE</h1>
     <h2>YOU VS YOU</h2>
     <button onclick="startGame()">START SESSION →</button>
-    <p class="smallNote">made by Frihet</p>
+    <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
+      made by Frihet
+    </p>
   </div>
 </div>
 
@@ -217,19 +207,19 @@ let audio = null;
 
 let xp = 0;
 const XP_PER_WIN = 10;
-const DAILY_GOAL = 50;   
+const DAILY_GOAL = 50;
 
 let nativeLang = localStorage.getItem("nativeLang") || "en";
 let selectedMode = localStorage.getItem("mode") || "mix";
 
-/* ===== Languages list ===== */
+/* ===== Languages (auto buttons) ===== */
 const LANGS = [
   { code: "en", label: "🇬🇧 English" },
   { code: "de", label: "🇩🇪 Deutsch" },
   { code: "es", label: "🇪🇸 Español" }
 ];
 
-/* ===== UI translations ===== */
+/* ===== UI ===== */
 const UI = {
   en: {
     chooseNative: "Choose your native language",
@@ -247,8 +237,8 @@ const UI = {
     restart: "Restart",
     strong: "Strong.",
     reset: "Reset. Focus.",
+    xp: "XP",
     progress: "Progress",
-    xp: "XP"
     dailyGoal: "Daily Goal",
     goalComplete: "Daily Goal Complete ✅"
   },
@@ -268,8 +258,8 @@ const UI = {
     restart: "Neustart",
     strong: "Stark.",
     reset: "Reset. Fokus.",
+    xp: "XP",
     progress: "Fortschritt",
-    xp: "XP"
     dailyGoal: "Tagesziel",
     goalComplete: "Tagesziel geschafft ✅"
   },
@@ -289,8 +279,8 @@ const UI = {
     restart: "Reiniciar",
     strong: "Fuerte.",
     reset: "Reset. Enfócate.",
+    xp: "XP",
     progress: "Progreso",
-    xp: "XP"
     dailyGoal: "Meta diaria",
     goalComplete: "Meta diaria completada ✅"
   }
@@ -303,6 +293,35 @@ function t(key){
 function displayText(i){
   const obj = items[i];
   return obj[nativeLang] || obj.en;
+}
+
+/* ===== Daily XP storage ===== */
+function todayKey(){
+  return new Date().toDateString();
+}
+
+function getDailyXP(){
+  const savedDay = localStorage.getItem("dailyXP_day");
+  const today = todayKey();
+  if(savedDay !== today){
+    localStorage.setItem("dailyXP_day", today);
+    localStorage.setItem("dailyXP_value", "0");
+    return 0;
+  }
+  return parseInt(localStorage.getItem("dailyXP_value") || "0");
+}
+
+function addDailyXP(amount){
+  const savedDay = localStorage.getItem("dailyXP_day");
+  const today = todayKey();
+  if(savedDay !== today){
+    localStorage.setItem("dailyXP_day", today);
+    localStorage.setItem("dailyXP_value", "0");
+  }
+  let v = parseInt(localStorage.getItem("dailyXP_value") || "0");
+  v += amount;
+  localStorage.setItem("dailyXP_value", String(v));
+  return v;
 }
 
 /* ===== Streak ===== */
@@ -336,7 +355,7 @@ function startGame(){
       <h2 style="margin-top:0;">${t("chooseNative")}</h2>
       <p style="color:#aaa; margin-top:8px;">${t("audioNote")}</p>
       <div style="margin-top:18px;">${buttons}</div>
-      <p class="smallNote">made by Frihet</p>
+      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
     </div>`;
 }
 
@@ -363,7 +382,7 @@ function showModeSelect(){
       <button onclick="setMode('drag')" style="margin:8px;">${t("buildOnly")}</button>
 
       <p style="color:#aaa; margin-top:12px; font-size:13px;">${t("audioNote")}</p>
-      <p class="smallNote">made by Frihet</p>
+      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
     </div>`;
 }
 
@@ -381,20 +400,22 @@ function startSession(){
           <div style="font-size:13px; color:#aaa;">${t("progress")}: <span id="progressText">0/${items.length}</span></div>
           <div style="font-size:13px; color:#aaa;">${t("xp")}: <span id="xpText">0</span></div>
         </div>
+
         <div style="margin-top:10px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
           <div id="progressBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
         </div>
-      </div>
-      <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
-  <div style="font-size:13px; color:#aaa;">
-    <span id="goalLabel">${t("dailyGoal")}: </span>
-    <span id="goalText">0/${DAILY_GOAL} XP</span>
-  </div>
-</div>
 
-<div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
-  <div id="goalBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
-</div>
+        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:13px; color:#aaa;">
+            <span id="goalLabel">${t("dailyGoal")}: </span>
+            <span id="goalText">0/${DAILY_GOAL} XP</span>
+          </div>
+        </div>
+
+        <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
+          <div id="goalBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
+        </div>
+      </div>
 
       <h2 id="mode"></h2>
       <button onclick="playAudio()">${t("play")}</button>
@@ -407,52 +428,21 @@ function startSession(){
 }
 
 /* ===== HUD ===== */
- function todayKey(){
-  return new Date().toDateString();
-}
-
-function getDailyXP(){
-  const savedDay = localStorage.getItem("dailyXP_day");
-  const today = todayKey();
-
-  if(savedDay !== today){
-    // new day → reset
-    localStorage.setItem("dailyXP_day", today);
-    localStorage.setItem("dailyXP_value", "0");
-    return 0;
-  }
-  return parseInt(localStorage.getItem("dailyXP_value") || "0");
-}
-
-function addDailyXP(amount){
-  const savedDay = localStorage.getItem("dailyXP_day");
-  const today = todayKey();
-
-  if(savedDay !== today){
-    localStorage.setItem("dailyXP_day", today);
-    localStorage.setItem("dailyXP_value", "0");
-  }
-
-  let v = parseInt(localStorage.getItem("dailyXP_value") || "0");
-  v += amount;
-  localStorage.setItem("dailyXP_value", String(v));
-  return v;
-}
-  function updateHUD(){
+function updateHUD(){
   const done = used.length;
+
   const progressText = document.getElementById("progressText");
   const xpText = document.getElementById("xpText");
   const progressBar = document.getElementById("progressBar");
 
-  if(!progressText || !xpText || !progressBar) return;
+  if(progressText) progressText.innerText = done + "/" + items.length;
+  if(xpText) xpText.innerText = xp;
+  if(progressBar){
+    const pct = Math.round((done / items.length) * 100);
+    progressBar.style.width = pct + "%";
+  }
 
-  progressText.innerText = done + "/" + items.length;
-  xpText.innerText = xp;
-
-  const pct = Math.round((done / items.length) * 100);
-  progressBar.style.width = pct + "%";
-
-      // Daily goal
+  // Daily goal
   const dailyXP = getDailyXP();
   const goalPct = Math.min(100, Math.round((dailyXP / DAILY_GOAL) * 100));
 
@@ -464,7 +454,6 @@ function addDailyXP(amount){
     goalBarEl.style.width = goalPct + "%";
 
     if(dailyXP >= DAILY_GOAL){
-      // completed state
       if(goalLabelEl) goalLabelEl.innerText = "";
       goalTextEl.innerText = t("goalComplete");
     } else {
@@ -640,6 +629,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
