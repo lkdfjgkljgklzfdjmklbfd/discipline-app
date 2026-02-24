@@ -2,397 +2,977 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
 <title>DISCIPLINE</title>
 
 <style>
+:root{
+  --red:#ff1a1a;
+  --red2:#b30000;
+  --panel: rgba(10,10,10,0.92);
+  --panel2: rgba(18,18,18,0.92);
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.65);
+}
+
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+
 body{
-margin:0;
-font-family:Arial;
-background:black;
-color:white;
-overflow:hidden;
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:#000;
+  color:var(--text);
+  overflow:hidden;
 }
+
 canvas{
-position:fixed;
-top:0;left:0;
-z-index:-1;
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  z-index:-2;
 }
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.25), rgba(0,0,0,0.82));
+  z-index:-1;
+}
+
 #container{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:12px;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
 }
+
 .card{
-background:rgba(12,12,12,0.95);
-padding:24px;
-border-radius:20px;
-width:min(800px,100%);
-box-shadow:0 0 40px rgba(255,0,0,0.2);
-text-align:center;
+  width:min(820px, 100%);
+  background: linear-gradient(180deg, var(--panel), var(--panel2));
+  border:1px solid rgba(255,26,26,0.14);
+  border-radius:24px;
+  box-shadow: 0 18px 70px rgba(255,0,0,0.18);
+  padding:28px;
+  transform: translateZ(0);
 }
-h1{
-font-size:56px;
-letter-spacing:8px;
-color:#ff1a1a;
-margin:0;
+
+/* Trading terminal intro branding */
+#intro h1{
+  font-family: "SF Pro Display", "Segoe UI", Arial, sans-serif;
+  font-size: clamp(42px, 7vw, 66px);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+  color: #ff1a1a;
+  text-shadow:
+    0 0 8px rgba(255,0,0,0.35),
+    0 0 20px rgba(255,0,0,0.18);
 }
-h2{color:#aaa;}
+#intro h2{
+  margin-top: 12px;
+  font-size: 12px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  font-weight: 600;
+}
+.terminal-line{
+  width: min(360px, 85%);
+  height: 2px;
+  margin: 16px auto 10px;
+  background: linear-gradient(90deg, transparent, rgba(255,0,0,0.95), transparent);
+  box-shadow: 0 0 14px rgba(255,0,0,0.4);
+}
+
+#mode{
+  font-size:22px;
+  margin:6px 0 12px;
+  letter-spacing:0.5px;
+}
 
 button{
-background:#b30000;
-border:none;
-color:white;
-padding:14px 20px;
-border-radius:12px;
-margin-top:14px;
-font-weight:bold;
-cursor:pointer;
+  appearance:none;
+  border:none;
+  cursor:pointer;
+  background: linear-gradient(180deg, var(--red2), #7a0000);
+  color:white;
+  font-weight:800;
+  letter-spacing:1px;
+  border-radius:16px;
+  height:54px;
+  padding:0 18px;
+  min-width: 220px;
+  box-shadow: 0 10px 26px rgba(255,0,0,0.18);
+  transition: transform .08s ease, filter .15s ease;
 }
-button:hover{background:#ff1a1a;}
+button:hover{ filter:brightness(1.08); }
+button:active{ transform: scale(0.98); }
+.card button{ margin:10px 8px 0; }
 
+/* darker solid choice cards */
 .choice{
-background:#1a1a1a;
-padding:14px;
-margin:10px 0;
-border-radius:12px;
-cursor:pointer;
-border:2px solid transparent;
+  background: rgba(28,28,28,0.92);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 20px;
+  padding: 18px 16px;
+  margin: 12px 0;
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 1.35;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
 }
 .choice.selected{
-border:2px solid #ff1a1a;
+  border-color: rgba(255,26,26,0.90);
+  box-shadow: 0 0 0 2px rgba(255,26,26,0.28), 0 12px 34px rgba(0,0,0,0.5);
 }
 
 .word-container{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:8px;
-margin:12px 0;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:16px 0;
+  min-height:64px;
+  padding:10px;
+  border-radius:16px;
+  background: rgba(28,28,28,0.75);
+  border:1px solid rgba(255,255,255,0.10);
 }
 .word{
-background:#990000;
-padding:8px 12px;
-border-radius:10px;
-cursor:pointer;
+  background: rgba(255,26,26,0.18);
+  border:1px solid rgba(255,26,26,0.28);
+  padding:10px 14px;
+  border-radius:16px;
+  font-size:17px;
+  font-weight:700;
+  user-select:none;
 }
 
 #hud{
-display:flex;
-justify-content:space-between;
-font-size:14px;
-margin-bottom:12px;
-color:#aaa;
+  margin-bottom:14px;
+  padding-right: 120px; /* reserve space so streak never overlaps */
+}
+#hud *{ font-size:14px !important; }
+
+#result{
+  margin-top:14px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:0.5px;
 }
 
-#rankPopup{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.8);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:9999;
+.hint{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:13px;
 }
-.popupCard{
-background:#111;
-padding:30px;
-border-radius:20px;
-text-align:center;
+
+#streakBox{
+  position:fixed;
+  top: calc(env(safe-area-inset-top) + 12px);
+  right: 12px;
+  font-size:13px;
+  color:rgba(255,255,255,0.85);
+  z-index:99999;
+  pointer-events:none;
 }
-.rankName{
-font-size:28px;
-color:#ff1a1a;
-font-weight:bold;
+
+#credit{
+  position:fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 12px);
+  right:12px;
+  font-size:12px;
+  color:rgba(255,255,255,0.55);
+  letter-spacing:1px;
+  z-index:9999;
+  pointer-events:none;
+}
+
+/* ====== GAME FEEL UPGRADES ====== */
+
+/* 1) Trophy pop animation */
+#toast{
+  position: fixed;
+  left: 50%;
+  top: calc(env(safe-area-inset-top) + 20px);
+  transform: translateX(-50%);
+  z-index: 999999;
+  pointer-events: none;
+  opacity: 0;
+}
+.toast-inner{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background: rgba(20,20,20,0.92);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  padding: 10px 14px;
+  box-shadow: 0 16px 50px rgba(0,0,0,0.55);
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+.toast-inner .delta{
+  color: rgba(255,255,255,0.95);
+}
+.toast-inner.good{
+  border-color: rgba(255,26,26,0.45);
+  box-shadow: 0 0 0 2px rgba(255,26,26,0.14), 0 16px 50px rgba(0,0,0,0.55);
+}
+.toast-inner.bad{
+  border-color: rgba(255,255,255,0.12);
+  opacity: 0.95;
+}
+.toast-show{
+  animation: toastInOut 1.0s ease forwards;
+}
+@keyframes toastInOut{
+  0%{ opacity:0; transform: translateX(-50%) translateY(-8px) scale(0.96); }
+  15%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
+  80%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
+  100%{ opacity:0; transform: translateX(-50%) translateY(-10px) scale(0.98); }
+}
+
+/* 2) Rank-up screen overlay */
+#rankUpOverlay{
+  position: fixed;
+  inset: 0;
+  z-index: 999998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(8px);
+}
+.rankup-card{
+  width: min(520px, 100%);
+  border-radius: 24px;
+  padding: 22px;
+  background: linear-gradient(180deg, rgba(16,16,16,0.96), rgba(8,8,8,0.96));
+  border: 1px solid rgba(255,26,26,0.20);
+  box-shadow: 0 22px 80px rgba(255,0,0,0.14);
+  text-align: center;
+}
+.rankup-badge{
+  width: 92px;
+  height: 92px;
+  border-radius: 22px;
+  margin: 0 auto 14px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,26,26,0.45), rgba(255,26,26,0.10));
+  border: 1px solid rgba(255,26,26,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 40px;
+  box-shadow: 0 0 0 6px rgba(255,26,26,0.06);
+}
+.rankup-title{
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.95);
+  margin: 0 0 6px;
+}
+.rankup-name{
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 1px;
+  margin: 0 0 12px;
+  text-shadow: 0 0 12px rgba(255,0,0,0.25);
+}
+.rankup-sub{
+  color: rgba(255,255,255,0.70);
+  margin: 0 0 14px;
+}
+.rankup-btn{
+  width: 100%;
+  min-width: unset;
+  height: 56px;
+  border-radius: 18px;
+}
+
+/* 3) Shake effect on wrong */
+.shake{
+  animation: shake 0.35s ease;
+}
+@keyframes shake{
+  0%{ transform: translateX(0); }
+  20%{ transform: translateX(-10px); }
+  40%{ transform: translateX(10px); }
+  60%{ transform: translateX(-7px); }
+  80%{ transform: translateX(7px); }
+  100%{ transform: translateX(0); }
+}
+
+/* FULLSCREEN MOBILE */
+@media (max-width: 520px){
+  #container{
+    padding: 0 !important;
+    height: 100dvh;
+    align-items: stretch;
+  }
+
+  .card{
+    width: 100%;
+    min-height: 100dvh;
+    border-radius: 0 !important;
+    padding:
+      calc(env(safe-area-inset-top) + 16px)
+      16px
+      calc(env(safe-area-inset-bottom) + 18px)
+      16px !important;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+  }
+
+  #content{
+    flex:1;
+    overflow:auto;
+    padding-bottom: 86px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .btn.play{
+    width: 64%;
+    max-width: 320px;
+    min-width: unset;
+    height: 52px;
+    font-size: 15px;
+    border-radius: 18px;
+    align-self:center;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .btn.check{
+    position: sticky;
+    bottom: calc(env(safe-area-inset-bottom) + 10px);
+    width: 100%;
+    min-width: unset;
+    height: 58px;
+    font-size: 16px;
+    border-radius: 18px;
+    margin: 14px 0 0;
+  }
 }
 </style>
 </head>
 
 <body>
-
 <canvas id="bg"></canvas>
+<div id="streakBox"></div>
+<div id="credit">made by Frihet</div>
 
-<div id="rankPopup">
-<div class="popupCard">
-<div style="font-size:40px">🪙</div>
-<h2>RANK UP</h2>
-<div class="rankName" id="popupRank"></div>
-<button onclick="closePopup()">CONTINUE →</button>
-</div>
+<!-- Trophy toast -->
+<div id="toast"><div id="toastInner" class="toast-inner"><span>🏆</span><span class="delta" id="toastText">+2</span></div></div>
+
+<!-- Rank up overlay -->
+<div id="rankUpOverlay">
+  <div class="rankup-card">
+    <div class="rankup-badge">🏆</div>
+    <h3 class="rankup-title">RANK UP</h3>
+    <div class="rankup-name" id="rankUpName">Millionaire</div>
+    <p class="rankup-sub" id="rankUpSub">Locked.</p>
+    <button class="rankup-btn" onclick="closeRankUp()">CONTINUE →</button>
+  </div>
 </div>
 
 <div id="container">
-<div class="card" id="intro">
-<h1>DISCIPLINE</h1>
-<h2>YOU VS YOU</h2>
-<button onclick="showRankScreen()">START SESSION →</button>
-<p style="font-size:12px;color:#777">made by Frihet</p>
-</div>
+  <div class="card" id="intro">
+    <h1>DISCIPLINE</h1>
+    <h2>YOU VS YOU</h2>
+    <div class="terminal-line"></div>
+    <button class="btn" onclick="startGame()">START SESSION →</button>
+    <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
+      made by Frihet
+    </p>
+  </div>
 </div>
 
 <script>
+/* ===== Background (candles) ===== */
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
 
-/* ===== BACKGROUND ===== */
-const canvas=document.getElementById("bg");
-const ctx=canvas.getContext("2d");
-function resize(){
-canvas.width=innerWidth;
-canvas.height=innerHeight;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
-resize();
-addEventListener("resize",resize);
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
-let candles=[];
-for(let i=0;i<40;i++){
-candles.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-h:Math.random()*60+20,
-s:Math.random()*1+0.5
-});
+let candles = [];
+function initCandles(){
+  candles = [];
+  for (let i = 0; i < 40; i++) {
+    candles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      height: Math.random() * 60 + 20,
+      speed: Math.random() * 1 + 0.5
+    });
+  }
 }
-function anim(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-candles.forEach(c=>{
-ctx.fillStyle="rgba(255,0,0,0.35)";
-ctx.fillRect(c.x,c.y,6,c.h);
-c.y+=c.s;
-if(c.y>canvas.height)c.y=-c.h;
-});
-requestAnimationFrame(anim);
-}
-anim();
+initCandles();
 
-/* ===== DATA ===== */
-const items=[
-"I feel you, bro. I’ve also been through a lot.",
-"You don’t need motivation. you just need discipline, bro.",
-"You just need to control yourself. it’s you vs you, bro.",
-"I want you to succeed, bro. I believe in you.",
-"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.",
-"I know it’s hard but dude nothing is easy in this world. You gotta work hard.",
-"Go ghost, bro. You can’t grow when people are around you.",
-"Lock in. You wanna be rich or not?",
-"I don’t wanna be an NPC, bro. That’s why I’m working this hard.",
-"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.",
-"You live only one life, bro. Nothing can stop you. do what you want.",
-"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.",
-"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions",
-"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life"
+function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  candles.forEach(c => {
+    ctx.fillStyle = "rgba(255,0,0,0.35)";
+    ctx.fillRect(c.x, c.y, 6, c.height);
+    c.y += c.speed;
+    if (c.y > canvas.height) c.y = -c.height;
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ===== Content ===== */
+const items = [
+  { en:"I feel you, bro. I’ve also been through a lot.", de:"Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht.", es:"Te entiendo, bro. Yo también he pasado por mucho." },
+  { en:"You don’t need motivation. you just need discipline, bro.", de:"Du brauchst keine Motivation. Du brauchst Disziplin, Bro.", es:"No necesitas motivación. Necesitas disciplina, bro." },
+  { en:"You just need to control yourself. it’s you vs you, bro.", de:"Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro.", es:"Solo tienes que controlarte. Es tú contra tú, bro." },
+  { en:"I want you to succeed, bro. I believe in you.", de:"Ich will, dass du Erfolg hast, Bro. Ich glaub an dich.", es:"Quiero que tengas éxito, bro. Creo en ti." },
+  { en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.", de:"Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär.", es:"Pero ya sabes, alguien tiene que trabajar de 9 a 5. No todos van a ser millonarios." },
+  { en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard.", de:"Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten.", es:"Sé que es difícil, pero nada en este mundo es fácil. Tienes que trabajar duro." },
+  { en:"Go ghost, bro. You can’t grow when people are around you.", de:"Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind.", es:"Desaparece un rato, bro. No puedes crecer si la gente siempre está alrededor." },
+  { en:"Lock in. You wanna be rich or not?", de:"Fokussier dich. Willst du reich werden oder nicht?", es:"Concéntrate. ¿Quieres ser rico o no?" },
+  { en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard.", de:"Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart.", es:"No quiero ser un NPC, bro. Por eso estoy trabajando así de duro." },
+  { en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.", de:"Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht.", es:"¿Crees que disfruto ir al gym todos los días? Hell nah, bro. De verdad que no." },
+  { en:"You live only one life, bro. Nothing can stop you. do what you want.", de:"Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst.", es:"Solo tienes una vida, bro. Nada puede detenerte. Haz lo que quieras." },
+  { en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.", de:"Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du.", es:"Si quieres mucho dinero, haz un gran movimiento. No te vas a hacer rico con un trabajo de 9 a 5, tú lo sabes." },
+  { en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions", de:"Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren.", es:"Si quieres ser diferente, tienes que ser frío, bro. Aprende a controlar tus emociones." },
+  { en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.", es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida." }
 ];
 
-/* ===== FHT SYSTEM ===== */
-const KEY="FHT";
-function getFHT(){return parseInt(localStorage.getItem(KEY)||"0")}
-function setFHT(v){if(v<0)v=0;localStorage.setItem(KEY,v)}
+/* ===== State ===== */
+let used = [];
+let currentIndex = 0;
+let score = 0;
+let round = 0;
+let selectedChoice = null;
+let audio = null;
 
-const RANKS=[
-{n:"LOSER",min:0},
-{n:"NPC",min:50},
-{n:"HUMAN",min:150},
-{n:"RICH",min:300},
-{n:"MILLIONAIRE",min:600},
-{n:"BILLIONAIRE",min:1000}
+let nativeLang = localStorage.getItem("nativeLang") || "en";
+let selectedMode = localStorage.getItem("mode") || "mix";
+
+/* ===== TROPHIES (persistent) ===== */
+const TROPHY_KEY = "trophies_forever";
+function getTrophies(){ return parseInt(localStorage.getItem(TROPHY_KEY) || "0"); }
+function setTrophies(v){
+  if (v < 0) v = 0; // keeps it clean; still applies -1, just not below zero
+  localStorage.setItem(TROPHY_KEY, String(v));
+}
+function addTrophies(delta){
+  const old = getTrophies();
+  setTrophies(old + delta);
+  return { old, now: getTrophies() };
+}
+
+/* Your rank names */
+const RANKS = [
+  { name: "Loser",       min: 0,    max: 49 },
+  { name: "NPC",         min: 50,   max: 149 },
+  { name: "Human",       min: 150,  max: 299 },
+  { name: "Rich",        min: 300,  max: 599 },
+  { name: "Millionaire", min: 600,  max: 999 },
+  { name: "Billionaire", min: 1000, max: 999999 }
 ];
 
-function rankOf(v){
-let r=RANKS[0];
-RANKS.forEach(x=>{if(v>=x.min)r=x});
-return r;
+function rankFor(t){
+  for(const r of RANKS){
+    if(t >= r.min && t <= r.max) return r;
+  }
+  return RANKS[0];
 }
-function nextRank(v){
-for(let r of RANKS){
-if(v<r.min)return r;
-}
-return null;
-}
-
-/* ===== START FLOW ===== */
-function showRankScreen(){
-let f=getFHT();
-let r=rankOf(f);
-let n=nextRank(f);
-
-document.getElementById("container").innerHTML=
-`<div class="card">
-<h2>YOUR RANK</h2>
-<p style="font-size:22px">🪙 FHT: <b>${f}</b></p>
-<p>RANK: <b>${r.n}</b></p>
-<p>NEXT: <b>${n?n.n:"MAX"}</b></p>
-<button onclick="startGame()">NEXT →</button>
-</div>`;
+function nextRankInfo(t){
+  const r = rankFor(t);
+  const idx = RANKS.indexOf(r);
+  if(idx === RANKS.length - 1){
+    return { nextName: "MAX", need: 0, pct: 100, label: "MAX" };
+  }
+  const next = RANKS[idx+1];
+  const needTotal = next.min - r.min;
+  const have = t - r.min;
+  const pct = Math.max(0, Math.min(100, Math.round((have / needTotal) * 100)));
+  return { nextName: next.name, need: next.min - t, pct, label: `${t}/${next.min}` };
 }
 
-/* ===== GAME ===== */
-let used=[],score=0,round=0,current=0,selected=null,audio=null;
+/* ===== Language UI ===== */
+const LANGS = [
+  { code: "en", label: "🇬🇧 English" },
+  { code: "de", label: "🇩🇪 Deutsch" },
+  { code: "es", label: "🇪🇸 Español" }
+];
 
+const UI = {
+  en: {
+    chooseNative: "Choose your native language",
+    chooseMode: "Choose a mode",
+    mix: "MIX",
+    listenOnly: "Listen",
+    buildOnly: "Build",
+    play: "PLAY",
+    check: "CHECK",
+    listenDecide: "Listen & Decide",
+    buildFocus: "Build With Focus",
+    sessionComplete: "Session Complete",
+    score: "Score",
+    restart: "Restart",
+    strong: "LOCKED.",
+    reset: "-1. Refocus.",
+    trophies: "Trophies",
+    rank: "Rank",
+    next: "Next",
+    progress: "Progress"
+  },
+  de: {
+    chooseNative: "Wähle deine Muttersprache",
+    chooseMode: "Wähle den Modus",
+    mix: "MIX",
+    listenOnly: "Hören",
+    buildOnly: "Bauen",
+    play: "PLAY",
+    check: "PRÜFEN",
+    listenDecide: "Hören & Entscheiden",
+    buildFocus: "Satz bauen",
+    sessionComplete: "Session beendet",
+    score: "Punktzahl",
+    restart: "Neustart",
+    strong: "LOCKED.",
+    reset: "-1. Fokus.",
+    trophies: "Trophäen",
+    rank: "Rang",
+    next: "Nächster",
+    progress: "Fortschritt"
+  },
+  es: {
+    chooseNative: "Elige tu idioma nativo",
+    chooseMode: "Elige el modo",
+    mix: "MIX",
+    listenOnly: "Escuchar",
+    buildOnly: "Construir",
+    play: "PLAY",
+    check: "COMPROBAR",
+    listenDecide: "Escucha y decide",
+    buildFocus: "Construye la frase",
+    sessionComplete: "Sesión terminada",
+    score: "Puntuación",
+    restart: "Reiniciar",
+    strong: "LOCKED.",
+    reset: "-1. Enfócate.",
+    trophies: "Trofeos",
+    rank: "Rango",
+    next: "Siguiente",
+    progress: "Progreso"
+  }
+};
+
+function t(key){
+  return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key;
+}
+function displayText(i){
+  const obj = items[i];
+  return obj[nativeLang] || obj.en;
+}
+
+/* ===== Streak ===== */
+function updateStreak() {
+  let today = new Date().toDateString();
+  let last = localStorage.getItem("lastDate");
+  let streak = parseInt(localStorage.getItem("streak") || "0");
+
+  if (last !== today) {
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (last === yesterday.toDateString()) streak++;
+    else streak = 1;
+    localStorage.setItem("streak", streak);
+    localStorage.setItem("lastDate", today);
+  }
+
+  document.getElementById("streakBox").innerText =
+    "🔥 Streak: " + (localStorage.getItem("streak") || 1);
+}
+updateStreak();
+
+/* ===== Screens ===== */
 function startGame(){
-document.getElementById("container").innerHTML=
-`<div class="card">
-<div id="hud">
-<div>Round: <span id="roundTxt">0/${items.length}</span></div>
-<div>🪙 FHT: <span id="fhtTxt">${getFHT()}</span></div>
-</div>
-<h2 id="mode"></h2>
-<button onclick="playAudio()">PLAY</button>
-<div id="content"></div>
-<div id="result"></div>
-</div>`;
-nextRound();
+  const buttons = LANGS.map(l =>
+    `<button class="btn" onclick="chooseLang('${l.code}')" style="margin:8px;">${l.label}</button>`
+  ).join("");
+
+  document.getElementById("container").innerHTML =
+    `<div class="card">
+      <h2 style="margin-top:0;">${t("chooseNative")}</h2>
+      <div style="margin-top:18px;">${buttons}</div>
+      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
+    </div>`;
 }
 
-function normalize(t){
-return t.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"");
+function chooseLang(lang){
+  nativeLang = lang;
+  localStorage.setItem("nativeLang", lang);
+
+  used = [];
+  score = 0;
+  round = 0;
+  selectedChoice = null;
+
+  showModeSelect();
 }
 
+function showModeSelect(){
+  document.getElementById("container").innerHTML =
+    `<div class="card">
+      <h2 style="margin-top:0;">${t("chooseMode")}</h2>
+
+      <button class="btn" onclick="setMode('mix')" style="margin:8px;">${t("mix")}</button>
+      <button class="btn" onclick="setMode('listen')" style="margin:8px;">${t("listenOnly")}</button>
+      <button class="btn" onclick="setMode('drag')" style="margin:8px;">${t("buildOnly")}</button>
+
+      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
+    </div>`;
+}
+
+function setMode(m){
+  selectedMode = m;
+  localStorage.setItem("mode", m);
+  startSession();
+}
+
+function startSession(){
+  document.getElementById("container").innerHTML =
+    `<div class="card" id="gameCard">
+      <div id="hud" style="text-align:left; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+          <div style="font-size:13px; color:#aaa;">
+            ${t("progress")}: <span id="progressText">0/${items.length}</span>
+          </div>
+
+          <div style="font-size:13px; color:#aaa; text-align:right;">
+            🏆 ${t("trophies")}: <span id="trophyText">0</span><br>
+            ${t("rank")}: <span id="rankText">Loser</span>
+          </div>
+        </div>
+
+        <div style="margin-top:10px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
+          <div id="progressBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:13px; color:#aaa;">
+            ${t("next")}: <span id="nextRankText">0/50</span>
+          </div>
+        </div>
+
+        <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
+          <div id="rankBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
+        </div>
+      </div>
+
+      <h2 id="mode"></h2>
+      <button class="btn play" onclick="playAudio()">${t("play")}</button>
+
+      <div id="content"></div>
+      <div id="result"></div>
+    </div>`;
+
+  nextRound();
+  updateHUD();
+}
+
+/* ===== HUD ===== */
+function updateHUD(){
+  const done = used.length;
+
+  const progressText = document.getElementById("progressText");
+  const progressBar = document.getElementById("progressBar");
+  if(progressText) progressText.innerText = done + "/" + items.length;
+  if(progressBar){
+    const pct = Math.round((done / items.length) * 100);
+    progressBar.style.width = pct + "%";
+  }
+
+  const trophies = getTrophies();
+  const trophyText = document.getElementById("trophyText");
+  const rankText = document.getElementById("rankText");
+  const nextRankText = document.getElementById("nextRankText");
+  const rankBar = document.getElementById("rankBar");
+
+  const r = rankFor(trophies);
+  const nxt = nextRankInfo(trophies);
+
+  if(trophyText) trophyText.innerText = trophies;
+  if(rankText) rankText.innerText = r.name;
+  if(nextRankText) nextRankText.innerText = nxt.label;
+  if(rankBar) rankBar.style.width = (nxt.pct || 0) + "%";
+}
+
+/* ===== Game helpers ===== */
+function normalize(s){
+  return s.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
+}
+
+/* ===== Random rounds ===== */
 function nextRound(){
-if(round>=items.length){
-document.getElementById("content").innerHTML=
-`<h2>Session Complete</h2>
-<p>Score: ${score}/${items.length}</p>
-<button onclick="location.reload()">Restart</button>`;
-return;
+  if(round >= items.length){
+    const trophies = getTrophies();
+    const r = rankFor(trophies);
+    document.getElementById("content").innerHTML =
+      `<h2>${t("sessionComplete")}</h2>
+       <p>${t("score")}: ${score} / ${items.length}</p>
+       <p>🏆 ${t("trophies")}: ${trophies} (${t("rank")}: ${r.name})</p>
+       <button class="btn" onclick="location.reload()">${t("restart")}</button>`;
+    return;
+  }
+
+  round++;
+  selectedChoice = null;
+  document.getElementById("result").innerText="";
+  document.getElementById("content").innerHTML="";
+
+  do {
+    currentIndex = Math.floor(Math.random()*items.length);
+  } while(used.includes(currentIndex));
+  used.push(currentIndex);
+
+  updateHUD();
+
+  if(selectedMode === "listen") buildListen();
+  else if(selectedMode === "drag") buildDrag();
+  else {
+    if(Math.random()>0.5) buildListen();
+    else buildDrag();
+  }
 }
 
-round++;
-document.getElementById("roundTxt").innerText=`${round}/${items.length}`;
-selected=null;
-document.getElementById("result").innerText="";
-document.getElementById("content").innerHTML="";
-
-do{
-current=Math.floor(Math.random()*items.length);
-}while(used.includes(current));
-used.push(current);
-
-if(Math.random()>0.5) buildListen();
-else buildDrag();
-}
-
-/* ===== LISTEN ===== */
+/* ===== Listen & Decide ===== */
 function buildListen(){
-document.getElementById("mode").innerText="Listen & Decide";
+  document.getElementById("mode").innerText = t("listenDecide");
 
-let correct=items[current];
-let options=[correct];
-while(options.length<4){
-let r=items[Math.floor(Math.random()*items.length)];
-if(!options.includes(r))options.push(r);
+  const correctText = displayText(currentIndex);
+
+  let optionIndexes = [currentIndex];
+  while(optionIndexes.length < 4){
+    const r = Math.floor(Math.random() * items.length);
+    if(!optionIndexes.includes(r)) optionIndexes.push(r);
+  }
+  optionIndexes.sort(()=>0.5 - Math.random());
+
+  optionIndexes.forEach(idx=>{
+    let div = document.createElement("div");
+    div.className="choice";
+    div.innerText = displayText(idx);
+    div.onclick=()=>{
+      document.querySelectorAll(".choice").forEach(c=>c.classList.remove("selected"));
+      div.classList.add("selected");
+      selectedChoice = displayText(idx);
+    };
+    document.getElementById("content").appendChild(div);
+  });
+
+  let btn = document.createElement("button");
+  btn.className = "btn check";
+  btn.innerText = t("check");
+  btn.onclick=()=>{
+    if(!selectedChoice) return;
+    if(normalize(selectedChoice)===normalize(correctText)) success();
+    else fail();
+  };
+  document.getElementById("content").appendChild(btn);
+
+  if(nativeLang !== "en"){
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.innerText = "English: " + items[currentIndex].en;
+    document.getElementById("content").appendChild(hint);
+  }
 }
-options.sort(()=>0.5-Math.random());
 
-options.forEach(o=>{
-let d=document.createElement("div");
-d.className="choice";
-d.innerText=o;
-d.onclick=()=>{
-document.querySelectorAll(".choice").forEach(c=>c.classList.remove("selected"));
-d.classList.add("selected");
-selected=o;
-};
-document.getElementById("content").appendChild(d);
-});
-
-let btn=document.createElement("button");
-btn.innerText="CHECK";
-btn.onclick=()=>{
-if(!selected)return;
-if(normalize(selected)==normalize(items[current])) success();
-else fail();
-};
-document.getElementById("content").appendChild(btn);
-}
-
-/* ===== DRAG ===== */
+/* ===== Build With Focus ===== */
 function buildDrag(){
-document.getElementById("mode").innerText="Build With Focus";
+  document.getElementById("mode").innerText = t("buildFocus");
 
-let words=items[current].split(" ");
-let shuffled=[...words].sort(()=>0.5-Math.random());
+  const targetSentence = displayText(currentIndex);
+  let words = targetSentence.split(" ");
+  let shuffled = [...words].sort(()=>0.5-Math.random());
 
-let top=document.createElement("div");
-top.className="word-container";
-top.id="top";
+  let top=document.createElement("div");
+  top.className="word-container";
+  top.id="top";
 
-let bottom=document.createElement("div");
-bottom.className="word-container";
-bottom.id="bottom";
+  let bottom=document.createElement("div");
+  bottom.className="word-container";
+  bottom.id="bottom";
 
-shuffled.forEach(w=>{
-let s=document.createElement("div");
-s.className="word";
-s.innerText=w;
-s.onclick=()=>{
-if(s.parentElement.id==="bottom")top.appendChild(s);
-else bottom.appendChild(s);
-};
-bottom.appendChild(s);
-});
+  shuffled.forEach(w=>{
+    let span=document.createElement("div");
+    span.className="word";
+    span.innerText=w;
+    span.onclick=()=>{
+      if(span.parentElement.id==="bottom") top.appendChild(span);
+      else bottom.appendChild(span);
+    };
+    bottom.appendChild(span);
+  });
 
-let btn=document.createElement("button");
-btn.innerText="CHECK";
-btn.onclick=()=>{
-let built="";
-document.querySelectorAll("#top .word").forEach(w=>built+=w.innerText+" ");
-if(normalize(built)==normalize(items[current])) success();
-else fail();
-};
+  let btn=document.createElement("button");
+  btn.className = "btn check";
+  btn.innerText = t("check");
+  btn.onclick=()=>{
+    let built="";
+    document.querySelectorAll("#top .word").forEach(w=>built+=w.innerText+" ");
+    if(normalize(built)===normalize(targetSentence)) success();
+    else fail();
+  };
 
-document.getElementById("content").append(top,bottom,btn);
+  document.getElementById("content").appendChild(top);
+  document.getElementById("content").appendChild(bottom);
+  document.getElementById("content").appendChild(btn);
+
+  if(nativeLang !== "en"){
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.innerText = "English: " + items[currentIndex].en;
+    document.getElementById("content").appendChild(hint);
+  }
 }
 
-/* ===== FHT ANIMATION ===== */
-function animateFHT(target){
-let el=document.getElementById("fhtTxt");
-let cur=parseInt(el.innerText);
-let step=target>cur?1:-1;
-let i=setInterval(()=>{
-cur+=step;
-el.innerText=cur;
-if(cur==target)clearInterval(i);
-},20);
+/* ===== GAME FEEL FUNCTIONS ===== */
+function showToast(delta){
+  const toast = document.getElementById("toast");
+  const inner = document.getElementById("toastInner");
+  const text = document.getElementById("toastText");
+
+  // reset classes
+  toast.classList.remove("toast-show");
+  inner.classList.remove("good","bad");
+
+  if(delta > 0){
+    inner.classList.add("good");
+    text.textContent = `+${delta} TROPHY`;
+  } else {
+    inner.classList.add("bad");
+    text.textContent = `${delta} TROPHY`;
+  }
+
+  // force reflow
+  void toast.offsetWidth;
+  toast.classList.add("toast-show");
 }
 
-/* ===== RESULT ===== */
+function shakeCard(){
+  const card = document.getElementById("gameCard");
+  if(!card) return;
+  card.classList.remove("shake");
+  void card.offsetWidth;
+  card.classList.add("shake");
+}
+
+let pendingNext = null;
+
+function showRankUp(newRankName){
+  const overlay = document.getElementById("rankUpOverlay");
+  const nameEl = document.getElementById("rankUpName");
+  const subEl = document.getElementById("rankUpSub");
+  nameEl.textContent = newRankName;
+  subEl.textContent = "Upgrade secured. Keep going.";
+  overlay.style.display = "flex";
+}
+
+function closeRankUp(){
+  const overlay = document.getElementById("rankUpOverlay");
+  overlay.style.display = "none";
+  if(typeof pendingNext === "function"){
+    const fn = pendingNext;
+    pendingNext = null;
+    fn();
+  }
+}
+
+/* ===== Scoring rules =====
+   Correct: +2 trophies
+   Wrong:   -1 trophy
+*/
 function success(){
-score++;
-let before=rankOf(getFHT()).n;
-let val=getFHT()+2;
-setFHT(val);
-animateFHT(val);
+  playSound(true);
+  score++;
 
-let after=rankOf(val).n;
-document.getElementById("result").innerText="LOCKED.";
+  const beforeRank = rankFor(getTrophies()).name;
 
-if(before!=after){
-document.getElementById("popupRank").innerText=after;
-document.getElementById("rankPopup").style.display="flex";
-}else{
-setTimeout(nextRound,1200);
-}
+  const res = addTrophies(+2);
+  showToast(+2);
+
+  const afterRank = rankFor(res.now).name;
+  updateHUD();
+
+  document.getElementById("result").innerText = t("strong");
+  stopAudio();
+
+  // Rank-up screen
+  if(afterRank !== beforeRank){
+    pendingNext = () => setTimeout(nextRound, 250);
+    showRankUp(afterRank);
+    return;
+  }
+
+  setTimeout(nextRound,1200);
 }
 
 function fail(){
-let val=getFHT()-1;
-setFHT(val);
-animateFHT(getFHT());
-document.getElementById("result").innerText="-1. Refocus.";
-setTimeout(nextRound,1400);
-}
+  playSound(false);
 
-function closePopup(){
-document.getElementById("rankPopup").style.display="none";
-nextRound();
+  const beforeRank = rankFor(getTrophies()).name;
+
+  const res = addTrophies(-1);
+  showToast(-1);
+  shakeCard();
+
+  const afterRank = rankFor(res.now).name;
+  updateHUD();
+
+  document.getElementById("result").innerText = t("reset");
+  stopAudio();
+
+  // If rank drops, we do NOT show rank-down overlay (keeps it fast).
+  setTimeout(nextRound,1500);
 }
 
 function playAudio(){
-if(audio){audio.pause();audio.currentTime=0;}
-audio=new Audio("audio"+(current+1)+".mp3");
-audio.play();
+  stopAudio();
+  audio = new Audio("audio"+(currentIndex+1)+".mp3");
+  audio.play();
+}
+
+function stopAudio(){
+  if(audio){ audio.pause(); audio.currentTime = 0; }
+}
+
+/* Soft click sound */
+function playSound(success){
+  const aCtx=new (window.AudioContext||window.webkitAudioContext)();
+  const osc=aCtx.createOscillator();
+  const gain=aCtx.createGain();
+  osc.connect(gain);
+  gain.connect(aCtx.destination);
+  osc.frequency.value= success?600:220;
+  gain.gain.value=0.05;
+  osc.start();
+  setTimeout(()=>osc.stop(),100);
 }
 </script>
-
 </body>
 </html>
+
