@@ -217,6 +217,7 @@ let audio = null;
 
 let xp = 0;
 const XP_PER_WIN = 10;
+const DAILY_GOAL = 50;   
 
 let nativeLang = localStorage.getItem("nativeLang") || "en";
 let selectedMode = localStorage.getItem("mode") || "mix";
@@ -248,6 +249,8 @@ const UI = {
     reset: "Reset. Focus.",
     progress: "Progress",
     xp: "XP"
+    dailyGoal: "Daily Goal",
+    goalComplete: "Daily Goal Complete ✅"
   },
   de: {
     chooseNative: "Wähle deine Muttersprache",
@@ -267,6 +270,8 @@ const UI = {
     reset: "Reset. Fokus.",
     progress: "Fortschritt",
     xp: "XP"
+    dailyGoal: "Tagesziel",
+    goalComplete: "Tagesziel geschafft ✅"
   },
   es: {
     chooseNative: "Elige tu idioma nativo",
@@ -286,6 +291,8 @@ const UI = {
     reset: "Reset. Enfócate.",
     progress: "Progreso",
     xp: "XP"
+    dailyGoal: "Meta diaria",
+    goalComplete: "Meta diaria completada ✅"
   }
 };
 
@@ -378,6 +385,16 @@ function startSession(){
           <div id="progressBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
         </div>
       </div>
+      <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
+  <div style="font-size:13px; color:#aaa;">
+    <span id="goalLabel">${t("dailyGoal")}: </span>
+    <span id="goalText">0/${DAILY_GOAL} XP</span>
+  </div>
+</div>
+
+<div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
+  <div id="goalBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
+</div>
 
       <h2 id="mode"></h2>
       <button onclick="playAudio()">${t("play")}</button>
@@ -390,7 +407,38 @@ function startSession(){
 }
 
 /* ===== HUD ===== */
-function updateHUD(){
+ function todayKey(){
+  return new Date().toDateString();
+}
+
+function getDailyXP(){
+  const savedDay = localStorage.getItem("dailyXP_day");
+  const today = todayKey();
+
+  if(savedDay !== today){
+    // new day → reset
+    localStorage.setItem("dailyXP_day", today);
+    localStorage.setItem("dailyXP_value", "0");
+    return 0;
+  }
+  return parseInt(localStorage.getItem("dailyXP_value") || "0");
+}
+
+function addDailyXP(amount){
+  const savedDay = localStorage.getItem("dailyXP_day");
+  const today = todayKey();
+
+  if(savedDay !== today){
+    localStorage.setItem("dailyXP_day", today);
+    localStorage.setItem("dailyXP_value", "0");
+  }
+
+  let v = parseInt(localStorage.getItem("dailyXP_value") || "0");
+  v += amount;
+  localStorage.setItem("dailyXP_value", String(v));
+  return v;
+}
+  function updateHUD(){
   const done = used.length;
   const progressText = document.getElementById("progressText");
   const xpText = document.getElementById("xpText");
@@ -403,6 +451,27 @@ function updateHUD(){
 
   const pct = Math.round((done / items.length) * 100);
   progressBar.style.width = pct + "%";
+
+      // Daily goal
+  const dailyXP = getDailyXP();
+  const goalPct = Math.min(100, Math.round((dailyXP / DAILY_GOAL) * 100));
+
+  const goalTextEl = document.getElementById("goalText");
+  const goalBarEl = document.getElementById("goalBar");
+  const goalLabelEl = document.getElementById("goalLabel");
+
+  if(goalTextEl && goalBarEl){
+    goalBarEl.style.width = goalPct + "%";
+
+    if(dailyXP >= DAILY_GOAL){
+      // completed state
+      if(goalLabelEl) goalLabelEl.innerText = "";
+      goalTextEl.innerText = t("goalComplete");
+    } else {
+      if(goalLabelEl) goalLabelEl.innerText = t("dailyGoal") + ": ";
+      goalTextEl.innerText = dailyXP + "/" + DAILY_GOAL + " XP";
+    }
+  }
 }
 
 /* ===== Game ===== */
@@ -532,6 +601,7 @@ function success(){
   playSound(true);
   score++;
   xp += XP_PER_WIN;
+  addDailyXP(XP_PER_WIN);
   updateHUD();
   document.getElementById("result").innerText = t("strong");
   stopAudio();
@@ -570,5 +640,6 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
