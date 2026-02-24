@@ -58,6 +58,7 @@ body::before{
   border-radius:24px;
   box-shadow: 0 18px 70px rgba(255,0,0,0.18);
   padding:28px;
+  transform: translateZ(0);
 }
 
 /* Trading terminal intro branding */
@@ -195,6 +196,124 @@ button:active{ transform: scale(0.98); }
   pointer-events:none;
 }
 
+/* ====== GAME FEEL UPGRADES ====== */
+
+/* 1) Trophy pop animation */
+#toast{
+  position: fixed;
+  left: 50%;
+  top: calc(env(safe-area-inset-top) + 20px);
+  transform: translateX(-50%);
+  z-index: 999999;
+  pointer-events: none;
+  opacity: 0;
+}
+.toast-inner{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background: rgba(20,20,20,0.92);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  padding: 10px 14px;
+  box-shadow: 0 16px 50px rgba(0,0,0,0.55);
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+.toast-inner .delta{
+  color: rgba(255,255,255,0.95);
+}
+.toast-inner.good{
+  border-color: rgba(255,26,26,0.45);
+  box-shadow: 0 0 0 2px rgba(255,26,26,0.14), 0 16px 50px rgba(0,0,0,0.55);
+}
+.toast-inner.bad{
+  border-color: rgba(255,255,255,0.12);
+  opacity: 0.95;
+}
+.toast-show{
+  animation: toastInOut 1.0s ease forwards;
+}
+@keyframes toastInOut{
+  0%{ opacity:0; transform: translateX(-50%) translateY(-8px) scale(0.96); }
+  15%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
+  80%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
+  100%{ opacity:0; transform: translateX(-50%) translateY(-10px) scale(0.98); }
+}
+
+/* 2) Rank-up screen overlay */
+#rankUpOverlay{
+  position: fixed;
+  inset: 0;
+  z-index: 999998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(8px);
+}
+.rankup-card{
+  width: min(520px, 100%);
+  border-radius: 24px;
+  padding: 22px;
+  background: linear-gradient(180deg, rgba(16,16,16,0.96), rgba(8,8,8,0.96));
+  border: 1px solid rgba(255,26,26,0.20);
+  box-shadow: 0 22px 80px rgba(255,0,0,0.14);
+  text-align: center;
+}
+.rankup-badge{
+  width: 92px;
+  height: 92px;
+  border-radius: 22px;
+  margin: 0 auto 14px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,26,26,0.45), rgba(255,26,26,0.10));
+  border: 1px solid rgba(255,26,26,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 40px;
+  box-shadow: 0 0 0 6px rgba(255,26,26,0.06);
+}
+.rankup-title{
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.95);
+  margin: 0 0 6px;
+}
+.rankup-name{
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 1px;
+  margin: 0 0 12px;
+  text-shadow: 0 0 12px rgba(255,0,0,0.25);
+}
+.rankup-sub{
+  color: rgba(255,255,255,0.70);
+  margin: 0 0 14px;
+}
+.rankup-btn{
+  width: 100%;
+  min-width: unset;
+  height: 56px;
+  border-radius: 18px;
+}
+
+/* 3) Shake effect on wrong */
+.shake{
+  animation: shake 0.35s ease;
+}
+@keyframes shake{
+  0%{ transform: translateX(0); }
+  20%{ transform: translateX(-10px); }
+  40%{ transform: translateX(10px); }
+  60%{ transform: translateX(-7px); }
+  80%{ transform: translateX(7px); }
+  100%{ transform: translateX(0); }
+}
+
 /* FULLSCREEN MOBILE */
 @media (max-width: 520px){
   #container{
@@ -254,6 +373,20 @@ button:active{ transform: scale(0.98); }
 <canvas id="bg"></canvas>
 <div id="streakBox"></div>
 <div id="credit">made by Frihet</div>
+
+<!-- Trophy toast -->
+<div id="toast"><div id="toastInner" class="toast-inner"><span>🏆</span><span class="delta" id="toastText">+2</span></div></div>
+
+<!-- Rank up overlay -->
+<div id="rankUpOverlay">
+  <div class="rankup-card">
+    <div class="rankup-badge">🏆</div>
+    <h3 class="rankup-title">RANK UP</h3>
+    <div class="rankup-name" id="rankUpName">Millionaire</div>
+    <p class="rankup-sub" id="rankUpSub">Locked.</p>
+    <button class="rankup-btn" onclick="closeRankUp()">CONTINUE →</button>
+  </div>
+</div>
 
 <div id="container">
   <div class="card" id="intro">
@@ -331,33 +464,30 @@ let round = 0;
 let selectedChoice = null;
 let audio = null;
 
-
 let nativeLang = localStorage.getItem("nativeLang") || "en";
 let selectedMode = localStorage.getItem("mode") || "mix";
 
 /* ===== TROPHIES (persistent) ===== */
 const TROPHY_KEY = "trophies_forever";
-function getTrophies(){
-  return parseInt(localStorage.getItem(TROPHY_KEY) || "0");
-}
+function getTrophies(){ return parseInt(localStorage.getItem(TROPHY_KEY) || "0"); }
 function setTrophies(v){
-  // still applies -1 on wrong, but we prevent negative (optional safety)
-  if (v < 0) v = 0;
+  if (v < 0) v = 0; // keeps it clean; still applies -1, just not below zero
   localStorage.setItem(TROPHY_KEY, String(v));
 }
 function addTrophies(delta){
-  const v = getTrophies() + delta;
-  setTrophies(v);
-  return getTrophies();
+  const old = getTrophies();
+  setTrophies(old + delta);
+  return { old, now: getTrophies() };
 }
 
+/* Your rank names */
 const RANKS = [
-  { name: "Loser", min: 0, max: 49 },
-  { name: "Npc", min: 50, max: 149 },
-  { name: "human", min: 150, max: 299 },
-  { name: "rich", min: 300, max: 599 },
-  { name: "millionaire", min: 600, max: 999 },
-  { name: "billionaire", min: 1000, max:999999 }
+  { name: "Loser",       min: 0,    max: 49 },
+  { name: "NPC",         min: 50,   max: 149 },
+  { name: "Human",       min: 150,  max: 299 },
+  { name: "Rich",        min: 300,  max: 599 },
+  { name: "Millionaire", min: 600,  max: 999 },
+  { name: "Billionaire", min: 1000, max: 999999 }
 ];
 
 function rankFor(t){
@@ -401,13 +531,11 @@ const UI = {
     score: "Score",
     restart: "Restart",
     strong: "LOCKED.",
-    reset: "Penalty. Refocus.",
+    reset: "-1. Refocus.",
     trophies: "Trophies",
     rank: "Rank",
     next: "Next",
-    progress: "Progress",
-    dailyGoal: "Daily Goal",
-    goalComplete: "Daily Goal Complete ✅"
+    progress: "Progress"
   },
   de: {
     chooseNative: "Wähle deine Muttersprache",
@@ -423,13 +551,11 @@ const UI = {
     score: "Punktzahl",
     restart: "Neustart",
     strong: "LOCKED.",
-    reset: "Strafe. Fokus.",
+    reset: "-1. Fokus.",
     trophies: "Trophäen",
     rank: "Rang",
     next: "Nächster",
-    progress: "Fortschritt",
-    dailyGoal: "Tagesziel",
-    goalComplete: "Tagesziel geschafft ✅"
+    progress: "Fortschritt"
   },
   es: {
     chooseNative: "Elige tu idioma nativo",
@@ -445,13 +571,11 @@ const UI = {
     score: "Puntuación",
     restart: "Reiniciar",
     strong: "LOCKED.",
-    reset: "Penalización. Enfócate.",
+    reset: "-1. Enfócate.",
     trophies: "Trofeos",
     rank: "Rango",
     next: "Siguiente",
-    progress: "Progreso",
-    dailyGoal: "Meta diaria",
-    goalComplete: "Meta diaria completada ✅"
+    progress: "Progreso"
   }
 };
 
@@ -461,12 +585,6 @@ function t(key){
 function displayText(i){
   const obj = items[i];
   return obj[nativeLang] || obj.en;
-}
-
-  let v = parseInt(localStorage.getItem("dailyXP_value") || "0");
-  v += amount;
-  localStorage.setItem("dailyXP_value", String(v));
-  return v;
 }
 
 /* ===== Streak ===== */
@@ -510,7 +628,6 @@ function chooseLang(lang){
   used = [];
   score = 0;
   round = 0;
-  xp = 0;
   selectedChoice = null;
 
   showModeSelect();
@@ -537,17 +654,16 @@ function setMode(m){
 
 function startSession(){
   document.getElementById("container").innerHTML =
-    `<div class="card">
+    `<div class="card" id="gameCard">
       <div id="hud" style="text-align:left; margin-bottom:14px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
           <div style="font-size:13px; color:#aaa;">
-            ${t("progress")}: <span id="progressText">0/${items.length}</span><br>
-            
+            ${t("progress")}: <span id="progressText">0/${items.length}</span>
           </div>
 
           <div style="font-size:13px; color:#aaa; text-align:right;">
             🏆 ${t("trophies")}: <span id="trophyText">0</span><br>
-            ${t("rank")}: <span id="rankText">Rookie</span>
+            ${t("rank")}: <span id="rankText">Loser</span>
           </div>
         </div>
 
@@ -557,16 +673,8 @@ function startSession(){
 
         <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
           <div style="font-size:13px; color:#aaa;">
-           
-          
-          </div>
-          <div style="font-size:13px; color:#aaa;">
             ${t("next")}: <span id="nextRankText">0/50</span>
           </div>
-        </div>
-
-        <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
-         
         </div>
 
         <div style="margin-top:8px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
@@ -590,19 +698,13 @@ function updateHUD(){
   const done = used.length;
 
   const progressText = document.getElementById("progressText");
- 
   const progressBar = document.getElementById("progressBar");
-
   if(progressText) progressText.innerText = done + "/" + items.length;
- 
   if(progressBar){
     const pct = Math.round((done / items.length) * 100);
     progressBar.style.width = pct + "%";
   }
 
-
-
-  // Trophies + Rank
   const trophies = getTrophies();
   const trophyText = document.getElementById("trophyText");
   const rankText = document.getElementById("rankText");
@@ -618,11 +720,12 @@ function updateHUD(){
   if(rankBar) rankBar.style.width = (nxt.pct || 0) + "%";
 }
 
-/* ===== Game ===== */
+/* ===== Game helpers ===== */
 function normalize(s){
   return s.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
 }
 
+/* ===== Random rounds ===== */
 function nextRound(){
   if(round >= items.length){
     const trophies = getTrophies();
@@ -630,7 +733,6 @@ function nextRound(){
     document.getElementById("content").innerHTML =
       `<h2>${t("sessionComplete")}</h2>
        <p>${t("score")}: ${score} / ${items.length}</p>
-       
        <p>🏆 ${t("trophies")}: ${trophies} (${t("rank")}: ${r.name})</p>
        <button class="btn" onclick="location.reload()">${t("restart")}</button>`;
     return;
@@ -656,6 +758,7 @@ function nextRound(){
   }
 }
 
+/* ===== Listen & Decide ===== */
 function buildListen(){
   document.getElementById("mode").innerText = t("listenDecide");
 
@@ -698,6 +801,7 @@ function buildListen(){
   }
 }
 
+/* ===== Build With Focus ===== */
 function buildDrag(){
   document.getElementById("mode").innerText = t("buildFocus");
 
@@ -746,6 +850,58 @@ function buildDrag(){
   }
 }
 
+/* ===== GAME FEEL FUNCTIONS ===== */
+function showToast(delta){
+  const toast = document.getElementById("toast");
+  const inner = document.getElementById("toastInner");
+  const text = document.getElementById("toastText");
+
+  // reset classes
+  toast.classList.remove("toast-show");
+  inner.classList.remove("good","bad");
+
+  if(delta > 0){
+    inner.classList.add("good");
+    text.textContent = `+${delta} TROPHY`;
+  } else {
+    inner.classList.add("bad");
+    text.textContent = `${delta} TROPHY`;
+  }
+
+  // force reflow
+  void toast.offsetWidth;
+  toast.classList.add("toast-show");
+}
+
+function shakeCard(){
+  const card = document.getElementById("gameCard");
+  if(!card) return;
+  card.classList.remove("shake");
+  void card.offsetWidth;
+  card.classList.add("shake");
+}
+
+let pendingNext = null;
+
+function showRankUp(newRankName){
+  const overlay = document.getElementById("rankUpOverlay");
+  const nameEl = document.getElementById("rankUpName");
+  const subEl = document.getElementById("rankUpSub");
+  nameEl.textContent = newRankName;
+  subEl.textContent = "Upgrade secured. Keep going.";
+  overlay.style.display = "flex";
+}
+
+function closeRankUp(){
+  const overlay = document.getElementById("rankUpOverlay");
+  overlay.style.display = "none";
+  if(typeof pendingNext === "function"){
+    const fn = pendingNext;
+    pendingNext = null;
+    fn();
+  }
+}
+
 /* ===== Scoring rules =====
    Correct: +2 trophies
    Wrong:   -1 trophy
@@ -754,22 +910,43 @@ function success(){
   playSound(true);
   score++;
 
-  addTrophies(+2);
+  const beforeRank = rankFor(getTrophies()).name;
 
+  const res = addTrophies(+2);
+  showToast(+2);
+
+  const afterRank = rankFor(res.now).name;
   updateHUD();
+
   document.getElementById("result").innerText = t("strong");
   stopAudio();
+
+  // Rank-up screen
+  if(afterRank !== beforeRank){
+    pendingNext = () => setTimeout(nextRound, 250);
+    showRankUp(afterRank);
+    return;
+  }
+
   setTimeout(nextRound,1200);
 }
 
 function fail(){
   playSound(false);
 
-  addTrophies(-1);
+  const beforeRank = rankFor(getTrophies()).name;
 
+  const res = addTrophies(-1);
+  showToast(-1);
+  shakeCard();
+
+  const afterRank = rankFor(res.now).name;
   updateHUD();
+
   document.getElementById("result").innerText = t("reset");
   stopAudio();
+
+  // If rank drops, we do NOT show rank-down overlay (keeps it fast).
   setTimeout(nextRound,1500);
 }
 
@@ -783,13 +960,14 @@ function stopAudio(){
   if(audio){ audio.pause(); audio.currentTime = 0; }
 }
 
+/* Soft click sound */
 function playSound(success){
   const aCtx=new (window.AudioContext||window.webkitAudioContext)();
   const osc=aCtx.createOscillator();
   const gain=aCtx.createGain();
   osc.connect(gain);
   gain.connect(aCtx.destination);
-  osc.frequency.value= success?600:200;
+  osc.frequency.value= success?600:220;
   gain.gain.value=0.05;
   osc.start();
   setTimeout(()=>osc.stop(),100);
