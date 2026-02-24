@@ -532,7 +532,7 @@ const UI = {
     restart: "Restart",
     strong: "LOCKED.",
     reset: "-1. Refocus.",
-    trophies: "Trophies",
+    trophies: "FSD",
     rank: "Rank",
     next: "Next",
     progress: "Progress"
@@ -552,7 +552,7 @@ const UI = {
     restart: "Neustart",
     strong: "LOCKED.",
     reset: "-1. Fokus.",
-    trophies: "Trophäen",
+    trophies: "FSD",
     rank: "Rang",
     next: "Nächster",
     progress: "Fortschritt"
@@ -572,7 +572,7 @@ const UI = {
     restart: "Reiniciar",
     strong: "LOCKED.",
     reset: "-1. Enfócate.",
-    trophies: "Trofeos",
+    trophies: "FSD",
     rank: "Rango",
     next: "Siguiente",
     progress: "Progreso"
@@ -662,7 +662,7 @@ function startSession(){
           </div>
 
           <div style="font-size:13px; color:#aaa; text-align:right;">
-            🏆 ${t("trophies")}: <span id="trophyText">0</span><br>
+            💰 ${t("fsd")}: <span id="trophyText">0</span><br>
             ${t("rank")}: <span id="rankText">Loser</span>
           </div>
         </div>
@@ -862,10 +862,10 @@ function showToast(delta){
 
   if(delta > 0){
     inner.classList.add("good");
-    text.textContent = `+${delta} TROPHY`;
+    text.textContent = `+${delta} FSD 💰`;
   } else {
     inner.classList.add("bad");
-    text.textContent = `${delta} TROPHY`;
+    text.textContent = `${delta} FSD 💰`;
   }
 
   // force reflow
@@ -975,4 +975,5 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
