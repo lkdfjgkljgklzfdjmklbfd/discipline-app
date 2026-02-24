@@ -118,8 +118,10 @@ button:active{ transform: scale(0.98); }
 
 /* darker solid choice cards */
 .choice{
+  font-weight: 800;
+  letter-spacing: 0.2px;
   background: rgba(28,28,28,0.92);
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,26,26,0.20);
   border-radius: 20px;
   padding: 18px 16px;
   margin: 12px 0;
@@ -132,6 +134,7 @@ button:active{ transform: scale(0.98); }
 .choice.selected{
   border-color: rgba(255,26,26,0.90);
   box-shadow: 0 0 0 2px rgba(255,26,26,0.28), 0 12px 34px rgba(0,0,0,0.5);
+  font-weight: 900;
 }
 
 .word-container{
@@ -375,12 +378,12 @@ button:active{ transform: scale(0.98); }
 <div id="credit">made by Frihet</div>
 
 <!-- Trophy toast -->
-<div id="toast"><div id="toastInner" class="toast-inner"><span>🏆</span><span class="delta" id="toastText">+2</span></div></div>
+<div id="toast"><div id="toastInner" class="toast-inner"><span>💰</span><span class="delta" id="toastText">+2</span></div></div>
 
 <!-- Rank up overlay -->
 <div id="rankUpOverlay">
   <div class="rankup-card">
-    <div class="rankup-badge">🏆</div>
+    <div class="rankup-badge">💰</div>
     <h3 class="rankup-title">RANK UP</h3>
     <div class="rankup-name" id="rankUpName">Millionaire</div>
     <p class="rankup-sub" id="rankUpSub">Locked.</p>
@@ -733,7 +736,7 @@ function nextRound(){
     document.getElementById("content").innerHTML =
       `<h2>${t("sessionComplete")}</h2>
        <p>${t("score")}: ${score} / ${items.length}</p>
-       <p>🏆 ${t("trophies")}: ${trophies} (${t("rank")}: ${r.name})</p>
+       <p💰> ${t("FSD")}: ${trophies} (${t("rank")}: ${r.name})</p>
        <button class="btn" onclick="location.reload()">${t("restart")}</button>`;
     return;
   }
@@ -975,6 +978,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
