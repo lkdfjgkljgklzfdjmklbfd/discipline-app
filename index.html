@@ -3,181 +3,226 @@
 <head>
 <meta charset="UTF-8">
 <title>DISCIPLINE</title>
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: black;
-  overflow: hidden;
-  color: white;
+  <style>
+:root{
+  --red:#ff1a1a;
+  --red2:#b30000;
+  --panel: rgba(10,10,10,0.92);
+  --panel2: rgba(18,18,18,0.92);
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.65);
 }
 
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:#000;
+  color:var(--text);
+  overflow:hidden;
 }
 
-#container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+canvas{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  z-index:-2;
 }
 
-.card {
-  background: rgba(10,10,10,0.95);
-  padding: 44px;
-  width: min(720px, 94vw);
-  max-width: 94vw;
-
-  min-height: 78vh;        
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* center content vertically */
-
-  border-radius: 22px;
-  box-shadow: 0 0 40px rgba(255,0,0,0.2);
-  text-align: center;
-}
-@media (max-width: 520px) {
-  .card{
-    width: 96vw;
-    min-height: 86vh;
-    padding: 24px;
-    border-radius: 18px;
-  }
-
-  /* Bigger titles */
-  #intro h1 { font-size: 44px; letter-spacing: 4px; }
-  #intro h2 { font-size: 15px; letter-spacing: 3px; }
-
-  /* Bigger mode title */
-  #mode { font-size: 20px; }
-
-  /* Make choices + sentence text readable */
-  .choice{
-    font-size: 17px;
-    line-height: 1.35;
-    padding: 16px;
-  }
-
-  /* Bigger draggable words */
-  .word{
-    font-size: 16px;
-    padding: 10px 14px;
-  }
-
-  /* HUD text bigger */
-  #hud { font-size: 14px; }
-  #hud span { font-size: 14px; }
-
-  /* Result text bigger */
-  #result { font-size: 16px; }
+/* subtle dark overlay so UI pops */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.25), rgba(0,0,0,0.78));
+  z-index:-1;
 }
 
-  #intro h1 { font-size: 40px; letter-spacing: 4px; }
-  #intro h2 { font-size: 14px; letter-spacing: 3px; }
+#container{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
 
+/* CARD = app screen */
+.card{
+  width:min(820px, 100%);
+  background: linear-gradient(180deg, var(--panel), var(--panel2));
+  border:1px solid rgba(255,26,26,0.20);
+  border-radius:24px;
+  box-shadow: 0 18px 70px rgba(255,0,0,0.18);
+  padding:28px;
+}
+
+/* intro titles */
+#intro h1{
+  font-size:52px;
+  letter-spacing:6px;
+  color:var(--red);
+  margin:0;
+  line-height:1;
+}
+#intro h2{
+  margin:10px 0 0;
+  letter-spacing:4px;
+  color:rgba(255,255,255,0.78);
+  font-size:16px;
+}
+
+/* mode title */
+#mode{
+  font-size:22px;
+  margin:6px 0 12px;
+  letter-spacing:0.5px;
+}
+
+/* APP BUTTONS */
 button{
-  width: auto;              
-  min-width: 220px;         
-  max-width: 90%;
-  display: inline-block;
-  #content{
-  margin-top: 12px;
-}
-  .word-container{
-  margin: 18px 0;
-}
-}
+  appearance:none;
+  border:none;
+  cursor:pointer;
+  background: linear-gradient(180deg, var(--red2), #7a0000);
+  color:white;
+  font-weight:800;
+  letter-spacing:1px;
+  border-radius:16px;
 
+  height:54px;
+  padding:0 18px;
+  min-width: 220px;
 
-#intro h1 {
-  font-size: 48px;
-  letter-spacing: 6px;
-  color: #ff1a1a;
-  margin: 0;
+  box-shadow: 0 10px 26px rgba(255,0,0,0.18);
+  transition: transform .08s ease, filter .15s ease;
 }
+button:hover{ filter:brightness(1.08); }
+button:active{ transform: scale(0.98); }
 
-#intro h2 {
-  margin-top: 10px;
-  letter-spacing: 4px;
-  color: #aaa;
+/* make groups of buttons look neat */
+.card button{ margin:10px 8px 0; }
+
+/* CHOICES = tappable app cards */
+.choice{
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:18px;
+  padding:16px 16px;
+  margin:12px 0;
+  cursor:pointer;
+
+  font-size:18px;
+  line-height:1.35;
+  text-align:left;
 }
-
-button {
-  padding: 14px 24px;
-  margin-top: 14px;
-  border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  cursor: pointer;
-  background: #b30000;
-  color: white;
-  transition: 0.2s;
-}
-
-button:hover { background: #ff1a1a; }
-
-.choice {
-  background: #1a1a1a;
-  margin: 12px 0;
-  padding: 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  border: 2px solid transparent;
+.choice.selected{
+  border-color: rgba(255,26,26,0.8);
+  box-shadow: 0 0 0 2px rgba(255,26,26,0.25);
 }
 
-.choice.selected { border: 2px solid #ff1a1a; }
-
-.word-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 15px 0;
-  min-height: 54px;
+/* Drag words */
+.word-container{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:16px 0;
+  min-height:64px;
+  padding:6px;
+  border-radius:16px;
+  background: rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+.word{
+  background: rgba(255,26,26,0.18);
+  border:1px solid rgba(255,26,26,0.28);
+  padding:10px 14px;
+  border-radius:16px;
+  font-size:17px;
+  font-weight:700;
+  user-select:none;
 }
 
-.word {
-  background: #990000;
-  padding: 8px 14px;
-  margin: 6px;
-  border-radius: 10px;
-  cursor: pointer;
-  user-select: none;
+/* HUD text bigger + clearer */
+#hud{
+  margin-bottom:14px;
+}
+#hud *{
+  font-size:14px !important;
+}
+#hud .muted{ color: var(--muted); }
+
+#result{
+  margin-top:14px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:0.5px;
 }
 
-#result { margin-top: 15px; font-weight: bold; }
-
-#streakBox {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  font-size: 14px;
-  color: rgba(255,255,255,0.9);
-  z-index: 9999;
+/* streak + credit */
+#streakBox{
+  position:fixed;
+  top:14px;
+  right:14px;
+  font-size:13px;
+  color:rgba(255,255,255,0.85);
+  z-index:9999;
+}
+#credit{
+  position:fixed;
+  bottom:12px;
+  right:12px;
+  font-size:12px;
+  color:rgba(255,255,255,0.55);
+  letter-spacing:1px;
+  z-index:9999;
+  pointer-events:none;
 }
 
-#credit {
-  position: fixed;
-  bottom: 20px;
-  right: 25px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.6);
-  letter-spacing: 1px;
-  font-weight: 500;
-  z-index: 9999;
-  pointer-events: none;
-}
+/* MOBILE = make it feel like a real app screen */
+@media (max-width: 520px){
+  #container{ padding:10px; }
 
-.hint {
-  margin-top: 12px;
-  color: #aaa;
-  font-size: 13px;
+  .card{
+    width:100%;
+    min-height: 88vh;      /* full-screen feel */
+    border-radius:22px;
+    padding:22px 18px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+  }
+
+  #intro h1{ font-size:48px; letter-spacing:5px; }
+  #intro h2{ font-size:15px; letter-spacing:3px; }
+
+  #mode{ font-size:22px; }
+
+  /* make main buttons look like app CTAs */
+  button{
+    width:100%;
+    min-width:unset;
+    height:58px;
+    font-size:16px;
+    border-radius:18px;
+  }
+
+  .choice{
+    font-size:19px;
+    padding:18px 16px;
+    border-radius:20px;
+  }
+
+  .word{
+    font-size:18px;
+    padding:12px 14px;
+  }
+
+  #hud *{ font-size:14px !important; }
+
+  #result{ font-size:19px; }
 }
 </style>
 </head>
@@ -685,6 +730,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
