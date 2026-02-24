@@ -381,7 +381,7 @@ initCandles();
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   for(const c of candles){
-    ctx.fillStyle = "rgba(255,0,0,0.35)";
+    ctx.fillStyle = "rgba(255,0,0,0.55)";
     ctx.fillRect(c.x, c.y, 6, c.height);
     c.y += c.speed;
     if(c.y > canvas.height) c.y = -c.height;
@@ -845,6 +845,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
