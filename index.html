@@ -364,31 +364,80 @@ function resizeCanvas(){ canvas.width = window.innerWidth; canvas.height = windo
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
+// ===== Candlestick Background (real-looking) =====
 let candles = [];
+const CANDLE_COUNT = 55;
+
+function rand(min, max){ return Math.random() * (max - min) + min; }
+
+function makeCandle(spawnTop=false){
+  const bodyH = rand(14, 70);
+  const wickTop = rand(6, 32);
+  const wickBot = rand(6, 26);
+  const w = rand(6, 11);           // body width
+  const speed = rand(0.35, 1.05);  // slow = premium
+  const x = rand(0, canvas.width);
+  const y = spawnTop ? rand(-canvas.height, 0) : rand(0, canvas.height);
+
+  // Mostly red (down candles), but with slight variation in shade
+  const r = Math.floor(rand(200, 255));
+  const g = Math.floor(rand(0, 40));
+  const b = Math.floor(rand(0, 40));
+
+  return { x, y, w, bodyH, wickTop, wickBot, speed, r, g, b };
+}
+
 function initCandles(){
   candles = [];
-  for(let i=0;i<40;i++){
-    candles.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      height: Math.random()*60 + 20,
-      speed: Math.random()*1 + 0.5
-    });
-  }
+  for(let i=0;i<CANDLE_COUNT;i++) candles.push(makeCandle(false));
 }
 initCandles();
 
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  for(const c of candles){
-    ctx.fillStyle = "rgba(220,20,20,0.55)";
-    ctx.fillRect(c.x, c.y, 6, c.height);
-    c.y += c.speed;
-    if(c.y > canvas.height) c.y = -c.height;
-  }
-  requestAnimationFrame(animate);
+function drawCandle(c){
+  const centerX = c.x;
+  const bodyX = centerX - c.w/2;
+  const wickX = centerX;
+
+  // overall opacity (controls "진하게")
+  const bodyA = 0.28;      // body opacity
+  const wickA = 0.22;      // wick opacity
+
+  // Wick (thin line)
+  ctx.lineWidth = 1.2;
+  ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${wickA})`;
+  ctx.beginPath();
+  ctx.moveTo(wickX, c.y - c.wickTop);
+  ctx.lineTo(wickX, c.y + c.bodyH + c.wickBot);
+  ctx.stroke();
+
+  // Body
+  ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${bodyA})`;
+  ctx.fillRect(bodyX, c.y, c.w, c.bodyH);
+
+  // subtle highlight line on body (makes it feel like a candle)
+  ctx.fillStyle = `rgba(255,255,255,0.04)`;
+  ctx.fillRect(bodyX + 1, c.y + 2, 1, Math.max(6, c.bodyH - 4));
 }
-animate();
+
+function animateCandles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  candles.forEach(c=>{
+    drawCandle(c);
+    c.y += c.speed;
+
+    // respawn when it leaves bottom
+    if(c.y - c.wickTop > canvas.height + 30){
+      const nc = makeCandle(true);
+      c.x = nc.x; c.y = nc.y; c.w = nc.w;
+      c.bodyH = nc.bodyH; c.wickTop = nc.wickTop; c.wickBot = nc.wickBot;
+      c.speed = nc.speed; c.r = nc.r; c.g = nc.g; c.b = nc.b;
+    }
+  });
+
+  requestAnimationFrame(animateCandles);
+}
+animateCandles();
 
 /* ===== Content (14) ===== */
 const items = [
@@ -845,6 +894,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
