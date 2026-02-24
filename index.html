@@ -691,7 +691,9 @@ function startLevel(levelId){
   selectedChoice = null;
   stopAudio();
 
-  showModeSelect();}
+  showModeSelect();
+}
+  function showModeSelect(){
 
   // Now render the game screen
 
@@ -820,7 +822,7 @@ function nextRound(){
  let pick;
   do {
     pick=
-    activeItems[Math.floor(Math.random()*activeitems.length)];
+    activeItems[Math.floor(Math.random()*activeItems.length)];
   } while(used.includes(pick));
 
   currentIndex = pick;
@@ -1053,6 +1055,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
