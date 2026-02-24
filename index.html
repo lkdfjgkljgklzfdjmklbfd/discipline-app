@@ -463,6 +463,20 @@ const items = [
   { en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.", es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida." }
 ];
 
+/* ===== LEVEL ===== */
+const LEVELS = [
+  { id: "L1", name: "✅Kid",
+  idx: [0,1,2,10,13] },
+  { id: "L2", name: "⚠️Bro",
+  idx: [3,5,6,7] },
+  { id: "L3", name: "🚫King",
+   [4,8,9,11,12] } 
+  ];
+
+  // active pool 
+  let activeItems = [];
+  let activeLevel = "L1";
+
 /* ===== State ===== */
 let used = [];
 let currentIndex = 0;
@@ -630,14 +644,60 @@ function startGame(){
 
 function chooseLang(lang){
   nativeLang = lang;
-  localStorage.setItem("nativeLang", lang);
 
+  // Show LEVEL SELECT screen
+
+  document,getElementById("container").innerH
+  TML = <div class="card">
+    <h2 style='margin-top:0;">Choose your level</h2>
+    <p style="color:#aaa;
+    margin-top:8px;">Harder level = stronger mindest + harder English</p>
+
+  <div id="levelBtns"
+  style="display:flex; flex-direction:column;
+    gap:12px; margin-top:16px;"></div>
+
+  <p class="credit">made by Frihet</p>
+    </div>
+  ';
+
+  const wrap=
+    document.getElementById("levelBtns");
+  LEVELS.forEach(lv => {
+    const b =
+      document.createElement("button");
+    b.textContent = lv.name;
+    b.onclick = () => startLevel(lv.id);
+    wrap.appendChild(b);
+  });
+}
+
+function startLevel(levelId){
+  activeLevel = levelId;
+
+  // Build active pool from LEVEL idx
+  const lv = LEVELS.find(x => x.id === levelId);
+  activeItems = lv.idx.map(i => items[i]); // <-- IMPORTANT: your main list must be named 'items'
+
+  // Reset session state
   used = [];
   score = 0;
   round = 0;
   selectedChoice = null;
+  stopAudio();
 
-  showModeSelect();
+  // Now render the game screen
+
+  document.getElementById("container").innerH
+  TML =
+    '<div class="card">
+    <h2 id="mode"><h2>
+    <button onclick="playAudio()">$
+  {t("play")}<button>
+    <div id="content"></div>
+    <div id="result"></div>
+    </div>';
+  nextRound();
 }
 
 function showModeSelect(){
@@ -734,12 +794,12 @@ function normalize(s){
 
 /* ===== Random rounds ===== */
 function nextRound(){
-  if(round >= items.length){
+  if(round >= activeItems.length){
     const trophies = getTrophies();
     const r = rankFor(trophies);
     document.getElementById("content").innerHTML =
       `<h2>${t("sessionComplete")}</h2>
-       <p>${t("score")}: ${score} / ${items.length}</p>
+       <p>${t("score")}: ${score} / ${activeItems.length}</p>
        <p💰> ${t("FSD")}: ${trophies} (${t("rank")}: ${r.name})</p>
        <button class="btn" onclick="location.reload()">${t("restart")}</button>`;
     return;
@@ -773,7 +833,7 @@ function buildListen(){
 
   let optionIndexes = [currentIndex];
   while(optionIndexes.length < 4){
-    const r = Math.floor(Math.random() * items.length);
+    const r = Math.floor(Math.random() * activeItems.length);
     if(!optionIndexes.includes(r)) optionIndexes.push(r);
   }
   optionIndexes.sort(()=>0.5 - Math.random());
@@ -982,6 +1042,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
