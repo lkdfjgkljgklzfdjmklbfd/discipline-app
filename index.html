@@ -31,7 +31,7 @@ canvas {
 .card {
   background: rgba(10,10,10,0.95);
   padding: 40px;
-  width: 520px;
+  width: 560px;
   max-width: 95%;
   border-radius: 20px;
   box-shadow: 0 0 40px rgba(255,0,0,0.2);
@@ -72,6 +72,7 @@ button:hover { background: #ff1a1a; }
   border-radius: 12px;
   cursor: pointer;
   border: 2px solid transparent;
+  text-align: left;
 }
 
 .choice.selected { border: 2px solid #ff1a1a; }
@@ -82,6 +83,9 @@ button:hover { background: #ff1a1a; }
   justify-content: center;
   margin: 15px 0;
   min-height: 54px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
 }
 
 .word {
@@ -120,6 +124,14 @@ button:hover { background: #ff1a1a; }
   margin-top: 12px;
   color: #aaa;
   font-size: 13px;
+  text-align: left;
+}
+
+.smallNote {
+  color: rgba(255,255,255,0.65);
+  font-size: 12px;
+  margin-top: 18px;
+  letter-spacing: 1px;
 }
 </style>
 </head>
@@ -133,9 +145,7 @@ button:hover { background: #ff1a1a; }
     <h1>DISCIPLINE</h1>
     <h2>YOU VS YOU</h2>
     <button onclick="startGame()">START SESSION →</button>
-    <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
-      made by Frihet
-    </p>
+    <p class="smallNote">made by Frihet</p>
   </div>
 </div>
 
@@ -202,15 +212,16 @@ let used = [];
 let currentIndex = 0;
 let score = 0;
 let round = 0;
-let xp = 0;          // XP for this session
-const XP_PER_WIN = 10;
 let selectedChoice = null;
 let audio = null;
+
+let xp = 0;
+const XP_PER_WIN = 10;
 
 let nativeLang = localStorage.getItem("nativeLang") || "en";
 let selectedMode = localStorage.getItem("mode") || "mix";
 
-/* ===== Languages list (auto buttons) ===== */
+/* ===== Languages list ===== */
 const LANGS = [
   { code: "en", label: "🇬🇧 English" },
   { code: "de", label: "🇩🇪 Deutsch" },
@@ -234,9 +245,9 @@ const UI = {
     score: "Score",
     restart: "Restart",
     strong: "Strong.",
-    reset: "Reset. Focus."
-    xp: "XP",
-    progress: "Progress"
+    reset: "Reset. Focus.",
+    progress: "Progress",
+    xp: "XP"
   },
   de: {
     chooseNative: "Wähle deine Muttersprache",
@@ -253,9 +264,9 @@ const UI = {
     score: "Punktzahl",
     restart: "Neustart",
     strong: "Stark.",
-    reset: "Reset. Fokus."
-    xp: "XP",
-    progress: "Fortschritt"
+    reset: "Reset. Fokus.",
+    progress: "Fortschritt",
+    xp: "XP"
   },
   es: {
     chooseNative: "Elige tu idioma nativo",
@@ -272,9 +283,9 @@ const UI = {
     score: "Puntuación",
     restart: "Reiniciar",
     strong: "Fuerte.",
-    reset: "Reset. Enfócate."
-    xp: "XP",
-    progress: "Progreso"
+    reset: "Reset. Enfócate.",
+    progress: "Progreso",
+    xp: "XP"
   }
 };
 
@@ -318,7 +329,7 @@ function startGame(){
       <h2 style="margin-top:0;">${t("chooseNative")}</h2>
       <p style="color:#aaa; margin-top:8px;">${t("audioNote")}</p>
       <div style="margin-top:18px;">${buttons}</div>
-      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
+      <p class="smallNote">made by Frihet</p>
     </div>`;
 }
 
@@ -329,6 +340,7 @@ function chooseLang(lang){
   used = [];
   score = 0;
   round = 0;
+  xp = 0;
   selectedChoice = null;
 
   showModeSelect();
@@ -344,7 +356,7 @@ function showModeSelect(){
       <button onclick="setMode('drag')" style="margin:8px;">${t("buildOnly")}</button>
 
       <p style="color:#aaa; margin-top:12px; font-size:13px;">${t("audioNote")}</p>
-      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
+      <p class="smallNote">made by Frihet</p>
     </div>`;
 }
 
@@ -356,32 +368,41 @@ function setMode(m){
 
 function startSession(){
   document.getElementById("container").innerHTML =
-  `<div class="card">
-     <div id="hud" style="text-align:left; margin-bottom:14px;">
-       <div style="display:flex; justify-content:space-between; align-items:center;">
-         <div style="font-size:13px; color:#aaa;">${t("progress")}: <span id="progressText">0/${items.length}</span></div>
-         <div style="font-size:13px; color:#aaa;">${t("xp")}: <span id="xpText">0</span></div>
-       </div>
-       <div style="margin-top:10px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
-         <div id="progressBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
-       </div>
-     </div>
+    `<div class="card">
+      <div id="hud" style="text-align:left; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:13px; color:#aaa;">${t("progress")}: <span id="progressText">0/${items.length}</span></div>
+          <div style="font-size:13px; color:#aaa;">${t("xp")}: <span id="xpText">0</span></div>
+        </div>
+        <div style="margin-top:10px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
+          <div id="progressBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
+        </div>
+      </div>
 
-     <h2 id="mode"></h2>
-     <button onclick="playAudio()">${t("play")}</button>
-     <div id="content"></div>
-     <div id="result"></div>
-   </div>`;
+      <h2 id="mode"></h2>
+      <button onclick="playAudio()">${t("play")}</button>
+      <div id="content"></div>
+      <div id="result"></div>
+    </div>`;
+
   nextRound();
   updateHUD();
-  
-  function updateHUD(){
-  const done = used.length; // how many questions already used
-  document.getElementById("progressText").innerText = done + "/" + items.length;
-  document.getElementById("xpText").innerText = xp;
+}
+
+/* ===== HUD ===== */
+function updateHUD(){
+  const done = used.length;
+  const progressText = document.getElementById("progressText");
+  const xpText = document.getElementById("xpText");
+  const progressBar = document.getElementById("progressBar");
+
+  if(!progressText || !xpText || !progressBar) return;
+
+  progressText.innerText = done + "/" + items.length;
+  xpText.innerText = xp;
 
   const pct = Math.round((done / items.length) * 100);
-  document.getElementById("progressBar").style.width = pct + "%";
+  progressBar.style.width = pct + "%";
 }
 
 /* ===== Game ===== */
@@ -394,6 +415,7 @@ function nextRound(){
     document.getElementById("content").innerHTML =
       `<h2>${t("sessionComplete")}</h2>
        <p>${t("score")}: ${score} / ${items.length}</p>
+       <p>${t("xp")}: ${xp}</p>
        <button onclick="location.reload()">${t("restart")}</button>`;
     return;
   }
@@ -407,6 +429,7 @@ function nextRound(){
     currentIndex = Math.floor(Math.random()*items.length);
   } while(used.includes(currentIndex));
   used.push(currentIndex);
+
   updateHUD();
 
   if(selectedMode === "listen") buildListen();
@@ -547,6 +570,5 @@ function playSound(success){
 </script>
 </body>
 </html>
-
 
 
