@@ -202,6 +202,8 @@ let used = [];
 let currentIndex = 0;
 let score = 0;
 let round = 0;
+let xp = 0;          // XP for this session
+const XP_PER_WIN = 10;
 let selectedChoice = null;
 let audio = null;
 
@@ -233,6 +235,8 @@ const UI = {
     restart: "Restart",
     strong: "Strong.",
     reset: "Reset. Focus."
+    xp: "XP",
+    progress: "Progress"
   },
   de: {
     chooseNative: "Wähle deine Muttersprache",
@@ -250,6 +254,8 @@ const UI = {
     restart: "Neustart",
     strong: "Stark.",
     reset: "Reset. Fokus."
+    xp: "XP",
+    progress: "Fortschritt"
   },
   es: {
     chooseNative: "Elige tu idioma nativo",
@@ -267,6 +273,8 @@ const UI = {
     restart: "Reiniciar",
     strong: "Fuerte.",
     reset: "Reset. Enfócate."
+    xp: "XP",
+    progress: "Progreso"
   }
 };
 
@@ -348,13 +356,32 @@ function setMode(m){
 
 function startSession(){
   document.getElementById("container").innerHTML =
-    `<div class="card">
-      <h2 id="mode"></h2>
-      <button onclick="playAudio()">${t("play")}</button>
-      <div id="content"></div>
-      <div id="result"></div>
-    </div>`;
+  `<div class="card">
+     <div id="hud" style="text-align:left; margin-bottom:14px;">
+       <div style="display:flex; justify-content:space-between; align-items:center;">
+         <div style="font-size:13px; color:#aaa;">${t("progress")}: <span id="progressText">0/${items.length}</span></div>
+         <div style="font-size:13px; color:#aaa;">${t("xp")}: <span id="xpText">0</span></div>
+       </div>
+       <div style="margin-top:10px; background:#1a1a1a; border-radius:999px; height:10px; overflow:hidden;">
+         <div id="progressBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
+       </div>
+     </div>
+
+     <h2 id="mode"></h2>
+     <button onclick="playAudio()">${t("play")}</button>
+     <div id="content"></div>
+     <div id="result"></div>
+   </div>`;
   nextRound();
+  updateHUD();
+  
+  function updateHUD(){
+  const done = used.length; // how many questions already used
+  document.getElementById("progressText").innerText = done + "/" + items.length;
+  document.getElementById("xpText").innerText = xp;
+
+  const pct = Math.round((done / items.length) * 100);
+  document.getElementById("progressBar").style.width = pct + "%";
 }
 
 /* ===== Game ===== */
@@ -380,6 +407,7 @@ function nextRound(){
     currentIndex = Math.floor(Math.random()*items.length);
   } while(used.includes(currentIndex));
   used.push(currentIndex);
+  updateHUD();
 
   if(selectedMode === "listen") buildListen();
   else if(selectedMode === "drag") buildDrag();
@@ -480,6 +508,8 @@ function buildDrag(){
 function success(){
   playSound(true);
   score++;
+  xp += XP_PER_WIN;
+  updateHUD();
   document.getElementById("result").innerText = t("strong");
   stopAudio();
   setTimeout(nextRound,1200);
@@ -517,5 +547,6 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
