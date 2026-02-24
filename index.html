@@ -355,11 +355,12 @@ function addTrophies(delta){
 }
 
 const RANKS = [
-  { name: "Rookie", min: 0, max: 49 },
-  { name: "Focused", min: 50, max: 149 },
-  { name: "Discipline", min: 150, max: 299 },
-  { name: "Locked In", min: 300, max: 599 },
-  { name: "Elite", min: 600, max: 999999 }
+  { name: "Loser", min: 0, max: 49 },
+  { name: "Npc", min: 50, max: 149 },
+  { name: "human", min: 150, max: 299 },
+  { name: "rich", min: 300, max: 599 },
+  { name: "millionaire", min: 600, max: 999 }
+  { name: "billionaire", min: 1000, max:999999 }
 ];
 
 function rankFor(t){
@@ -842,6 +843,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
