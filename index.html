@@ -64,18 +64,34 @@ body::before{
 }
 
 /* intro */
+/* Premium brand title */
 #intro h1{
-  font-size:52px;
-  letter-spacing:6px;
-  color:var(--red);
-  margin:0;
-  line-height:1;
+  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: clamp(44px, 7vw, 64px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+
+  /* premium red gradient */
+  background: linear-gradient(180deg, #ff3b3b 0%, #b30000 55%, #6a0000 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  /* subtle glow (not cringe) */
+  text-shadow:
+    0 8px 30px rgba(255, 0, 0, 0.18),
+    0 2px 10px rgba(255, 0, 0, 0.12);
 }
+
+/* Premium subtitle */
 #intro h2{
-  margin:10px 0 0;
-  letter-spacing:4px;
-  color:rgba(255,255,255,0.78);
-  font-size:16px;
+  margin-top: 14px;
+  font-size: 13px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.72);
 }
 
 /* mode title */
@@ -265,12 +281,22 @@ button:active{ transform: scale(0.98); }
   <div class="card" id="intro">
     <h1>DISCIPLINE</h1>
     <h2>YOU VS YOU</h2>
-    <button class="btn" onclick="startGame()">START SESSION →</button>
+    <div class="brand-line"></div>
+    <button onclick="startGame()">START SESSION →</button>
     <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
       made by Frihet
     </p>
   </div>
 </div>
+
+  .brand-line{
+  width: min(340px, 80%);
+  height: 2px;
+  margin: 18px auto 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255,26,26,0.95), transparent);
+  box-shadow: 0 10px 24px rgba(255,0,0,0.14);
+}
 
 <script>
 /* ===== Background (candles) ===== */
@@ -753,6 +779,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
