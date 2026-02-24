@@ -170,20 +170,22 @@ animate();
 /* Game Logic */
 
 const sentences = [
-  "I feel you, bro. I’ve also been through a lot.",
-"You don’t need motivation. you just need discipline, bro.",
-"You just need to control yourself. it’s you vs you, bro.",
-"I want you to succeed, bro. I believe in you.",
-"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.",
-"I know it’s hard but dude nothing is easy in this world. You gotta work hard.",
-"Go ghost, bro. You can’t grow when people are around you.",
-"Lock in. You wanna be rich or not?",
-"I don’t wanna be an NPC, bro. That’s why I’m working this hard.",
-"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.",
-"You live only one life, bro. Nothing can stop you. do what you want.",
-"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.",
-"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions",
-"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life"
+  const items = [
+  { en: "I feel you, bro. I’ve also been through a lot.", de: "Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht." },
+  { en: "You don’t need motivation. you just need discipline, bro.", de: "Du brauchst keine Motivation. Du brauchst Disziplin, Bro." },
+  { en: "You just need to control yourself. it’s you vs you, bro.", de: "Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro." },
+  { en: "I want you to succeed, bro. I believe in you.", de: "Ich will, dass du Erfolg hast, Bro. Ich glaub an dich." },
+  { en: "But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.", de: "Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär." },
+  { en: "I know it’s hard but dude nothing is easy in this world. You gotta work hard.", de: "Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten." },
+  { en: "Go ghost, bro. You can’t grow when people are around you.", de: "Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind." },
+  { en: "Lock in. You wanna be rich or not?", de: "Fokussier dich. Willst du reich werden oder nicht?" },
+  { en: "I don’t wanna be an NPC, bro. That’s why I’m working this hard.", de: "Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart." },
+  { en: "You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.", de: "Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht." },
+  { en: "You live only one life, bro. Nothing can stop you. do what you want.", de: "Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst." },
+  { en: "If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.", de: "Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du." },
+  { en: "If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions", de: "Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren." },
+  { en: "Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de: "Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben." }
+];
 
 ];
 
@@ -194,6 +196,36 @@ let round = 0;
 let selectedChoice = null;
 let audio = null;
 
+let nativeLang = "en"; // "en" = English, "de" = German
+const UI = {
+  en: {
+    chooseNative: "Choose your native language",
+    audioNote: "Audio stays English. Text support changes.",
+    startSession: "START SESSION →",
+    play: "PLAY",
+    check: "CHECK",
+    listenDecide: "Listen & Decide",
+    buildFocus: "Build With Focus",
+    sessionComplete: "Session Complete",
+    score: "Score"
+  },
+  de: {
+    chooseNative: "Wähle deine Muttersprache",
+    audioNote: "Audio bleibt Englisch. Der Text ändert sich.",
+    startSession: "SESSION STARTEN →",
+    play: "PLAY",
+    check: "PRÜFEN",
+    listenDecide: "Hören & Entscheiden",
+    buildFocus: "Satz bauen",
+    sessionComplete: "Session beendet",
+    score: "Punktzahl"
+  }
+};
+
+function t(key) {
+  return (UI[nativeLang] && UI[nativeLang][key]) ? UI[nativeLang][key] : UI.en[key];
+}
+  
 /* Daily Streak */
 function updateStreak() {
   let today = new Date().toDateString();
@@ -218,10 +250,37 @@ updateStreak();
 
 function startGame() {
   document.getElementById("container").innerHTML =
-    '<div class="card"><h2 id="mode"></h2><button onclick="playAudio()">PLAY</button><div id="content"></div><div id="result"></div></div>';
+    `
+    <div class="card">
+      <h2 style="margin-top:0;">${t("chooseNative")}</h2>
+      <p style="color:#aaa; margin-top:8px;">${t("audioNote")}</p>
+
+      <button onclick="chooseLang('en')">🇬🇧 English</button>
+      <button onclick="chooseLang('de')" style="margin-left:10px;">🇩🇪 Deutsch</button>
+
+      <p class="credit">made by Frihet</p>
+    </div>
+    `;
+}
+  
+function chooseLang(lang) {
+  nativeLang = lang;
+
+document.getElementById("container").innerHTML =
+  `<div class="card">
+     <h2 id="mode"></h2>
+     <button onclick="playAudio()">${t("play")}</button>
+     <div id="content"></div>
+     <div id="result"></div>
+   </div>`;
+  
+  used = [];
+  score = 0;
+  round = 0;
+
   nextRound();
 }
-
+  
 function normalize(t){
   return t.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
 }
@@ -249,7 +308,7 @@ function nextRound(){
 }
 
 function buildListen(){
-  document.getElementById("mode").innerText="Listen & Decide";
+  document.getElementById("mode").innerText = t("listenDecide");
 
   let correct = sentences[currentIndex];
   let options=[correct];
@@ -274,7 +333,8 @@ function buildListen(){
   });
 
   let btn=document.createElement("button");
-  btn.innerText="CHECK";
+  \
+  btn.innerText = t("check");
   btn.onclick=()=>{
     if(!selectedChoice) return;
     if(normalize(selectedChoice)===normalize(sentences[currentIndex])) success();
@@ -284,7 +344,7 @@ function buildListen(){
 }
 
 function buildDrag(){
-  document.getElementById("mode").innerText="Build With Focus";
+  document.getElementById("mode").innerText = t("buildFocus");
 
   let words=sentences[currentIndex].split(" ");
   let shuffled=[...words].sort(()=>0.5-Math.random());
@@ -309,7 +369,7 @@ function buildDrag(){
   });
 
   let btn=document.createElement("button");
-  btn.innerText="CHECK";
+  btn.innerText = t("check");
   btn.onclick=()=>{
     let built="";
     document.querySelectorAll("#top .word").forEach(w=>built+=w.innerText+" ");
@@ -364,6 +424,7 @@ function playSound(success){
 </body>
 
 </html>
+
 
 
 
