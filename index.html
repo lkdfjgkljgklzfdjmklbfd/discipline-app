@@ -43,18 +43,56 @@ canvas {
   box-shadow: 0 0 40px rgba(255,0,0,0.2);
   text-align: center;
 }
-  @media (max-width: 520px) {
- .card {
-  width: 96vw;
-  min-height: 86vh;   /* ⭐ taller on phone */
-  padding: 26px;
-  border-radius: 18px;
+@media (max-width: 520px) {
+  .card{
+    width: 96vw;
+    min-height: 86vh;
+    padding: 24px;
+    border-radius: 18px;
+  }
+
+  /* Bigger titles */
+  #intro h1 { font-size: 44px; letter-spacing: 4px; }
+  #intro h2 { font-size: 15px; letter-spacing: 3px; }
+
+  /* Bigger mode title */
+  #mode { font-size: 20px; }
+
+  /* Make choices + sentence text readable */
+  .choice{
+    font-size: 17px;
+    line-height: 1.35;
+    padding: 16px;
+  }
+
+  /* Bigger draggable words */
+  .word{
+    font-size: 16px;
+    padding: 10px 14px;
+  }
+
+  /* HUD text bigger */
+  #hud { font-size: 14px; }
+  #hud span { font-size: 14px; }
+
+  /* Result text bigger */
+  #result { font-size: 16px; }
 }
 
   #intro h1 { font-size: 40px; letter-spacing: 4px; }
   #intro h2 { font-size: 14px; letter-spacing: 3px; }
 
-  button { width: 100%; }
+button{
+  width: auto;              
+  min-width: 220px;         
+  max-width: 90%;
+  display: inline-block;
+  #content{
+  margin-top: 12px;
+}
+  .word-container{
+  margin: 18px 0;
+}
 }
 
 
@@ -647,6 +685,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
