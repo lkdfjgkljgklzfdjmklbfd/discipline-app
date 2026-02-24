@@ -30,12 +30,24 @@ canvas {
 
 .card {
   background: rgba(10,10,10,0.95);
-  padding: 40px;
-  width: 520px;
-  max-width: 95%;
-  border-radius: 20px;
+  padding: 44px;
+  width: min(720px, 94vw);
+  max-width: 94vw;
+  border-radius: 22px;
   box-shadow: 0 0 40px rgba(255,0,0,0.2);
   text-align: center;
+  @media (max-width: 520px) {
+  .card {
+    width: 96vw;
+    padding: 26px;
+    border-radius: 18px;
+  }
+
+  #intro h1 { font-size: 40px; letter-spacing: 4px; }
+  #intro h2 { font-size: 14px; letter-spacing: 3px; }
+
+  button { width: 100%; }
+}
 }
 
 #intro h1 {
@@ -223,9 +235,9 @@ const LANGS = [
 const UI = {
   en: {
     chooseNative: "Choose your native language",
-    audioNote: "Audio stays English. Text support changes.",
+    audioNote: "",
     chooseMode: "Choose a mode",
-    mix: "MIX (game style)",
+    mix: "MIX",
     listenOnly: "Listen only",
     buildOnly: "Build only",
     play: "PLAY",
@@ -235,7 +247,7 @@ const UI = {
     sessionComplete: "Session Complete",
     score: "Score",
     restart: "Restart",
-    strong: "Strong.",
+    strong: "LOCKED",
     reset: "Reset. Focus.",
     xp: "XP",
     progress: "Progress",
@@ -244,9 +256,9 @@ const UI = {
   },
   de: {
     chooseNative: "Wähle deine Muttersprache",
-    audioNote: "Audio bleibt Englisch. Der Text ändert sich.",
+    audioNote: "",
     chooseMode: "Wähle den Modus",
-    mix: "MIX (wie ein Spiel)",
+    mix: "MIX",
     listenOnly: "Nur Hören",
     buildOnly: "Nur Bauen",
     play: "PLAY",
@@ -256,7 +268,7 @@ const UI = {
     sessionComplete: "Session beendet",
     score: "Punktzahl",
     restart: "Neustart",
-    strong: "Stark.",
+    strong: "LOCKED",
     reset: "Reset. Fokus.",
     xp: "XP",
     progress: "Fortschritt",
@@ -265,9 +277,9 @@ const UI = {
   },
   es: {
     chooseNative: "Elige tu idioma nativo",
-    audioNote: "El audio sigue en inglés. El texto cambia.",
+    audioNote: "",
     chooseMode: "Elige el modo",
-    mix: "MIX (como juego)",
+    mix: "MIX",
     listenOnly: "Solo escuchar",
     buildOnly: "Solo construir",
     play: "PLAY",
@@ -277,7 +289,7 @@ const UI = {
     sessionComplete: "Sesión terminada",
     score: "Puntuación",
     restart: "Reiniciar",
-    strong: "Fuerte.",
+    strong: "LOCKED",
     reset: "Reset. Enfócate.",
     xp: "XP",
     progress: "Progreso",
@@ -353,7 +365,6 @@ function startGame(){
   document.getElementById("container").innerHTML =
     `<div class="card">
       <h2 style="margin-top:0;">${t("chooseNative")}</h2>
-      <p style="color:#aaa; margin-top:8px;">${t("audioNote")}</p>
       <div style="margin-top:18px;">${buttons}</div>
       <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
     </div>`;
@@ -381,7 +392,6 @@ function showModeSelect(){
       <button onclick="setMode('listen')" style="margin:8px;">${t("listenOnly")}</button>
       <button onclick="setMode('drag')" style="margin:8px;">${t("buildOnly")}</button>
 
-      <p style="color:#aaa; margin-top:12px; font-size:13px;">${t("audioNote")}</p>
       <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
     </div>`;
 }
@@ -629,6 +639,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
