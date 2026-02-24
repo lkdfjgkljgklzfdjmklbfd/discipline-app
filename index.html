@@ -138,7 +138,12 @@ button{
   border-radius:16px;
   height:54px;
   padding:0 18px;
-  min-width: 220px;
+  min-width: 0;
+max-width: 420px;
+width: 100%;
+  @media (min-width: 700px){
+  button{ width:auto; }
+}
   box-shadow: 0 10px 26px rgba(255,0,0,0.18);
   transition: transform .08s ease, filter .15s ease;
 }
@@ -435,10 +440,10 @@ const BODY_W_MIN = 6;
 const BODY_W_MAX = 12;
 
 // Opacity (a bit visible but not too much)
-const UP_BODY_A = 0.22;
-const UP_WICK_A = 0.16;
-const DOWN_BODY_A = 0.28;
-const DOWN_WICK_A = 0.18;
+const UP_BODY_A = 0.28;
+const UP_WICK_A = 0.22;
+const DOWN_BODY_A = 0.36;
+const DOWN_WICK_A = 0.26;
 
 function makeCandle(spawnRight=false){
   const w = rand(BODY_W_MIN, BODY_W_MAX);
@@ -650,6 +655,20 @@ let audio = null;
 
 /* ===== FSD (persistent) ===== */
 const FSD_KEY = "fsd_forever";
+  // --- MIGRATE old saved points (so you don't lose them) ---
+(function migrateOldFSD(){
+  const keysToTry = ["trophies", "trophy", "fsd", "FSD", "points"];
+  const cur = localStorage.getItem(FSD_KEY);
+  if (cur !== null) return; // already has new key
+
+  for (const k of keysToTry){
+    const v = localStorage.getItem(k);
+    if (v !== null && !isNaN(parseInt(v))){
+      localStorage.setItem(FSD_KEY, String(parseInt(v)));
+      break;
+    }
+  }
+})();
 function getFSD(){ return parseInt(localStorage.getItem(FSD_KEY) || "0"); }
 function setFSD(v){ if(v<0) v=0; localStorage.setItem(FSD_KEY, String(v)); }
 function addFSD(delta){
@@ -1035,4 +1054,5 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
