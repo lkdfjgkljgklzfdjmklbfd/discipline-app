@@ -773,20 +773,7 @@ function startLevel(levelId){
   nextRound();
 }
 
-  function chooseLang(lang){
-  nativeLang = lang;
-  localStorage.setItem("nativeLang", lang);
-
-  document.getElementById("container").innerHTML = `
-    <div class="card">
-      <h3>Select mode</h3>
-      <button onclick="startReal('listen')">Listen & Decide</button>
-      <button onclick="startReal('build')">Build With Focus</button>
-      <button onclick="startReal('mix')">Mix</button>
-      <div class="smallNote">FSD is permanent. +2 correct / -1 wrong.</div>
-    </div>
-  `;
-}
+ 
 
 /* ===== HUD ===== */
 function updateHUD(){
@@ -1050,6 +1037,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
