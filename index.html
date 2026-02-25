@@ -369,6 +369,15 @@ button:active{ transform: scale(0.98); }
     border-radius: 18px;
     margin: 14px 0 0;
   }
+
+  #fsdBox{
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  font-size: 14px;
+  color: #fff;
+  font-weight: 600;
+}
 }
 </style>
 </head>
@@ -376,6 +385,7 @@ button:active{ transform: scale(0.98); }
 <body>
 <canvas id="bg"></canvas>
 <div id="streakBox"></div>
+<div id="fsdBox"></div>
 <div id="credit">made by Frihet</div>
 
 <!-- FSD toast -->
@@ -548,6 +558,7 @@ function updateStreak() {
     "🔥 Streak: " + (localStorage.getItem("streak") || 1);
 }
 updateStreak();
+updateFSD();
 
 /* ===== Sentences (English audio, text support by native language) ===== */
 const items = [
@@ -635,6 +646,23 @@ const UI = {
 function t(key){
   return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key;
 }
+
+const FSD_KEY = "trophy"; // your old storage key
+
+function getFSD(){
+  return parseInt(localStorage.getItem(FSD_KEY) || "0");
+}
+
+function setFSD(v){
+  localStorage.setItem(FSD_KEY, v);
+  updateFSD();
+}
+
+function updateFSD(){
+  document.getElementById("fsdBox").innerText =
+    "💰 FSD: " + getFSD();
+}
+  
 function displayText(i){
   const obj = activeItems[i];
   return obj[nativeLang] || obj.en;
@@ -1017,6 +1045,8 @@ function success(){
   playSound(true);
   score++;
 
+  setFSD(getFSD()+2);
+
   const beforeRank = rankFor(getFSD()).name;
   const res = addFSD(+2);
   showToast(+2);
@@ -1039,6 +1069,7 @@ function success(){
 function fail(){
   playSound(false);
 
+  setFSD(getfsd()-1);
   const res = addFSD(-1);
   showToast(-1);
   shakeCard();
@@ -1076,6 +1107,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
