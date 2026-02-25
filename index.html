@@ -751,7 +751,7 @@ document.getElementById("container").innerHTML = `
   <button onclick="startRealGame('mix')">
     Mix
   </button>
-</div> ';
+</div> `;
 
   
   document.getElementById("container").innerHTML = `
@@ -793,17 +793,33 @@ document.getElementById("container").innerHTML = `
   nextRound();
 }
 
-function startRealGame(levelId, mode){ gameMode = mode;
-                                     
-                                      document.getElementById("container").innerHTML = '
-                                        <div class="card" id="gameCard">
-                                        <h2 id="mode"></h2>
-                                      <button onclick="playAudio()">PLAY</button>
-                                      <div id="content"></div>
-                                      <div id="result"></div>
-                                        </div>
-                                      ';
-                                      nextRound();}
+
+function startRealGame(mode){
+
+  gameMode = mode;
+
+  document.getElementById("container").innerHTML = `
+    <div class="card" id="gameCard">
+      <div id="hud" style="text-align:left; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between;">
+          <div>${t("progress")}: <span id="progressText">0/${activeItems.length}</span></div>
+          <div>
+            💰 ${t("fsd")}: <span id="fsdText">0</span><br>
+            ${t("rank")}: <span id="rankText">Loser</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="mode"></h2>
+      <button class="btn play" onclick="playAudio()">${t("play")}</button>
+      <div id="content"></div>
+      <div id="result"></div>
+    </div>
+  `;
+
+  updateHUD();
+  nextRound();
+}
 
  
 
@@ -864,7 +880,7 @@ function nextRound(){
 
   updateHUD();
 
-  if =(gameMode === "listen"){buildListen();}
+  if (gameMode === "listen"){buildListen();}
   else if(gameMode === "build") {buildDrag();}
   else{ if(Math.random()>0.5) buildListen();
        else buildDrag(); }
@@ -1071,6 +1087,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
