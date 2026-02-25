@@ -734,6 +734,20 @@ function startLevel(levelId){
   selectedChoice = null;
   stopAudio();
 
+  let selectedMode = "mix";
+  let gameMode = "mix";
+
+document.getElementById("container").innerHTML = `
+<div class="card">
+  <h2>Select Mode</h2>
+
+  <button onclick="startRealGame('${levelId}','listen')">Listen & Decide</button>
+  <button onclick="startRealGame('${levelId}','build')">Build With Focus</button>
+  <button onclick="startRealGame('${levelId}','mix')">Mix</button>
+</div>
+`;
+return;
+
   document.getElementById("container").innerHTML = `
     <div class="card" id="gameCard">
       <div id="hud" style="text-align:left; margin-bottom:14px;">
@@ -770,6 +784,29 @@ function startLevel(levelId){
   `;
 
   updateHUD();
+  nextRound();
+}
+
+  function startRealGame(levelId, mode){
+  gameMode = mode;
+
+  const lv = LEVELS.find(x => x.id === levelId);
+  activeItems = lv.idx.map(i => items[i]);
+
+  used = [];
+  score = 0;
+  round = 0;
+  selectedChoice = null;
+
+  document.getElementById("container").innerHTML = `
+    <div class="card" id="gameCard">
+      <h2 id="mode"></h2>
+      <button class="btn play" onclick="playAudio()">PLAY</button>
+      <div id="content"></div>
+      <div id="result"></div>
+    </div>
+  `;
+
   nextRound();
 }
 
@@ -829,9 +866,13 @@ function nextRound(){
   used.push(currentIndex);
 
   updateHUD();
-
+if(gameMode === "listen") buildListen();
+else if(gameMode === "build") buildDrag();
+else {
   if(Math.random()>0.5) buildListen();
   else buildDrag();
+}
+ 
 }
 
 /* Listen & Decide */
@@ -1035,6 +1076,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
