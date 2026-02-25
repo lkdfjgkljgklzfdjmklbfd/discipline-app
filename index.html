@@ -350,6 +350,131 @@ button:active{ transform: scale(0.98); }
     margin: 14px 0 0;
   }
 }
+
+/* ===== Rank modal (popup) ===== */
+#rankModal {
+  position: fixed;
+  inset: 0;
+  z-index: 999997;
+  display: none;               /* hidden by default */
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(8px);
+}
+
+#rankModal.show {
+  display: flex;
+}
+
+.rank-modal-card {
+  width: min(560px, 100%);
+  border-radius: 22px;
+  padding: 18px 18px 16px;
+  background: linear-gradient(180deg, rgba(16,16,16,0.96), rgba(8,8,8,0.96));
+  border: 1px solid rgba(255,26,26,0.22);
+  box-shadow: 0 28px 90px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,26,26,0.12);
+  position: relative;
+}
+
+.rank-modal-title {
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+  font-size: 16px;
+}
+
+.rank-modal-sub {
+  margin: 6px 0 14px;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.rank-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  min-width: unset;
+  padding: 0;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.rank-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.rank-table th,
+.rank-table td {
+  padding: 12px 12px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.88);
+}
+
+.rank-table th {
+  text-align: left;
+  color: rgba(255,255,255,0.70);
+  font-weight: 800;
+  background: rgba(28,28,28,0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.rank-table tr {
+  background: rgba(20,20,20,0.70);
+}
+
+.rank-table tr + tr td {
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.rank-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,26,26,0.22);
+  background: rgba(255,26,26,0.10);
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+
+.rank-range {
+  color: rgba(255,255,255,0.70);
+  font-weight: 700;
+}
+
+.rank-hintline {
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.62);
+}
+
+/* Clickable rank in HUD */
+#rankBtn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.88);
+  height: 34px;
+  min-width: unset;
+  padding: 0 10px;
+  border-radius: 12px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  box-shadow: none;
+}
+
+#rankBtn:hover { filter: brightness(1.1); }
+
 </style>
 </head>
 
@@ -374,6 +499,59 @@ button:active{ transform: scale(0.98); }
     <button class="rankup-btn" onclick="closeRankUp()">CONTINUE →</button>
   </div>
 </div>
+
+  
+<!-- Rank ladder modal -->
+<div id="rankModal" onclick="onRankBackdrop(event)">
+  <div class="rank-modal-card">
+    <button class="rank-close" onclick="toggleRankModal(false)">✕</button>
+
+    <h3 class="rank-modal-title">RANK LADDER</h3>
+    <p class="rank-modal-sub">
+      Your money unit is <b>FSD 💰</b>. More FSD = higher rank.
+    </p>
+
+    <table class="rank-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>FSD Range</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-badge">Loser</span></td>
+          <td class="rank-range">0–49 FSD</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">NPC</span></td>
+          <td class="rank-range">50–149 FSD</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">Human</span></td>
+          <td class="rank-range">150–299 FSD</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">Rich</span></td>
+          <td class="rank-range">300–599 FSD</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">Millionaire</span></td>
+          <td class="rank-range">600–999 FSD</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">Billionaire</span></td>
+          <td class="rank-range">1000–999999 FSD</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rank-hintline">
+      Tip: Tap <b>Rank</b> again or press ✕ to close.
+    </div>
+  </div>
+</div>
+
 
 <div id="container">
   <div class="card" id="intro">
@@ -670,7 +848,7 @@ function startRealGame(mode){
           </div>
           <div style="font-size:13px; color:#aaa; text-align:right;">
             💰 ${t("fsd")}: <span id="fsdText">0</span><br>
-            ${t("rank")}: <span id="rankText">Loser</span>
+           ${t("rank")}: <button id="rankBtn" onclick="toggleRankModal(true)"><span id="rankText">Loser</span> ⓘ</button>
           </div>
         </div>
 
@@ -953,9 +1131,36 @@ function playSound(success){
   osc.start();
   setTimeout(()=>osc.stop(), 100);
 }
+
+  /* ===== Rank modal logic ===== */
+function toggleRankModal(forceOpen) {
+  const modal = document.getElementById("rankModal");
+  if (!modal) return;
+
+  const shouldOpen = (typeof forceOpen === "boolean")
+    ? forceOpen
+    : !modal.classList.contains("show");
+
+  if (shouldOpen) modal.classList.add("show");
+  else modal.classList.remove("show");
+}
+
+// Close when clicking outside the card (backdrop)
+function onRankBackdrop(e) {
+  if (e.target && e.target.id === "rankModal") {
+    toggleRankModal(false);
+  }
+}
+
+// ESC key closes (desktop)
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") toggleRankModal(false);
+});
+  
 </script>
 </body>
 </html>
+
 
 
 
