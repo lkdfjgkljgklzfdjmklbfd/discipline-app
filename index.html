@@ -647,6 +647,7 @@ let score = 0;
 let round = 0;
 let selectedChoice = null;
 let audio = null;
+let gameMode = "mix";
 
 /* ===== FSD (persistent) ===== */
 const FSD_KEY = "fsd_forever";
@@ -734,6 +735,25 @@ function startLevel(levelId){
   selectedChoice = null;
   stopAudio();
 
+  
+document.getElementById("container").innerHTML = `
+<div class="card">
+  <h2>Select Mode</h2>
+
+  <button onclick="startRealGame('listen')">
+    Listen & Decide
+  </button>
+
+  <button onclick="startRealGame('build')">
+    Build With Focus
+  </button>
+
+  <button onclick="startRealGame('mix')">
+    Mix
+  </button>
+</div> ';
+
+  
   document.getElementById("container").innerHTML = `
     <div class="card" id="gameCard">
       <div id="hud" style="text-align:left; margin-bottom:14px;">
@@ -772,6 +792,18 @@ function startLevel(levelId){
   updateHUD();
   nextRound();
 }
+
+function startRealGame(levelId, mode){ gameMode = mode;
+                                     
+                                      document.getElementById("container").innerHTML = '
+                                        <div class="card" id="gameCard">
+                                        <h2 id="mode"></h2>
+                                      <button onclick="playAudio()">PLAY</button>
+                                      <div id="content"></div>
+                                      <div id="result"></div>
+                                        </div>
+                                      ';
+                                      nextRound();}
 
  
 
@@ -832,8 +864,10 @@ function nextRound(){
 
   updateHUD();
 
-  if(Math.random()>0.5) buildListen();
-  else buildDrag();
+  if =(gameMode === "listen"){buildListen();}
+  else if(gameMode === "build") {buildDrag();}
+  else{ if(Math.random()>0.5) buildListen();
+       else buildDrag(); }
 }
 
 /* Listen & Decide */
@@ -1037,6 +1071,7 @@ function playSound(success){
 </script>
 </body>
 </html>
+
 
 
 
