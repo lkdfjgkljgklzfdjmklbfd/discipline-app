@@ -369,15 +369,6 @@ button:active{ transform: scale(0.98); }
     border-radius: 18px;
     margin: 14px 0 0;
   }
-
-  #fsdBox{
-  position: absolute;
-  top: 50px;
-  right: 20px;
-  font-size: 14px;
-  color: #fff;
-  font-weight: 600;
-}
 }
 </style>
 </head>
@@ -385,7 +376,6 @@ button:active{ transform: scale(0.98); }
 <body>
 <canvas id="bg"></canvas>
 <div id="streakBox"></div>
-<div id="fsdBox"></div>
 <div id="credit">made by Frihet</div>
 
 <!-- FSD toast -->
@@ -445,10 +435,10 @@ const BODY_W_MIN = 6;
 const BODY_W_MAX = 12;
 
 // Opacity (a bit visible but not too much)
-const UP_BODY_A = 0.28;
-const UP_WICK_A = 0.22;
-const DOWN_BODY_A = 0.36;
-const DOWN_WICK_A = 0.26;
+const UP_BODY_A = 0.22;
+const UP_WICK_A = 0.16;
+const DOWN_BODY_A = 0.28;
+const DOWN_WICK_A = 0.18;
 
 function makeCandle(spawnRight=false){
   const w = rand(BODY_W_MIN, BODY_W_MAX);
@@ -558,7 +548,6 @@ function updateStreak() {
     "🔥 Streak: " + (localStorage.getItem("streak") || 1);
 }
 updateStreak();
-updateFSD();
 
 /* ===== Sentences (English audio, text support by native language) ===== */
 const items = [
@@ -581,7 +570,7 @@ const items = [
 /* ===== LEVELS (3 sessions) ===== */
 const LEVELS = [
   { id:"L1", name:"Passive", idx:[0,1,3,10,13] },
-  { id:"L2", name:"Grinder",     idx:[2,5,6,7] },
+  { id:"L2", name:"Grinder", idx:[2,5,6,7] },
   { id:"L3", name:"Millionaire",idx:[4,8,9,11,12] }
 ];
 
@@ -646,23 +635,6 @@ const UI = {
 function t(key){
   return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key;
 }
-
-const FSD_KEY = "trophy"; // your old storage key
-
-function getFSD(){
-  return parseInt(localStorage.getItem(FSD_KEY) || "0");
-}
-
-function setFSD(v){
-  localStorage.setItem(FSD_KEY, v);
-  updateFSD();
-}
-
-function updateFSD(){
-  document.getElementById("fsdBox").innerText =
-    "💰 FSD: " + getFSD();
-}
-  
 function displayText(i){
   const obj = activeItems[i];
   return obj[nativeLang] || obj.en;
@@ -762,20 +734,6 @@ function startLevel(levelId){
   selectedChoice = null;
   stopAudio();
 
-  let selectedMode = "mix";
-  let gameMode = "mix";
-
-document.getElementById("container").innerHTML = `
-<div class="card">
-  <h2>Select Mode</h2>
-
-  <button onclick="startRealGame('${levelId}','listen')">Listen & Decide</button>
-  <button onclick="startRealGame('${levelId}','build')">Build With Focus</button>
-  <button onclick="startRealGame('${levelId}','mix')">Mix</button>
-</div>
-`;
-return;
-
   document.getElementById("container").innerHTML = `
     <div class="card" id="gameCard">
       <div id="hud" style="text-align:left; margin-bottom:14px;">
@@ -812,29 +770,6 @@ return;
   `;
 
   updateHUD();
-  nextRound();
-}
-
-  function startRealGame(levelId, mode){
-  gameMode = mode;
-
-  const lv = LEVELS.find(x => x.id === levelId);
-  activeItems = lv.idx.map(i => items[i]);
-
-  used = [];
-  score = 0;
-  round = 0;
-  selectedChoice = null;
-
-  document.getElementById("container").innerHTML = `
-    <div class="card" id="gameCard">
-      <h2 id="mode"></h2>
-      <button class="btn play" onclick="playAudio()">PLAY</button>
-      <div id="content"></div>
-      <div id="result"></div>
-    </div>
-  `;
-
   nextRound();
 }
 
@@ -894,13 +829,9 @@ function nextRound(){
   used.push(currentIndex);
 
   updateHUD();
-if(gameMode === "listen") buildListen();
-else if(gameMode === "build") buildDrag();
-else {
+
   if(Math.random()>0.5) buildListen();
   else buildDrag();
-}
- 
 }
 
 /* Listen & Decide */
@@ -1045,8 +976,6 @@ function success(){
   playSound(true);
   score++;
 
-  setFSD(getFSD()+2);
-
   const beforeRank = rankFor(getFSD()).name;
   const res = addFSD(+2);
   showToast(+2);
@@ -1069,7 +998,6 @@ function success(){
 function fail(){
   playSound(false);
 
-  setFSD(getfsd()-1);
   const res = addFSD(-1);
   showToast(-1);
   shakeCard();
@@ -1107,8 +1035,6 @@ function playSound(success){
 </script>
 </body>
 </html>
-
-
 
 
 
