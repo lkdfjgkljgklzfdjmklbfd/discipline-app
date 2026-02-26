@@ -700,10 +700,12 @@ function setNoFailStreak(n){ localStorage.setItem(noFailKey(), String(n)); }
 let activeLevel = "L1";
 let activeItems = []; // each entry: {en,de,es, globalIndex}
 let used = [];
+let currentIndex = 0;
 let round = 0;
 let score = 0;
 let mistakes = 0;
 let audio = null;
+
 
 /* =========================
    Screens
@@ -771,6 +773,7 @@ function startLevel(levelId){
 
   used = [];
   round = 0;
+  currentIndex = 0;
   score = 0;
   mistakes = 0;
   stopAudio();
@@ -1175,6 +1178,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
