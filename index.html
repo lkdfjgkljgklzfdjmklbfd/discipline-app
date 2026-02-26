@@ -546,37 +546,37 @@ updateStreak();
    audio is ALWAYS English: audio1..audio30
 ========================= */
 const items = [
-  { en:"I feel you, bro. I’ve also been through a lot.", de:"Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht.", es:"Te entiendo, bro. Yo también he pasado por mucho." },
-  { en:"You don’t need motivation. you just need discipline, bro.", de:"Du brauchst keine Motivation. Du brauchst Disziplin, Bro.", es:"No necesitas motivación. Necesitas disciplina, bro." },
-  { en:"You just need to control yourself. it’s you vs you, bro.", de:"Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro.", es:"Solo tienes que controlarte. Es tú contra tú, bro." },
-  { en:"I want you to succeed, bro. I believe in you.", de:"Ich will, dass du Erfolg hast, Bro. Ich glaub an dich.", es:"Quiero que tengas éxito, bro. Creo en ti." },
-  { en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.", de:"Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär.", es:"Pero ya sabes, alguien tiene que trabajar de 9 a 5. No todos van a ser millonarios." },
-  { en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard.", de:"Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten.", es:"Sé que es difícil, pero nada en este mundo es fácil. Tienes que trabajar duro." },
-  { en:"Go ghost, bro. You can’t grow when people are around you.", de:"Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind.", es:"Desaparece un rato, bro. No puedes crecer si la gente siempre está alrededor." },
-  { en:"Lock in. You wanna be rich or not?", de:"Fokussier dich. Willst du reich werden oder nicht?", es:"Concéntrate. ¿Quieres ser rico o no?" },
-  { en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard.", de:"Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart.", es:"No quiero ser un NPC, bro. Por eso estoy trabajando así de duro." },
-  { en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.", de:"Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht.", es:"¿Crees que disfruto ir al gym todos los días? Hell nah, bro. De verdad que no." },
-  { en:"You live only one life, bro. Nothing can stop you. do what you want.", de:"Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst.", es:"Solo tienes una vida, bro. Nada puede detenerte. Haz lo que quieras." },
-  { en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.", de:"Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du.", es:"Si quieres mucho dinero, haz un gran movimiento. No te vas a hacer rico con un trabajo de 9 a 5, tú lo sabes." },
-  { en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions", de:"Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren.", es:"Si quieres ser diferente, tienes que ser frío, bro. Aprende a controlar tus emociones." },
-  { en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.", es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida." },
+  { en:"I feel you, bro. I’ve also been through a lot.", de:"Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht.", es:"Te entiendo, bro. Yo también he pasado por mucho.", sv:"Jag fattar dig, bro. Jag har också gått igenom mycket.", nl:"Ik voel je, bro. Ik heb ook veel meegemaakt." },
+  { en:"You don’t need motivation. you just need discipline, bro.", de:"Du brauchst keine Motivation. Du brauchst Disziplin, Bro.", es:"No necesitas motivación. Necesitas disciplina, bro.", sv:"Du behöver inte motivation. Du behöver bara disciplin, bro.", nl:"Je hebt geen motivatie nodig. Je hebt discipline nodig, bro." },
+  { en:"You just need to control yourself. it’s you vs you, bro.", de:"Du musst dich einfach kontrollieren. Es geht nur um dich gegen dich, Bro.", es:"Solo tienes que controlarte. Es tú contra tú, bro.", sv:"Du måste bara kontrollera dig själv. Det är du mot dig själv, bro.", nl:"Je moet gewoon jezelf onder controle krijgen. Het is jij tegen jezelf, bro." },
+  { en:"I want you to succeed, bro. I believe in you.", de:"Ich will, dass du Erfolg hast, Bro. Ich glaub an dich.", es:"Quiero que tengas éxito, bro. Creo en ti.", sv:"Jag vill att du ska lyckas, bro. Jag tror på dig.", nl:"Ik wil dat je slaagt, bro. Ik geloof in je." },
+  { en:"But you know, someone has to do 9 to 5 stuff. Not everyone can be a millionaire.", de:"Aber weißt du, irgendwer muss halt den 9-to-5-Job machen. Nicht jeder wird Millionär.", es:"Pero ya sabes, alguien tiene que trabajar de 9 a 5. No todos van a ser millonarios.", sv:"Men du vet, någon måste jobba 9 till 5. Alla kan inte bli miljonärer.", nl:"Maar je weet, iemand moet die 9-tot-5 doen. Niet iedereen kan miljonair worden." },
+  { en:"I know it’s hard but dude nothing is easy in this world. You gotta work hard.", de:"Ich weiß, es ist hart, aber nichts auf dieser Welt ist leicht. Du musst hart arbeiten.", es:"Sé que es difícil, pero nada en este mundo es fácil. Tienes que trabajar duro.", sv:"Jag vet att det är hårt, men inget är lätt i den här världen. Du måste jobba hårt.", nl:"Ik weet dat het zwaar is, maar niks is makkelijk in deze wereld. Je moet hard werken." },
+  { en:"Go ghost, bro. You can’t grow when people are around you.", de:"Zieh dich zurück, Bro. Du kannst nicht wachsen, wenn ständig Leute um dich herum sind.", es:"Desaparece un rato, bro. No puedes crecer si la gente siempre está alrededor.", sv:"Försvinn ett tag, bro. Du kan inte växa när folk alltid är runt dig.", nl:"Ga even offline, bro. Je kunt niet groeien als mensen altijd om je heen zijn." },
+  { en:"Lock in. You wanna be rich or not?", de:"Fokussier dich. Willst du reich werden oder nicht?", es:"Concéntrate. ¿Quieres ser rico o no?", sv:" Fokusera. Vill du bli rik eller inte?", nl:"Focus. Wil je rijk worden of niet?"},
+  { en:"I don’t wanna be an NPC, bro. That’s why I’m working this hard.", de:"Ich will kein NPC sein, Bro. Deshalb arbeite ich so hart.", es:"No quiero ser un NPC, bro. Por eso estoy trabajando así de duro.", sv:"Jag vill inte vara en NPC, bro. Det är därför jag jobbar så här hårt.", nl:"Ik wil geen NPC zijn, bro. Daarom werk ik zo hard." },
+  { en:"You think I enjoy going to the gym every day? Hell nah, bro. I genuinely don’t.", de:"Denkst du, ich geh gern jeden Tag ins Gym? Hell nah, Bro. Ehrlich nicht.", es:"¿Crees que disfruto ir al gym todos los días? Hell nah, bro. De verdad que no.", sv:"Tror du att jag gillar att gå till gymmet varje dag? Hell nah, bro. Verkligen inte.", nl:"Denk je dat ik elke dag naar de gym ga omdat ik het leuk vind? Hell nah, bro. Echt niet." },
+  { en:"You live only one life, bro. Nothing can stop you. do what you want.", de:"Du hast nur ein Leben, Bro. Nichts kann dich aufhalten. Mach, was du willst.", es:"Solo tienes una vida, bro. Nada puede detenerte. Haz lo que quieras.", sv:"Du lever bara ett liv, bro. Inget kan stoppa dig. Gör vad du vill.", nl:"Je leeft maar één keer, bro. Niks kan je stoppen. Doe wat je wilt." },
+  { en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.", de:"Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du.", es:"Si quieres mucho dinero, haz un gran movimiento. No te vas a hacer rico con un trabajo de 9 a 5, tú lo sabes.", sv:"Vill du ha stora pengar, gör stora moves. Du blir inte rik på ett 9 till 5 jobb, du vet det.", nl:"Wil je groot geld? Maak grote moves. Je wordt niet rijk met een 9-tot-5 baan, dat weet je." },
+  { en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions", de:"Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren.", es:"Si quieres ser diferente, tienes que ser frío, bro. Aprende a controlar tus emociones.", sv:"Vill du vara annorlunda måste du vara känslokall, bro. Lär dig kontrollera dina känslor.", nl:"Wil je anders zijn, dan moet je emotieloos zijn, bro. Leer je emoties te controleren." },
+  { en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.", es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida.", sv:"Bro, alla är vilsna. Det är inte bara du. Vi är alla vilsna. Det är det fina med livet.", nl:"Bro, iedereen is verloren. Niet alleen jij. We zijn allemaal verloren. Dat is het mooie van het leven." },
 
-  { en:"Go hit the gym, bro. It's your body. Take care of it.", de:"Geh ins Gym, Bro. Das ist dein Körper. Kümmere dich darum.", es:"Ve al gym, bro. Es tu cuerpo. Cuídalo." },
-  { en:"Stop scrolling all that stupid stuff, bro. Ain’t you scared it’s messing up your brain? I don’t get how people don’t even care.", de:"Hör auf, diesen ganzen dummen Mist zu scrollen, Bro. Hast du keine Angst, dass das dein Gehirn kaputtmacht? Ich check nicht, wie Leute das einfach egal finden.", es:"Deja de scrollear toda esa basura, bro. ¿No te da miedo que te esté jodiendo el cerebro? No entiendo cómo a la gente ni siquiera le importa." },
-  { en:"Manifesting works, dude. Not magic. it’s because you act on what you’re thinking unconsciously.", de:"Manifestieren funktioniert, Bro. Nicht wegen Magie. Sondern weil du unbewusst nach dem handelst, woran du denkst.", es:"Manifestar funciona, bro. No es magia. Es porque actúas inconscientemente según lo que estás pensando." },
-  { en:"You don’t even know how valuable you are. That’s why you end up like that.", de:"Du weißt nicht mal, wie wertvoll du bist. Deshalb landest du am Ende genau so.", es:"Ni siquiera sabes lo valioso que eres. Por eso terminas así." },
-  { en:"I learned it the hard way, bro. You can’t trust anyone in life. For real, you can only trust yourself.", de:"Ich hab’s auf die harte Tour gelernt, Bro. Du kannst im Leben niemandem vertrauen. Ehrlich: Am Ende kannst du nur dir selbst vertrauen.", es:"Lo aprendí por las malas, bro. No puedes confiar en nadie en la vida. De verdad: al final solo puedes confiar en ti mismo." },
-  { en:"It’s your life, bro. Take control and own it.", de:"Es ist dein Leben, Bro. Übernimm die Kontrolle und steh dazu.", es:"Es tu vida, bro. Toma el control y hazte cargo." },
-  { en:"Work first, man. Money always comes last, no matter what.", de:"Arbeite zuerst, Bro. Geld kommt immer zuletzt, egal was passiert.", es:"Trabaja primero, bro. El dinero siempre viene después, pase lo que pase." },
-  { en:"You know humans just love comfort, bro. Yeah, that’s why it’s so hard to do the hard stuff.", de:"Menschen lieben einfach Komfort, Bro. Genau deshalb ist es so schwer, die harten Sachen zu machen.", es:"Los humanos aman la comodidad, bro. Por eso es tan difícil hacer las cosas duras." },
-  { en:"You want me to be honest? Bro, you can’t be successful doing what everyone else does. Wanna be successful? Do what nobody else is doing, man.", de:"Willst du, dass ich ehrlich bin? Bro, du kannst nicht erfolgreich sein, wenn du machst, was alle anderen machen. Willst du Erfolg? Dann mach, was sonst keiner macht.", es:"¿Quieres que sea honesto? Bro, no puedes tener éxito haciendo lo mismo que todos. ¿Quieres tener éxito? Haz lo que nadie más hace." },
-  { en:"If people are constantly talking about you, lucky you, dude you’ve got a fan group.", de:"Wenn die Leute ständig über dich reden: Glück für dich, Bro du hast schon deine eigene Fangruppe.", es:"Si la gente habla de ti todo el tiempo, suerte la tuya, bro ya tienes tu propio grupo de fans." },
-  { en:"The thing is, dude, nobody cares about you that deeply. Do you even remember what happened 4 hours ago? If you do, you’re in trouble, bro. Can’t even lie.", de:"Die Sache ist, Bro: Niemand interessiert sich so tief für dich. Erinnerst du dich überhaupt, was vor 4 Stunden passiert ist? Wenn ja, hast du ein Problem. Kein Witz.", es:"La cosa es, bro: a nadie le importas tan profundamente. ¿De verdad recuerdas lo que pasó hace 4 horas? Si sí, estás en problemas. No te voy a mentir." },
-  { en:"Stop distracting yourself, dude. You’ll come back to reality eventually.", de:"Hör auf, dich abzulenken, Bro. Früher oder später holt dich die Realität ein.", es:"Deja de distraerte, bro. Tarde o temprano vas a volver a la realidad." },
-  { en:"Everything changes, bro. That’s life.", de:"Alles verändert sich, Bro. So ist das Leben.", es:"Todo cambia, bro. Así es la vida." },
-  { en:"It’s never too late in life, dude. Wake up.", de:"Es ist im Leben nie zu spät, Bro. Wach auf.", es:"Nunca es demasiado tarde en la vida, bro. Despierta." },
-  { en:"It’s really hard to balance work and rest, but 100% work is always better than 100% rest.", de:"Es ist verdammt schwer, Arbeit und Pause auszubalancieren, aber 100% Arbeit ist immer besser als 100% Pause.", es:"Es muy difícil equilibrar trabajo y descanso, pero 100% trabajo siempre es mejor que 100% descanso." },
-  { en:"You know, hate is a really big emotion, mate. Don’t waste it.", de:"Weißt du, Hass ist eine verdammt große Emotion, Bro. Verschwend sie nicht.", es:"Sabes, el odio es una emoción enorme, bro. No la desperdicies." }
+  { en:"Go hit the gym, bro. It's your body. Take care of it.", de:"Geh ins Gym, Bro. Das ist dein Körper. Kümmere dich darum.", es:"Ve al gym, bro. Es tu cuerpo. Cuídalo.", sv:"Gå till gymmet, bro. Det är din kropp. Ta hand om den.", nl:"Ga naar de gym, bro. Het is jouw lichaam. Zorg ervoor." },
+  { en:"Stop scrolling all that stupid stuff, bro. Ain’t you scared it’s messing up your brain? I don’t get how people don’t even care.", de:"Hör auf, diesen ganzen dummen Mist zu scrollen, Bro. Hast du keine Angst, dass das dein Gehirn kaputtmacht? Ich check nicht, wie Leute das einfach egal finden.", es:"Deja de scrollear toda esa basura, bro. ¿No te da miedo que te esté jodiendo el cerebro? No entiendo cómo a la gente ni siquiera le importa.", sv:"Sluta scrolla allt det där skitet, bro. Är du inte rädd att det förstör din hjärna? Jag fattar inte hur folk inte ens bryr sig.", nl:"Stop met al die domme shit scrollen, bro. Ben je niet bang dat het je brein verpest? Ik snap niet hoe mensen het niet eens boeit." },
+  { en:"Manifesting works, dude. Not magic. it’s because you act on what you’re thinking unconsciously.", de:"Manifestieren funktioniert, Bro. Nicht wegen Magie. Sondern weil du unbewusst nach dem handelst, woran du denkst.", es:"Manifestar funciona, bro. No es magia. Es porque actúas inconscientemente según lo que estás pensando.", sv:"Manifestering funkar, dude. Inte magi. Det är för att du agerar på det du tänker utan att märka det.", nl:"Manifesteren werkt, dude. Geen magie. Het is omdat je onbewust handelt naar wat je denkt." },
+  { en:"You don’t even know how valuable you are. That’s why you end up like that.", de:"Du weißt nicht mal, wie wertvoll du bist. Deshalb landest du am Ende genau so.", es:"Ni siquiera sabes lo valioso que eres. Por eso terminas así.", sv:"Du fattar inte ens hur värdefull du är. Det är därför du hamnar där du hamnar.", nl:"Je weet niet eens hoe waardevol je bent. Daarom eindig je zo." },
+  { en:"I learned it the hard way, bro. You can’t trust anyone in life. For real, you can only trust yourself.", de:"Ich hab’s auf die harte Tour gelernt, Bro. Du kannst im Leben niemandem vertrauen. Ehrlich: Am Ende kannst du nur dir selbst vertrauen.", es:"Lo aprendí por las malas, bro. No puedes confiar en nadie en la vida. De verdad: al final solo puedes confiar en ti mismo.", sv:"Jag lärde mig det den hårda vägen, bro. Du kan inte lita på någon i livet. På riktigt, du kan bara lita på dig själv.", nl:"Ik heb het op de harde manier geleerd, bro. Je kunt niemand vertrouwen in het leven. Echt, je kunt alleen jezelf vertrouwen." },
+  { en:"It’s your life, bro. Take control and own it.", de:"Es ist dein Leben, Bro. Übernimm die Kontrolle und steh dazu.", es:"Es tu vida, bro. Toma el control y hazte cargo.", sv:"Det är ditt liv, bro. Ta kontroll och äg det.", nl:"Het is jouw leven, bro. Neem controle en own het." },
+  { en:"Work first, man. Money always comes last, no matter what.", de:"Arbeite zuerst, Bro. Geld kommt immer zuletzt, egal was passiert.", es:"Trabaja primero, bro. El dinero siempre viene después, pase lo que pase.", sv:"Jobba först, mannen. Pengar kommer alltid sist, oavsett vad.", nl:"Werk eerst, man. Geld komt altijd als laatste, wat er ook gebeurt." },
+  { en:"You know humans just love comfort, bro. Yeah, that’s why it’s so hard to do the hard stuff.", de:"Menschen lieben einfach Komfort, Bro. Genau deshalb ist es so schwer, die harten Sachen zu machen.", es:"Los humanos aman la comodidad, bro. Por eso es tan difícil hacer las cosas duras.", sv:"Du vet att människor älskar bekvämlighet, bro. Det är därför det är så svårt att göra det hårda skitet.", nl:"Mensen houden van comfort, bro. Daarom is het zo moeilijk om het harde werk te doen." },
+  { en:"You want me to be honest? Bro, you can’t be successful doing what everyone else does. Wanna be successful? Do what nobody else is doing, man.", de:"Willst du, dass ich ehrlich bin? Bro, du kannst nicht erfolgreich sein, wenn du machst, was alle anderen machen. Willst du Erfolg? Dann mach, was sonst keiner macht.", es:"¿Quieres que sea honesto? Bro, no puedes tener éxito haciendo lo mismo que todos. ¿Quieres tener éxito? Haz lo que nadie más hace.", sv:"Vill du att jag ska vara ärlig? Bro, du kan inte bli framgångsrik genom att göra som alla andra. Vill du lyckas? Gör det ingen annan gör.", nl:"Wil je dat ik eerlijk ben? Bro, je wordt niet succesvol door te doen wat iedereen doet. Wil je succes? Doe wat niemand anders doet." },
+  { en:"If people are constantly talking about you, lucky you, dude you’ve got a fan group.", de:"Wenn die Leute ständig über dich reden: Glück für dich, Bro du hast schon deine eigene Fangruppe.", es:"Si la gente habla de ti todo el tiempo, suerte la tuya, bro ya tienes tu propio grupo de fans.", sv:"Om folk snackar om dig hela tiden — grattis, dude, du har redan en fangrupp.", nl:"Als mensen constant over je praten, geluk jij, dude je hebt al een fangroep." },
+  { en:"The thing is, dude, nobody cares about you that deeply. Do you even remember what happened 4 hours ago? If you do, you’re in trouble, bro. Can’t even lie.", de:"Die Sache ist, Bro: Niemand interessiert sich so tief für dich. Erinnerst du dich überhaupt, was vor 4 Stunden passiert ist? Wenn ja, hast du ein Problem. Kein Witz.", es:"La cosa es, bro: a nadie le importas tan profundamente. ¿De verdad recuerdas lo que pasó hace 4 horas? Si sí, estás en problemas. No te voy a mentir.", sv:"Grejen är, dude, ingen bryr sig så djupt om dig. Kommer du ens ihåg vad som hände för 4 timmar sen? Om du gör det är du i trubbel, bro. Är bara ärlig.", nl:"Het ding is, dude, niemand geeft zo diep om je. Weet je nog wat er 4 uur geleden gebeurde? Als wel, dan heb je een probleem, bro. Eerlijk." },
+  { en:"Stop distracting yourself, dude. You’ll come back to reality eventually.", de:"Hör auf, dich abzulenken, Bro. Früher oder später holt dich die Realität ein.", es:"Deja de distraerte, bro. Tarde o temprano vas a volver a la realidad.", sv:"Sluta distrahera dig själv, dude. Du kommer tillbaka till verkligheten förr eller senare.", nl:"Stop met jezelf afleiden, dude. Uiteindelijk kom je toch terug in de realiteit." },
+  { en:"Everything changes, bro. That’s life.", de:"Alles verändert sich, Bro. So ist das Leben.", es:"Todo cambia, bro. Así es la vida.", sv:"Allt förändras, bro. Så är livet.", nl:"Alles verandert, bro. Dat is het leven." },
+  { en:"It’s never too late in life, dude. Wake up.", de:"Es ist im Leben nie zu spät, Bro. Wach auf.", es:"Nunca es demasiado tarde en la vida, bro. Despierta.", sv:"Det är aldrig för sent i livet, dude. Vakna.", nl:"Het is nooit te laat in het leven, dude. Word wakker." },
+  { en:"It’s really hard to balance work and rest, but 100% work is always better than 100% rest.", de:"Es ist verdammt schwer, Arbeit und Pause auszubalancieren, aber 100% Arbeit ist immer besser als 100% Pause.", es:"Es muy difícil equilibrar trabajo y descanso, pero 100% trabajo siempre es mejor que 100% descanso.", sv:"Det är svårt att balansera jobb och vila, men 100% jobb är alltid bättre än 100% vila.", nl:"Het is moeilijk om werk en rust te balanceren, maar 100% werk is altijd beter dan 100% rust." },
+  { en:"You know, hate is a really big emotion, mate. Don’t waste it.", de:"Weißt du, Hass ist eine verdammt große Emotion, Bro. Verschwend sie nicht.", es:"Sabes, el odio es una emoción enorme, bro. No la desperdicies.", sv:"Du vet, hat är en stark känsla, mate. Slösa inte bort den.", nl:"Haat is een sterke emotie, mate. Verspil het niet."  }
 ];
 
 /* 6 levels, 5 sentences each */
@@ -599,16 +599,57 @@ const UI = {
         locked:"LOCKED.", wrong:"-1. Refocus.", fsd:"FSD", rank:"Rank", progress:"Progress",
         levelComplete:"LEVEL COMPLETE", perfect:"✅ PERFECT. NEXT LEVEL UNLOCKED.", notPerfect:"❌ NOT PERFECT. RUN IT BACK.",
         retry:"RETRY LEVEL →", home:"GO HOME →", backHome:"BACK TO HOME" },
-  de: { chooseNative:"Wähle deine Muttersprache", levels:"DISZIPLIN-PFAD", levelHint:"Perfekt = nächstes Level frei.",
+  de: { chooseNative:"Wähle deine Muttersprache", levels:"KONTRIJAL PATH", levelHint:"Perfekt = nächstes Level frei.",
         play:"PLAY", check:"PRÜFEN", listenDecide:"Hören & Entscheiden", buildFocus:"Satz bauen",
         locked:"LOCKED.", wrong:"-1. Fokus.", fsd:"FSD", rank:"Rang", progress:"Fortschritt",
         levelComplete:"LEVEL GESCHAFFT", perfect:"✅ PERFEKT. NÄCHSTES LEVEL FREI.", notPerfect:"❌ NICHT PERFEKT. NOCHMAL.",
         retry:"LEVEL WIEDERHOLEN →", home:"ZURÜCK →", backHome:"ZURÜCK" },
-  es: { chooseNative:"Elige tu idioma nativo", levels:"RUTA DISCIPLINE", levelHint:"Puntaje perfecto desbloquea el siguiente.",
+  es: { chooseNative:"Elige tu idioma nativo", levels:"KONTRIJAL PATH", levelHint:"Puntaje perfecto desbloquea el siguiente.",
         play:"PLAY", check:"COMPROBAR", listenDecide:"Escucha y decide", buildFocus:"Construye la frase",
         locked:"LOCKED.", wrong:"-1. Enfócate.", fsd:"FSD", rank:"Rango", progress:"Progreso",
         levelComplete:"NIVEL COMPLETADO", perfect:"✅ PERFECTO. SIGUIENTE NIVEL DESBLOQUEADO.", notPerfect:"❌ NO PERFECTO. REPITE.",
-        retry:"REINTENTAR →", home:"INICIO →", backHome:"VOLVER" }
+        retry:"REINTENTAR →", home:"INICIO →", backHome:"VOLVER" },
+ sv: {
+  chooseNative:"Välj ditt modersmål",
+  levels:"KONTRIJAL PATH",
+  levelHint:"Perfekt poäng låser upp nästa nivå.",
+  play:"SPELA",
+  check:"KOLLA",
+  listenDecide:"Lyssna & välj",
+  buildFocus:"Bygg meningen",
+  locked:"LOCKED.",
+  wrong:"-1. Fokusera.",
+  fsd:"FSD",
+  rank:"Rank",
+  progress:"Progress",
+  levelComplete:"NIVÅ KLAR",
+  perfect:"✅ PERFEKT. NÄSTA NIVÅ UPPLÅST.",
+  notPerfect:"❌ INTE PERFEKT. KÖR IGEN.",
+  retry:"KÖR IGEN →",
+  home:"HEM →",
+  backHome:"TILLBAKA HEM"
+},
+
+nl: {
+  chooseNative:"Kies je moedertaal",
+  levels:"KONTRIJAL PATH",
+  levelHint:"Perfecte score ontgrendelt het volgende level.",
+  play:"PLAY",
+  check:"CHECK",
+  listenDecide:"Luister & kies",
+  buildFocus:"Bouw de zin",
+  locked:"LOCKED.",
+  wrong:"-1. Focus.",
+  fsd:"FSD",
+  rank:"Rang",
+  progress:"Voortgang",
+  levelComplete:"LEVEL VOLTOOID",
+  perfect:"✅ PERFECT. VOLGEND LEVEL ONTGRENDELD.",
+  notPerfect:"❌ NIET PERFECT. OPNIEUW.",
+  retry:"OPNIEUW →",
+  home:"NAAR HOME →",
+  backHome:"TERUG NAAR HOME"
+}
 };
 function t(key){ return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key; }
 
@@ -675,6 +716,8 @@ function startGame(){
         <button onclick="chooseLang('en')">🇬🇧 English</button>
         <button onclick="chooseLang('de')">🇩🇪 Deutsch</button>
         <button onclick="chooseLang('es')">🇪🇸 Español</button>
+        <button onclick="chooseLang('sv')">🇸🇪 Svenska</button>
+        <button onclick="chooseLang('nl')">🇳🇱 Nederlands</button>
       </div>
       <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
     </div>
@@ -1098,6 +1141,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
