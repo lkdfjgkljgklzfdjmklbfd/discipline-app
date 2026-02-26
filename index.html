@@ -84,7 +84,7 @@ body::before{
 #intro{ text-align:center; }
 #intro h1{
   font-size: clamp(42px, 7vw, 66px);
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   margin: 0;
@@ -100,7 +100,7 @@ body::before{
   letter-spacing: 0.35em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.65);
-  font-weight: 650;
+  font-weight: 750;
 }
 .terminal-line{
   width: min(360px, 85%);
@@ -110,19 +110,13 @@ body::before{
   box-shadow: 0 0 14px rgba(255,0,0,0.4);
 }
 
-#mode{
-  font-size:22px;
-  margin:6px 0 12px;
-  letter-spacing:0.5px;
-}
-
 button{
   appearance:none;
   border:none;
   cursor:pointer;
   background: linear-gradient(180deg, var(--red2), #7a0000);
   color:white;
-  font-weight:800;
+  font-weight:900;
   letter-spacing:1px;
   border-radius:16px;
   height:54px;
@@ -133,7 +127,7 @@ button{
 }
 button:hover{ filter:brightness(1.08); }
 button:active{ transform: scale(0.98); }
-.card button{ margin:10px 8px 0; }
+button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightness(0.85); }
 
 .choice{
   background: rgba(28,28,28,0.92);
@@ -146,14 +140,13 @@ button:active{ transform: scale(0.98); }
   line-height: 1.35;
   text-align: left;
   box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.2px;
   color: rgba(255,255,255,0.88);
 }
 .choice.selected{
   border-color: rgba(255,26,26,0.90);
   box-shadow: 0 0 0 2px rgba(255,26,26,0.28), 0 12px 34px rgba(0,0,0,0.5);
-  font-weight: 600;
 }
 
 .word-container{
@@ -174,21 +167,21 @@ button:active{ transform: scale(0.98); }
   padding:10px 14px;
   border-radius:16px;
   font-size:17px;
-  font-weight:500;
+  font-weight:600; /* not too thick */
   user-select:none;
   cursor:pointer;
 }
 
 #hud{
   margin-bottom:14px;
-  padding-right: 120px;
+  padding-right: 120px; /* avoid overlap with streak */
 }
 #hud *{ font-size:14px !important; }
 
 #result{
   margin-top:14px;
   font-size:18px;
-  font-weight:900;
+  font-weight:950;
   letter-spacing:0.5px;
 }
 .hint{
@@ -215,7 +208,7 @@ button:active{ transform: scale(0.98); }
   border-radius: 999px;
   padding: 10px 14px;
   box-shadow: 0 16px 50px rgba(0,0,0,0.55);
-  font-weight: 900;
+  font-weight: 950;
   letter-spacing: 0.6px;
 }
 .toast-inner.good{
@@ -234,65 +227,6 @@ button:active{ transform: scale(0.98); }
   100%{ opacity:0; transform: translateX(-50%) translateY(-10px) scale(0.98); }
 }
 
-#rankUpOverlay{
-  position: fixed;
-  inset: 0;
-  z-index: 999998;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  background: rgba(0,0,0,0.78);
-  backdrop-filter: blur(8px);
-}
-.rankup-card{
-  width: min(520px, 100%);
-  border-radius: 24px;
-  padding: 22px;
-  background: linear-gradient(180deg, rgba(16,16,16,0.96), rgba(8,8,8,0.96));
-  border: 1px solid rgba(255,26,26,0.20);
-  box-shadow: 0 22px 80px rgba(255,0,0,0.14);
-  text-align: center;
-}
-.rankup-badge{
-  width: 92px;
-  height: 92px;
-  border-radius: 22px;
-  margin: 0 auto 14px;
-  background: radial-gradient(circle at 30% 30%, rgba(255,26,26,0.45), rgba(255,26,26,0.10));
-  border: 1px solid rgba(255,26,26,0.25);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size: 40px;
-  box-shadow: 0 0 0 6px rgba(255,26,26,0.06);
-}
-.rankup-title{
-  font-weight: 900;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.95);
-  margin: 0 0 6px;
-}
-.rankup-name{
-  font-size: 26px;
-  font-weight: 900;
-  color: var(--red);
-  letter-spacing: 1px;
-  margin: 0 0 12px;
-  text-shadow: 0 0 12px rgba(255,0,0,0.25);
-}
-.rankup-sub{
-  color: rgba(255,255,255,0.70);
-  margin: 0 0 14px;
-}
-.rankup-btn{
-  width: 100%;
-  min-width: unset;
-  height: 56px;
-  border-radius: 18px;
-}
-
 .shake{ animation: shake 0.35s ease; }
 @keyframes shake{
   0%{ transform: translateX(0); }
@@ -303,6 +237,107 @@ button:active{ transform: scale(0.98); }
   100%{ transform: translateX(0); }
 }
 
+/* Clickable rank in HUD */
+#rankBtn{
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.88);
+  height: 34px;
+  min-width: unset;
+  padding: 0 10px;
+  border-radius: 12px;
+  font-weight: 950;
+  letter-spacing: 0.6px;
+  box-shadow: none;
+}
+#rankBtn:hover{ filter: brightness(1.1); }
+
+/* Rank modal */
+#rankModal{
+  position: fixed;
+  inset: 0;
+  z-index: 999997;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(8px);
+}
+#rankModal.show{ display:flex; }
+.rank-modal-card{
+  width: min(560px, 100%);
+  border-radius: 22px;
+  padding: 18px 18px 16px;
+  background: linear-gradient(180deg, rgba(16,16,16,0.96), rgba(8,8,8,0.96));
+  border: 1px solid rgba(255,26,26,0.22);
+  box-shadow: 0 28px 90px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,26,26,0.12);
+  position: relative;
+}
+.rank-close{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  min-width: unset;
+  padding: 0;
+  font-weight: 950;
+  letter-spacing: 0;
+}
+.rank-modal-title{
+  margin: 0;
+  font-weight: 950;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+  font-size: 16px;
+}
+.rank-modal-sub{
+  margin: 6px 0 14px;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.rank-table{
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.rank-table th, .rank-table td{
+  padding: 12px 12px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.88);
+}
+.rank-table th{
+  text-align: left;
+  color: rgba(255,255,255,0.70);
+  font-weight: 900;
+  background: rgba(28,28,28,0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+.rank-table tr{ background: rgba(20,20,20,0.70); }
+.rank-table tr + tr td{ border-top: 1px solid rgba(255,255,255,0.08); }
+.rank-badge{
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,26,26,0.22);
+  background: rgba(255,26,26,0.10);
+  font-weight: 950;
+  letter-spacing: 0.6px;
+}
+.rank-range{ color: rgba(255,255,255,0.70); font-weight: 800; }
+.rank-hintline{
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.62);
+}
+
+/* Mobile fullscreen */
 @media (max-width: 520px){
   #container{
     padding: 0 !important;
@@ -328,7 +363,7 @@ button:active{ transform: scale(0.98); }
     padding-bottom: 86px;
     -webkit-overflow-scrolling: touch;
   }
-  .btn.play{
+  .btn-play{
     width: 64%;
     max-width: 320px;
     min-width: unset;
@@ -339,7 +374,7 @@ button:active{ transform: scale(0.98); }
     margin-left:auto;
     margin-right:auto;
   }
-  .btn.check{
+  .btn-check{
     position: sticky;
     bottom: calc(env(safe-area-inset-bottom) + 10px);
     width: 100%;
@@ -350,131 +385,6 @@ button:active{ transform: scale(0.98); }
     margin: 14px 0 0;
   }
 }
-
-/* ===== Rank modal (popup) ===== */
-#rankModal {
-  position: fixed;
-  inset: 0;
-  z-index: 999997;
-  display: none;               /* hidden by default */
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: rgba(0,0,0,0.72);
-  backdrop-filter: blur(8px);
-}
-
-#rankModal.show {
-  display: flex;
-}
-
-.rank-modal-card {
-  width: min(560px, 100%);
-  border-radius: 22px;
-  padding: 18px 18px 16px;
-  background: linear-gradient(180deg, rgba(16,16,16,0.96), rgba(8,8,8,0.96));
-  border: 1px solid rgba(255,26,26,0.22);
-  box-shadow: 0 28px 90px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,26,26,0.12);
-  position: relative;
-}
-
-.rank-modal-title {
-  margin: 0;
-  font-weight: 900;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.92);
-  font-size: 16px;
-}
-
-.rank-modal-sub {
-  margin: 6px 0 14px;
-  color: rgba(255,255,255,0.65);
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.rank-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  min-width: unset;
-  padding: 0;
-  font-weight: 900;
-  letter-spacing: 0;
-}
-
-.rank-table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.12);
-}
-
-.rank-table th,
-.rank-table td {
-  padding: 12px 12px;
-  font-size: 14px;
-  color: rgba(255,255,255,0.88);
-}
-
-.rank-table th {
-  text-align: left;
-  color: rgba(255,255,255,0.70);
-  font-weight: 800;
-  background: rgba(28,28,28,0.85);
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-}
-
-.rank-table tr {
-  background: rgba(20,20,20,0.70);
-}
-
-.rank-table tr + tr td {
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-
-.rank-badge {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,26,26,0.22);
-  background: rgba(255,26,26,0.10);
-  font-weight: 900;
-  letter-spacing: 0.6px;
-}
-
-.rank-range {
-  color: rgba(255,255,255,0.70);
-  font-weight: 700;
-}
-
-.rank-hintline {
-  margin-top: 12px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.62);
-}
-
-/* Clickable rank in HUD */
-#rankBtn {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.16);
-  color: rgba(255,255,255,0.88);
-  height: 34px;
-  min-width: unset;
-  padding: 0 10px;
-  border-radius: 12px;
-  font-weight: 900;
-  letter-spacing: 0.6px;
-  box-shadow: none;
-}
-
-#rankBtn:hover { filter: brightness(1.1); }
-
 </style>
 </head>
 
@@ -483,6 +393,7 @@ button:active{ transform: scale(0.98); }
 <div id="streakBox"></div>
 <div id="credit">made by Frihet</div>
 
+<!-- FSD toast -->
 <div id="toast">
   <div id="toastInner" class="toast-inner">
     <span>💰</span>
@@ -490,97 +401,55 @@ button:active{ transform: scale(0.98); }
   </div>
 </div>
 
-<div id="rankUpOverlay">
-  <div class="rankup-card">
-    <div class="rankup-badge">💰</div>
-    <h3 class="rankup-title">RANK UP</h3>
-    <div class="rankup-name" id="rankUpName">Millionaire</div>
-    <p class="rankup-sub" id="rankUpSub">Upgrade secured. Keep going.</p>
-    <button class="rankup-btn" onclick="closeRankUp()">CONTINUE →</button>
-  </div>
-</div>
-
-  
-<!-- Rank ladder modal -->
+<!-- Rank modal -->
 <div id="rankModal" onclick="onRankBackdrop(event)">
   <div class="rank-modal-card">
     <button class="rank-close" onclick="toggleRankModal(false)">✕</button>
-
     <h3 class="rank-modal-title">RANK LADDER</h3>
-    <p class="rank-modal-sub">
-      Your money unit is <b>FSD 💰</b>. More FSD = higher rank.
-    </p>
+    <p class="rank-modal-sub">Your money unit is <b>FSD 💰</b>. More FSD = higher rank.</p>
 
     <table class="rank-table">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>FSD Range</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Rank</th><th>FSD Range</th></tr></thead>
       <tbody>
-        <tr>
-          <td><span class="rank-badge">Loser</span></td>
-          <td class="rank-range">0–49 FSD</td>
-        </tr>
-        <tr>
-          <td><span class="rank-badge">NPC</span></td>
-          <td class="rank-range">50–149 FSD</td>
-        </tr>
-        <tr>
-          <td><span class="rank-badge">Human</span></td>
-          <td class="rank-range">150–299 FSD</td>
-        </tr>
-        <tr>
-          <td><span class="rank-badge">Rich</span></td>
-          <td class="rank-range">300–599 FSD</td>
-        </tr>
-        <tr>
-          <td><span class="rank-badge">Millionaire</span></td>
-          <td class="rank-range">600–999 FSD</td>
-        </tr>
-        <tr>
-          <td><span class="rank-badge">Billionaire</span></td>
-          <td class="rank-range">1000–999999 FSD</td>
-        </tr>
+        <tr><td><span class="rank-badge">Loser</span></td><td class="rank-range">0–49 FSD</td></tr>
+        <tr><td><span class="rank-badge">NPC</span></td><td class="rank-range">50–149 FSD</td></tr>
+        <tr><td><span class="rank-badge">Human</span></td><td class="rank-range">150–299 FSD</td></tr>
+        <tr><td><span class="rank-badge">Rich</span></td><td class="rank-range">300–599 FSD</td></tr>
+        <tr><td><span class="rank-badge">Millionaire</span></td><td class="rank-range">600–999 FSD</td></tr>
+        <tr><td><span class="rank-badge">Billionaire</span></td><td class="rank-range">1000–999999 FSD</td></tr>
       </tbody>
     </table>
 
-    <div class="rank-hintline">
-      Tip: Tap <b>Rank</b> again or press ✕ to close.
-    </div>
+    <div class="rank-hintline">Tip: Tap <b>Rank</b> again, press ✕, or tap outside to close.</div>
   </div>
 </div>
-
 
 <div id="container">
   <div class="card" id="intro">
     <h1>DISCIPLINE</h1>
     <h2>YOU VS YOU</h2>
     <div class="terminal-line"></div>
-    <button class="btn" onclick="startGame()">START SESSION →</button>
-    <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">
-      made by Frihet
-    </p>
+    <button onclick="startGame()">START SESSION →</button>
+    <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px; letter-spacing: 1px;">made by Frihet</p>
   </div>
 </div>
 
 <script>
-/* ===== Canvas setup ===== */
+/* =========================
+   Background candles chart
+========================= */
 const canvas = document.getElementById("bg");
 const ctx = canvas.getContext("2d");
-function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+function resizeCanvas(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener("resize", () => { resizeCanvas(); initChartCandles(); });
 
-/* ===== Trading chart background (scrolling candles) ===== */
 let candles = [];
-function rand(min, max){ return Math.random() * (max - min) + min; }
+function rand(min,max){ return Math.random()*(max-min)+min; }
 
 const SPEED = 0.55;
 const GAP_MIN = 6, GAP_MAX = 14;
 const BODY_W_MIN = 6, BODY_W_MAX = 12;
-
 const UP_BODY_A = 0.22, UP_WICK_A = 0.16;
 const DOWN_BODY_A = 0.28, DOWN_WICK_A = 0.18;
 
@@ -599,14 +468,13 @@ function makeCandle(spawnRight=false){
   const dnRGB = { r: 255, g: 40, b: 40 };
 
   return {
-    x: spawnRight ? canvas.width + rand(0, 200) : rand(0, canvas.width),
+    x: spawnRight ? canvas.width + rand(0,200) : rand(0,canvas.width),
     y, w, gap, bodyH, wickTop, wickBot, isUp,
     r: isUp ? upRGB.r : dnRGB.r,
     g: isUp ? upRGB.g : dnRGB.g,
     b: isUp ? upRGB.b : dnRGB.b
   };
 }
-
 function initChartCandles(){
   candles = [];
   let x = -50;
@@ -621,15 +489,14 @@ initChartCandles();
 
 function drawChartCandle(c){
   const centerX = c.x + c.w/2;
-  const wickX = centerX;
   const bodyA = c.isUp ? UP_BODY_A : DOWN_BODY_A;
   const wickA = c.isUp ? UP_WICK_A : DOWN_WICK_A;
 
   ctx.lineWidth = 1.2;
   ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${wickA})`;
   ctx.beginPath();
-  ctx.moveTo(wickX, c.y - c.wickTop);
-  ctx.lineTo(wickX, c.y + c.bodyH + c.wickBot);
+  ctx.moveTo(centerX, c.y - c.wickTop);
+  ctx.lineTo(centerX, c.y + c.bodyH + c.wickBot);
   ctx.stroke();
 
   ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${bodyA})`;
@@ -638,11 +505,10 @@ function drawChartCandle(c){
   ctx.fillStyle = `rgba(255,255,255,0.035)`;
   ctx.fillRect(c.x + 1, c.y + 2, 1, Math.max(8, c.bodyH - 4));
 }
-
 function animateChart(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   candles.forEach(drawChartCandle);
-  candles.forEach(c => { c.x -= SPEED; });
+  candles.forEach(c => c.x -= SPEED);
 
   while(candles.length && candles[0].x + candles[0].w < -60) candles.shift();
 
@@ -653,23 +519,20 @@ function animateChart(){
     candles.push(nc);
     last = nc;
   }
-
   requestAnimationFrame(animateChart);
 }
 animateChart();
 
-window.addEventListener("resize", () => { resizeCanvas(); initChartCandles(); });
-
-/* ===== Daily Streak ===== */
-function updateStreak() {
-  let today = new Date().toDateString();
-  let last = localStorage.getItem("lastDate");
+/* =========================
+   Daily streak
+========================= */
+function updateStreak(){
+  const today = new Date().toDateString();
+  const last = localStorage.getItem("lastDate");
   let streak = parseInt(localStorage.getItem("streak") || "0");
-
-  if (last !== today) {
-    let yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    if (last === yesterday.toDateString()) streak++;
+  if(last !== today){
+    const y = new Date(); y.setDate(y.getDate()-1);
+    if(last === y.toDateString()) streak++;
     else streak = 1;
     localStorage.setItem("streak", streak);
     localStorage.setItem("lastDate", today);
@@ -678,7 +541,10 @@ function updateStreak() {
 }
 updateStreak();
 
-/* ===== Sentences ===== */
+/* =========================
+   Data: 30 items
+   audio is ALWAYS English: audio1..audio30
+========================= */
 const items = [
   { en:"I feel you, bro. I’ve also been through a lot.", de:"Ich fühl dich, Bro. Ich hab auch schon viel durchgemacht.", es:"Te entiendo, bro. Yo también he pasado por mucho." },
   { en:"You don’t need motivation. you just need discipline, bro.", de:"Du brauchst keine Motivation. Du brauchst Disziplin, Bro.", es:"No necesitas motivación. Necesitas disciplina, bro." },
@@ -694,79 +560,66 @@ const items = [
   { en:"If you want big money, make a big move. You can’t get rich with a 9 to 5 job, you know that.", de:"Wenn du großes Geld willst, musst du große Moves machen. Mit einem 9-to-5-Job wirst du nicht reich, das weißt du.", es:"Si quieres mucho dinero, haz un gran movimiento. No te vas a hacer rico con un trabajo de 9 a 5, tú lo sabes." },
   { en:"If you wanna be different, you gotta be emotionless, bro. Learn to control your emotions", de:"Wenn du anders sein willst, musst du emotionslos sein, Bro. Lern, deine Emotionen zu kontrollieren.", es:"Si quieres ser diferente, tienes que ser frío, bro. Aprende a controlar tus emociones." },
   { en:"Bro, everyone’s lost. It’s not just you. We’re all lost. That’s the beauty of life", de:"Bro, jeder ist verloren. Nicht nur du. Wir sind alle verloren. Das ist das Schöne am Leben.", es:"Bro, todos estamos perdidos. No eres solo tú. Todos estamos perdidos. Esa es la belleza de la vida." },
-  { en:"Go hit the gym, bro. It's your body. Take care of it.", de:"Geh ins Gym, Bro. Das ist dein Körper. Kümmere dich darum.", es:"Ve al gym, bro. Es tu cuerpo. Cuídalo."},
-  { en:"Stop scrolling all that stupid shit, bro. Ain’t you scared it’s messing up your brain? I don’t get how people don’t even care.", de:"Hör auf, die ganze dummen Mist zu scrollen, Bro. Hast du keine Angst, dass das dein Gehirn kaputtmacht? Ich check nicht, wie Leute das einfach ignorieren.", es:"Deja de scrollear toda esa basura, bro. ¿No te da miedo que te esté jodiendo el cerebro? No entiendo cómo a la gente ni siquiera le importa." },
+
+  { en:"Go hit the gym, bro. It's your body. Take care of it.", de:"Geh ins Gym, Bro. Das ist dein Körper. Kümmere dich darum.", es:"Ve al gym, bro. Es tu cuerpo. Cuídalo." },
+  { en:"Stop scrolling all that stupid stuff, bro. Ain’t you scared it’s messing up your brain? I don’t get how people don’t even care.", de:"Hör auf, diesen ganzen dummen Mist zu scrollen, Bro. Hast du keine Angst, dass das dein Gehirn kaputtmacht? Ich check nicht, wie Leute das einfach egal finden.", es:"Deja de scrollear toda esa basura, bro. ¿No te da miedo que te esté jodiendo el cerebro? No entiendo cómo a la gente ni siquiera le importa." },
   { en:"Manifesting works, dude. Not magic. it’s because you act on what you’re thinking unconsciously.", de:"Manifestieren funktioniert, Bro. Nicht wegen Magie. Sondern weil du unbewusst nach dem handelst, woran du denkst.", es:"Manifestar funciona, bro. No es magia. Es porque actúas inconscientemente según lo que estás pensando." },
-  { en:"You don’t even know how valuable you are. That’s why you end up like that.", de:"Du weißt nicht mal, wie wertvoll du bist. Deshalb bist du da gelandet, wo du jetzt bist.", es:"Ni siquiera sabes lo valioso que eres. Por eso terminaste así." },
-  { en:"I learned it the hard way, bro. You can’t trust anyone in life. For real, you can only trust yourself.", de:"Ich hab’s auf die harte Tour gelernt, Bro. Du kannst im Leben niemandem vertrauen. Ehrlich am Ende kannst du nur dir selbst vertrauen.", es:"Lo aprendí por las malas, bro. No puedes confiar en nadie en la vida. De verdad, al final solo puedes confiar en ti mismo." },
-  { en:"It’s your life, bro. Take control and own it.", de:"Es ist dein Leben, Bro. Übernimm die Kontrolle und steh dazu.", eu:"Es tu vida, bro. Toma el control y hazte cargo."},
-  { en:"Work first, man. Money always comes last, no matter what.", de:"Arbeite zuerst, Bro. Geld kommt immer zuletzt, egal was passiert.", es:"Trabaja primero, bro. El dinero siempre viene después, pase lo que pase."},
-  { en:"You know humans just love comfort, bro. Yeah, that’s why it’s so hard to do the hard shit.", de:"Menschen lieben einfach Komfort, Bro. Genau deshalb ist es so schwer, den harten Scheiß zu machen.", es:"Los humanos aman la comodidad, bro. Por eso es tan difícil hacer las cosas duras."},
-  { en:"You want me to be honest? Bro, you can’t be successful doing what everyone else does. Wanna be successful? Do what nobody else is doing, man.", de:"Willst du, dass ich ehrlich bin? Bro, du kannst nicht erfolgreich sein, wenn du das machst, was alle anderen machen. Willst du Erfolg? Dann mach das, was sonst keiner macht, Mann.", es:"¿Quieres que sea honesto? Bro, no puedes tener éxito haciendo lo mismo que todos los demás. ¿Quieres tener éxito? Haz lo que nadie más está haciendo, hermano."},
-  { en:"If people are constantly talking about you, lucky you, dude you’ve got a fan group.", de:"Wenn die Leute ständig über dich reden, Glückwunsch, Mann du hast schon deine eigene Fangruppe.", es:"Si la gente está hablando de ti todo el tiempo, suerte la tuya, hermano — ya tienes tu propio grupo de fans."},
-  { en:"The thing is, dude, nobody cares about you that deeply. Do you even remember what happened 4 hours ago? If you do, you’re in trouble, bro. Can’t even lie.", de:"Die Sache ist, Bruder niemand interessiert sich so tief für dich. Erinnerst du dich überhaupt noch, was vor 4 Stunden passiert ist? Wenn ja, hast du ein Problem, Bro. Kann ich nicht mal lügen.", es:"La cosa es, bro, que a nadie le importas tan profundamente. ¿De verdad recuerdas lo que pasó hace 4 horas? Si sí, estás en problemas, hermano. No te voy a mentir."},
-  { en:"Stop distracting yourself, dude. You’ll come back to reality eventually.", de:"Hör auf, dich abzulenken, Bruder. Früher oder später holt dich die Realität sowieso ein.", es:"Deja de distraerte, bro. Tarde o temprano vas a volver a la realidad."},
-  { en:"Everything changes, bro. That’s life.", de:"Alles verändert sich, Bro. So ist das Leben.", es:"Todo cambia, bro. Así es la vida."},
-  { en:"It’s never too late in life, dude. Wake up.", de:"Es ist im Leben nie zu spät, Bruder. Wach auf.", es:"Nunca es demasiado tarde en la vida, bro. Despierta."},
-  { en:"It’s really hard to balance work and rest, but 100% work is always better than 100% rest.", de:"Es ist verdammt schwer, Arbeit und Erholung auszubalancieren, aber 100 % Arbeit ist immer besser als 100 % Ausruhen.", es:"Es realmente difícil equilibrar trabajo y descanso, pero 100 % trabajo siempre es mejor que 100 % descanso."},
-  { en:"You know, hate is a really big emotion, mate. Don’t waste it.", de:"Weißt du, Hass ist eine verdammt starke Emotion, Bruder. Verschwend sie nicht.", es:"Sabes, el odio es una emoción muy fuerte, bro. No la desperdicies."}
+  { en:"You don’t even know how valuable you are. That’s why you end up like that.", de:"Du weißt nicht mal, wie wertvoll du bist. Deshalb landest du am Ende genau so.", es:"Ni siquiera sabes lo valioso que eres. Por eso terminas así." },
+  { en:"I learned it the hard way, bro. You can’t trust anyone in life. For real, you can only trust yourself.", de:"Ich hab’s auf die harte Tour gelernt, Bro. Du kannst im Leben niemandem vertrauen. Ehrlich: Am Ende kannst du nur dir selbst vertrauen.", es:"Lo aprendí por las malas, bro. No puedes confiar en nadie en la vida. De verdad: al final solo puedes confiar en ti mismo." },
+  { en:"It’s your life, bro. Take control and own it.", de:"Es ist dein Leben, Bro. Übernimm die Kontrolle und steh dazu.", es:"Es tu vida, bro. Toma el control y hazte cargo." },
+  { en:"Work first, man. Money always comes last, no matter what.", de:"Arbeite zuerst, Bro. Geld kommt immer zuletzt, egal was passiert.", es:"Trabaja primero, bro. El dinero siempre viene después, pase lo que pase." },
+  { en:"You know humans just love comfort, bro. Yeah, that’s why it’s so hard to do the hard stuff.", de:"Menschen lieben einfach Komfort, Bro. Genau deshalb ist es so schwer, die harten Sachen zu machen.", es:"Los humanos aman la comodidad, bro. Por eso es tan difícil hacer las cosas duras." },
+  { en:"You want me to be honest? Bro, you can’t be successful doing what everyone else does. Wanna be successful? Do what nobody else is doing, man.", de:"Willst du, dass ich ehrlich bin? Bro, du kannst nicht erfolgreich sein, wenn du machst, was alle anderen machen. Willst du Erfolg? Dann mach, was sonst keiner macht.", es:"¿Quieres que sea honesto? Bro, no puedes tener éxito haciendo lo mismo que todos. ¿Quieres tener éxito? Haz lo que nadie más hace." },
+  { en:"If people are constantly talking about you, lucky you, dude — you’ve got a fan group.", de:"Wenn die Leute ständig über dich reden: Glück für dich, Bro — du hast schon deine eigene Fangruppe.", es:"Si la gente habla de ti todo el tiempo, suerte la tuya, bro — ya tienes tu propio grupo de fans." },
+  { en:"The thing is, dude, nobody cares about you that deeply. Do you even remember what happened 4 hours ago? If you do, you’re in trouble, bro. Can’t even lie.", de:"Die Sache ist, Bro: Niemand interessiert sich so tief für dich. Erinnerst du dich überhaupt, was vor 4 Stunden passiert ist? Wenn ja, hast du ein Problem. Kein Witz.", es:"La cosa es, bro: a nadie le importas tan profundamente. ¿De verdad recuerdas lo que pasó hace 4 horas? Si sí, estás en problemas. No te voy a mentir." },
+  { en:"Stop distracting yourself, dude. You’ll come back to reality eventually.", de:"Hör auf, dich abzulenken, Bro. Früher oder später holt dich die Realität ein.", es:"Deja de distraerte, bro. Tarde o temprano vas a volver a la realidad." },
+  { en:"Everything changes, bro. That’s life.", de:"Alles verändert sich, Bro. So ist das Leben.", es:"Todo cambia, bro. Así es la vida." },
+  { en:"It’s never too late in life, dude. Wake up.", de:"Es ist im Leben nie zu spät, Bro. Wach auf.", es:"Nunca es demasiado tarde en la vida, bro. Despierta." },
+  { en:"It’s really hard to balance work and rest, but 100% work is always better than 100% rest.", de:"Es ist verdammt schwer, Arbeit und Pause auszubalancieren, aber 100% Arbeit ist immer besser als 100% Pause.", es:"Es muy difícil equilibrar trabajo y descanso, pero 100% trabajo siempre es mejor que 100% descanso." },
+  { en:"You know, hate is a really big emotion, mate. Don’t waste it.", de:"Weißt du, Hass ist eine verdammt große Emotion, Bro. Verschwend sie nicht.", es:"Sabes, el odio es una emoción enorme, bro. No la desperdicies." }
 ];
 
-/* ===== LEVELS ===== */
+/* 6 levels, 5 sentences each */
 const LEVELS = [
-  { id:"L1", name:"Passive",     idx:[0,1,2,3,7,10,14,19,20,25,26,27,29] },
-  { id:"L2", name:"Grinder",     idx:[4,5,6,13,17,18,21,23,28] },
-  { id:"L3", name:"Millionaire", idx:[8,9,11,12,15,16,22,24] }
+  { id:"L1", name:"LEVEL 1", idx:[0,1,2,3,4] },
+  { id:"L2", name:"LEVEL 2", idx:[5,6,7,8,9] },
+  { id:"L3", name:"LEVEL 3", idx:[10,11,12,13,14] },
+  { id:"L4", name:"LEVEL 4", idx:[15,16,17,18,19] },
+  { id:"L5", name:"LEVEL 5", idx:[20,21,22,23,24] },
+  { id:"L6", name:"LEVEL 6", idx:[25,26,27,28,29] }
 ];
 
-let activeItems = [];
-let activeLevel = "L1";
-
-/* ===== Language UI ===== */
+/* =========================
+   Language UI
+========================= */
 let nativeLang = localStorage.getItem("nativeLang") || "en";
 const UI = {
-  en: { chooseNative:"Choose your native language", chooseLevel:"Choose your level",
-        levelNote:"Be honest", chooseMode:"Choose mode",
-        play:"PLAY", check:"CHECK",
-        listenDecide:"Listen & Decide", buildFocus:"Build With Focus",
-        sessionComplete:"Session Complete", score:"Score", restart:"Restart",
-        strong:"LOCKED.", reset:"-1. Refocus.", fsd:"FSD", rank:"Rank", progress:"Progress" },
-  de: { chooseNative:"Wähle deine Muttersprache", chooseLevel:"Wähle dein Level",
-        levelNote:"Be honest", chooseMode:"Modus wählen",
-        play:"PLAY", check:"PRÜFEN",
-        listenDecide:"Hören & Entscheiden", buildFocus:"Satz bauen",
-        sessionComplete:"Session beendet", score:"Punktzahl", restart:"Neustart",
-        strong:"LOCKED.", reset:"-1. Fokus.", fsd:"FSD", rank:"Rang", progress:"Fortschritt" },
-  es: { chooseNative:"Elige tu idioma nativo", chooseLevel:"Elige tu nivel",
-        levelNote:"Be honest", chooseMode:"Elige modo",
-        play:"PLAY", check:"COMPROBAR",
-        listenDecide:"Escucha y decide", buildFocus:"Construye la frase",
-        sessionComplete:"Sesión terminada", score:"Puntuación", restart:"Reiniciar",
-        strong:"LOCKED.", reset:"-1. Enfócate.", fsd:"FSD", rank:"Rango", progress:"Progreso" }
+  en: { chooseNative:"Choose your native language", levels:"DISCIPLINE PATH", levelHint:"Perfect score unlocks next level.",
+        play:"PLAY", check:"CHECK", listenDecide:"Listen & Decide", buildFocus:"Build With Focus",
+        locked:"LOCKED.", wrong:"-1. Refocus.", fsd:"FSD", rank:"Rank", progress:"Progress",
+        levelComplete:"LEVEL COMPLETE", perfect:"✅ PERFECT. NEXT LEVEL UNLOCKED.", notPerfect:"❌ NOT PERFECT. RUN IT BACK.",
+        retry:"RETRY LEVEL →", home:"GO HOME →", backHome:"BACK TO HOME" },
+  de: { chooseNative:"Wähle deine Muttersprache", levels:"DISZIPLIN-PFAD", levelHint:"Perfekt = nächstes Level frei.",
+        play:"PLAY", check:"PRÜFEN", listenDecide:"Hören & Entscheiden", buildFocus:"Satz bauen",
+        locked:"LOCKED.", wrong:"-1. Fokus.", fsd:"FSD", rank:"Rang", progress:"Fortschritt",
+        levelComplete:"LEVEL GESCHAFFT", perfect:"✅ PERFEKT. NÄCHSTES LEVEL FREI.", notPerfect:"❌ NICHT PERFEKT. NOCHMAL.",
+        retry:"LEVEL WIEDERHOLEN →", home:"ZURÜCK →", backHome:"ZURÜCK" },
+  es: { chooseNative:"Elige tu idioma nativo", levels:"RUTA DISCIPLINE", levelHint:"Puntaje perfecto desbloquea el siguiente.",
+        play:"PLAY", check:"COMPROBAR", listenDecide:"Escucha y decide", buildFocus:"Construye la frase",
+        locked:"LOCKED.", wrong:"-1. Enfócate.", fsd:"FSD", rank:"Rango", progress:"Progreso",
+        levelComplete:"NIVEL COMPLETADO", perfect:"✅ PERFECTO. SIGUIENTE NIVEL DESBLOQUEADO.", notPerfect:"❌ NO PERFECTO. REPITE.",
+        retry:"REINTENTAR →", home:"INICIO →", backHome:"VOLVER" }
 };
 function t(key){ return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] || key; }
-function displayText(i){ const obj = activeItems[i]; return obj[nativeLang] || obj.en; }
 
-/* ===== Game State ===== */
-let used = [];
-let currentIndex = 0;
-let score = 0;
-let round = 0;
-let selectedChoice = null;
-let audio = null;
-let gameMode = "mix";
-
-/* ===== FSD persistent ===== */
+/* =========================
+   Persistent FSD + ranks
+========================= */
 const FSD_KEY = "fsd_forever";
 function getFSD(){ return parseInt(localStorage.getItem(FSD_KEY) || "0"); }
-function setFSD(v){ if(v < 0) v = 0; localStorage.setItem(FSD_KEY, String(v)); }
-function addFSD(delta){
-  const old = getFSD();
-  setFSD(old + delta);
-  return { old, now: getFSD() };
-}
+function setFSD(v){ if(v<0) v=0; localStorage.setItem(FSD_KEY, String(v)); }
+function addFSD(delta){ const now = getFSD() + delta; setFSD(now); return getFSD(); }
 
-/* ===== Ranks ===== */
 const RANKS = [
   { name:"Loser",       min:0,    max:49 },
   { name:"NPC",         min:50,   max:149 },
@@ -775,22 +628,45 @@ const RANKS = [
   { name:"Millionaire", min:600,  max:999 },
   { name:"Billionaire", min:1000, max:999999 }
 ];
-function rankFor(v){
-  for(const r of RANKS){ if(v >= r.min && v <= r.max) return r; }
-  return RANKS[0];
-}
+function rankFor(v){ return RANKS.find(r => v>=r.min && v<=r.max) || RANKS[0]; }
 function nextRankInfo(v){
   const r = rankFor(v);
   const idx = RANKS.indexOf(r);
-  if(idx === RANKS.length - 1) return { pct:100, label:"MAX" };
+  if(idx === RANKS.length-1) return { pct:100, label:"MAX" };
   const next = RANKS[idx+1];
-  const needTotal = next.min - r.min;
+  const need = next.min - r.min;
   const have = v - r.min;
-  const pct = Math.max(0, Math.min(100, Math.round((have/needTotal)*100)));
-  return { pct, label:`${v}/${next.min}` };
+  return { pct: Math.max(0, Math.min(100, Math.round((have/need)*100))), label:`${v}/${next.min}` };
 }
 
-/* ===== Screens flow ===== */
+/* =========================
+   Unlocks per language
+========================= */
+function unlockKey(){ return "unlockedLevel_" + (nativeLang || "en"); }
+function getUnlockedLevel(){ return parseInt(localStorage.getItem(unlockKey()) || "1"); }
+function setUnlockedLevel(n){ localStorage.setItem(unlockKey(), String(n)); }
+function levelNum(id){ return parseInt(id.replace("L",""),10); }
+function isUnlocked(levelId){ return levelNum(levelId) <= getUnlockedLevel(); }
+
+/* Bonus: 2 perfect levels in a row => +5 FSD */
+function noFailKey(){ return "noFailStreak_" + (nativeLang || "en"); }
+function getNoFailStreak(){ return parseInt(localStorage.getItem(noFailKey()) || "0"); }
+function setNoFailStreak(n){ localStorage.setItem(noFailKey(), String(n)); }
+
+/* =========================
+   Game state
+========================= */
+let activeLevel = "L1";
+let activeItems = []; // each entry: {en,de,es, globalIndex}
+let used = [];
+let round = 0;
+let score = 0;
+let mistakes = 0;
+let audio = null;
+
+/* =========================
+   Screens
+========================= */
 function startGame(){
   document.getElementById("container").innerHTML = `
     <div class="card">
@@ -804,67 +680,71 @@ function startGame(){
     </div>
   `;
 }
-
 function chooseLang(lang){
   nativeLang = lang;
   localStorage.setItem("nativeLang", lang);
+  renderHome();
+}
 
-  document.getElementById("container").innerHTML = `
-    <div class="card">
-      <h2 style="margin-top:0;">${t("chooseLevel")}</h2>
-      <p style="color:#aaa; margin-top:8px;">${t("levelNote")}</p>
-      <div id="levelBtns" style="display:flex; flex-direction:column; gap:12px; margin-top:16px;"></div>
-      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
+function renderHome(){
+  const unlocked = getUnlockedLevel();
+  let html = `
+    <div class="card" id="home">
+      <h2 style="margin-top:0; letter-spacing:1px;">${t("levels")}</h2>
+      <p style="color:#aaa; margin-top:8px;">${t("levelHint")}</p>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:16px;" id="levelGrid"></div>
+
+      <div style="margin-top:16px; color:rgba(255,255,255,0.75); font-size:13px;">
+        💰 ${t("fsd")}: <b>${getFSD()}</b> · ${t("rank")}: <b>${rankFor(getFSD()).name}</b>
+      </div>
     </div>
   `;
-  const wrap = document.getElementById("levelBtns");
-  LEVELS.forEach(lv=>{
-    const b = document.createElement("button");
-    b.textContent = lv.name;
-    b.onclick = () => startLevel(lv.id);
-    wrap.appendChild(b);
+  document.getElementById("container").innerHTML = html;
+
+  const grid = document.getElementById("levelGrid");
+  LEVELS.forEach(lv => {
+    const n = levelNum(lv.id);
+    const locked = n > unlocked;
+    const btn = document.createElement("button");
+    btn.style.minWidth = "unset";
+    btn.style.width = "100%";
+    btn.style.height = "66px";
+    btn.style.borderRadius = "18px";
+    btn.style.fontSize = "16px";
+    btn.style.fontWeight = "950";
+    btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
+    btn.disabled = locked;
+    btn.onclick = () => startLevel(lv.id);
+    grid.appendChild(btn);
   });
 }
 
-/* IMPORTANT: startLevel shows ONLY mode screen */
 function startLevel(levelId){
   activeLevel = levelId;
+
   const lv = LEVELS.find(x => x.id === levelId);
-  activeItems = lv.idx.map(i => items[i]);
+  activeItems = lv.idx.map(i => ({...items[i], globalIndex: i})); // store global index for audio
 
   used = [];
-  score = 0;
   round = 0;
-  selectedChoice = null;
+  score = 0;
+  mistakes = 0;
   stopAudio();
-
-  document.getElementById("container").innerHTML = `
-    <div class="card">
-      <h2 style="margin-top:0;">${t("chooseMode")}</h2>
-      <div style="margin-top:18px; display:flex; flex-direction:column; gap:12px; align-items:center;">
-        <button onclick="startRealGame('listen')">${t("listenDecide")}</button>
-        <button onclick="startRealGame('build')">${t("buildFocus")}</button>
-        <button onclick="startRealGame('mix')">Mix</button>
-      </div>
-      <p style="color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 20px;">made by Frihet</p>
-    </div>
-  `;
-}
-
-/* startRealGame builds HUD + game UI and starts */
-function startRealGame(mode){
-  gameMode = mode;
 
   document.getElementById("container").innerHTML = `
     <div class="card" id="gameCard">
       <div id="hud" style="text-align:left; margin-bottom:14px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
           <div style="font-size:13px; color:#aaa;">
-            ${t("progress")}: <span id="progressText">0/${activeItems.length}</span>
+            <b>${lv.name}</b> · ${t("progress")}: <span id="progressText">0/${activeItems.length}</span>
           </div>
           <div style="font-size:13px; color:#aaa; text-align:right;">
-            💰 ${t("fsd")}: <span id="fsdText">0</span><br>
-           ${t("rank")}: <button id="rankBtn" onclick="toggleRankModal(true)"><span id="rankText">Loser</span> ⓘ</button>
+            💰 ${t("fsd")}: <span id="fsdText">${getFSD()}</span><br>
+            ${t("rank")}:
+            <button id="rankBtn" onclick="toggleRankModal()">
+              <span id="rankText">${rankFor(getFSD()).name}</span> ⓘ
+            </button>
           </div>
         </div>
 
@@ -872,7 +752,7 @@ function startRealGame(mode){
           <div id="progressBar" style="height:10px; width:0%; background:#ff1a1a;"></div>
         </div>
 
-        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
           <div style="font-size:13px; color:#aaa;">
             Next: <span id="nextRankText">0/50</span>
           </div>
@@ -883,10 +763,17 @@ function startRealGame(mode){
         </div>
       </div>
 
-      <h2 id="mode"></h2>
-      <button class="btn play" onclick="playAudio()">${t("play")}</button>
+      <h2 id="mode" style="margin:8px 0 12px; font-size:22px; letter-spacing:0.5px;"></h2>
+
+      <button class="btn-play" onclick="playAudio()">${t("play")}</button>
+
       <div id="content"></div>
       <div id="result"></div>
+
+      <div style="margin-top:14px;">
+        <button style="min-width:unset; height:42px; border-radius:14px; font-size:13px; opacity:0.9;"
+          onclick="renderHome()">${t("backHome")}</button>
+      </div>
     </div>
   `;
 
@@ -894,16 +781,15 @@ function startRealGame(mode){
   nextRound();
 }
 
-/* ===== HUD ===== */
+/* =========================
+   HUD + helpers
+========================= */
 function updateHUD(){
   const done = used.length;
-  const progressText = document.getElementById("progressText");
-  const progressBar = document.getElementById("progressBar");
-  if(progressText) progressText.innerText = done + "/" + activeItems.length;
-  if(progressBar){
-    const pct = Math.round((done / activeItems.length) * 100);
-    progressBar.style.width = pct + "%";
-  }
+  const pText = document.getElementById("progressText");
+  const pBar = document.getElementById("progressBar");
+  if(pText) pText.innerText = done + "/" + activeItems.length;
+  if(pBar) pBar.style.width = Math.round((done/activeItems.length)*100) + "%";
 
   const fsd = getFSD();
   const r = rankFor(fsd);
@@ -920,75 +806,74 @@ function updateHUD(){
   if(rankBar) rankBar.style.width = (nxt.pct || 0) + "%";
 }
 
-/* ===== Helpers ===== */
 function normalize(s){
   return s.toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g,"").trim();
 }
+function displayText(obj){
+  return obj[nativeLang] || obj.en;
+}
 
-/* ===== Game loop ===== */
+/* =========================
+   Game loop (MIX)
+========================= */
 function nextRound(){
   if(round >= activeItems.length){
-    const fsd = getFSD();
-    const r = rankFor(fsd);
-    document.getElementById("content").innerHTML =
-      `<h2>${t("sessionComplete")}</h2>
-       <p>${t("score")}: ${score} / ${activeItems.length}</p>
-       <p>💰 ${t("fsd")}: ${fsd} (${t("rank")}: ${r.name})</p>
-       <button onclick="location.reload()">${t("restart")}</button>`;
+    finishLevel();
     return;
   }
 
   round++;
-  selectedChoice = null;
   document.getElementById("result").innerText = "";
-  document.getElementById("content").innerHTML = "";
+  const content = document.getElementById("content");
+  content.innerHTML = "";
 
-  do{
-    currentIndex = Math.floor(Math.random()*activeItems.length);
-  } while(used.includes(currentIndex));
+  // unique random
+  let idx;
+  do{ idx = Math.floor(Math.random()*activeItems.length); }
+  while(used.includes(idx));
+  used.push(idx);
 
-  used.push(currentIndex);
   updateHUD();
 
-  if(gameMode === "listen") buildListen();
-  else if(gameMode === "build") buildDrag();
-  else {
-    if(Math.random() > 0.5) buildListen();
-    else buildDrag();
-  }
+  // MIX: 50/50
+  if(Math.random() > 0.5) buildListen(idx);
+  else buildDrag(idx);
 }
 
-/* Listen & Decide */
-function buildListen(){
+function buildListen(idx){
   document.getElementById("mode").innerText = t("listenDecide");
 
-  const correctText = displayText(currentIndex);
-  let optionIndexes = [currentIndex];
+  const correctObj = activeItems[idx];
+  const correctText = displayText(correctObj);
 
+  // 4 options
+  let optionIndexes = [idx];
   while(optionIndexes.length < 4){
-    const r = Math.floor(Math.random() * activeItems.length);
+    const r = Math.floor(Math.random()*activeItems.length);
     if(!optionIndexes.includes(r)) optionIndexes.push(r);
   }
   optionIndexes.sort(()=>0.5 - Math.random());
 
-  optionIndexes.forEach(idx=>{
-    let div = document.createElement("div");
+  let selected = null;
+
+  optionIndexes.forEach(i=>{
+    const div = document.createElement("div");
     div.className = "choice";
-    div.innerText = displayText(idx);
+    div.innerText = displayText(activeItems[i]);
     div.onclick = ()=>{
       document.querySelectorAll(".choice").forEach(c=>c.classList.remove("selected"));
       div.classList.add("selected");
-      selectedChoice = displayText(idx);
+      selected = div.innerText;
     };
     document.getElementById("content").appendChild(div);
   });
 
-  let btn = document.createElement("button");
-  btn.className = "btn check";
+  const btn = document.createElement("button");
+  btn.className = "btn-check";
   btn.innerText = t("check");
   btn.onclick = ()=>{
-    if(!selectedChoice) return;
-    if(normalize(selectedChoice) === normalize(correctText)) success();
+    if(!selected) return;
+    if(normalize(selected) === normalize(correctText)) success();
     else fail();
   };
   document.getElementById("content").appendChild(btn);
@@ -996,61 +881,109 @@ function buildListen(){
   if(nativeLang !== "en"){
     const hint = document.createElement("div");
     hint.className = "hint";
-    hint.innerText = "English: " + activeItems[currentIndex].en;
+    hint.innerText = "English: " + correctObj.en;
     document.getElementById("content").appendChild(hint);
   }
 }
 
-/* Build With Focus */
-function buildDrag(){
+function buildDrag(idx){
   document.getElementById("mode").innerText = t("buildFocus");
 
-  const targetSentence = displayText(currentIndex);
-  let words = targetSentence.split(" ");
-  let shuffled = [...words].sort(()=>0.5 - Math.random());
+  const targetObj = activeItems[idx];
+  const targetSentence = displayText(targetObj);
 
-  let top = document.createElement("div");
+  const words = targetSentence.split(" ");
+  const shuffled = [...words].sort(()=>0.5 - Math.random());
+
+  const top = document.createElement("div");
   top.className = "word-container";
   top.id = "top";
 
-  let bottom = document.createElement("div");
+  const bottom = document.createElement("div");
   bottom.className = "word-container";
   bottom.id = "bottom";
 
   shuffled.forEach(w=>{
-    let span = document.createElement("div");
-    span.className = "word";
-    span.innerText = w;
-    span.onclick = ()=>{
-      if(span.parentElement.id === "bottom") top.appendChild(span);
-      else bottom.appendChild(span);
+    const chip = document.createElement("div");
+    chip.className = "word";
+    chip.innerText = w;
+    chip.onclick = ()=>{
+      if(chip.parentElement.id === "bottom") top.appendChild(chip);
+      else bottom.appendChild(chip);
     };
-    bottom.appendChild(span);
+    bottom.appendChild(chip);
   });
 
-  let btn = document.createElement("button");
-  btn.className = "btn check";
+  const btn = document.createElement("button");
+  btn.className = "btn-check";
   btn.innerText = t("check");
   btn.onclick = ()=>{
     let built = "";
-    document.querySelectorAll("#top .word").forEach(w=>built += w.innerText + " ");
+    document.querySelectorAll("#top .word").forEach(w=> built += w.innerText + " ");
     if(normalize(built) === normalize(targetSentence)) success();
     else fail();
   };
 
-  document.getElementById("content").appendChild(top);
-  document.getElementById("content").appendChild(bottom);
-  document.getElementById("content").appendChild(btn);
+  const c = document.getElementById("content");
+  c.appendChild(top);
+  c.appendChild(bottom);
+  c.appendChild(btn);
 
   if(nativeLang !== "en"){
     const hint = document.createElement("div");
     hint.className = "hint";
-    hint.innerText = "English: " + activeItems[currentIndex].en;
-    document.getElementById("content").appendChild(hint);
+    hint.innerText = "English: " + targetObj.en;
+    c.appendChild(hint);
   }
 }
 
-/* ===== Feedback + FSD ===== */
+/* =========================
+   Level finish + rules
+========================= */
+function finishLevel(){
+  const perfect = (score === activeItems.length) && (mistakes === 0);
+
+  // unlock next level ONLY if perfect
+  const currentNum = levelNum(activeLevel);
+  if(perfect){
+    const unlocked = getUnlockedLevel();
+    if(currentNum >= unlocked && unlocked < 6) setUnlockedLevel(unlocked + 1);
+  }
+
+  // bonus: 2 perfect levels in a row => +5 FSD
+  if(perfect){
+    let s = getNoFailStreak() + 1;
+    if(s >= 2){
+      addFSD(+5);
+      s = 0;
+      showToast(+5);
+    }
+    setNoFailStreak(s);
+  } else {
+    setNoFailStreak(0);
+  }
+
+  updateHUD();
+
+  document.getElementById("content").innerHTML = `
+    <h2 style="margin-top:6px;">${t("levelComplete")}</h2>
+    <p>${t("progress")}: <b>${score} / ${activeItems.length}</b></p>
+    <p style="margin-top:10px; font-weight:950;">
+      ${perfect ? t("perfect") : t("notPerfect")}
+    </p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;">
+      <button onclick="${perfect ? "renderHome()" : "startLevel(activeLevel)"}">
+        ${perfect ? t("home") : t("retry")}
+      </button>
+      <button onclick="renderHome()" style="min-width:unset;">LEVEL SELECT</button>
+    </div>
+  `;
+}
+
+/* =========================
+   Feedback + FSD rules
+========================= */
 function showToast(delta){
   const toast = document.getElementById("toast");
   const inner = document.getElementById("toastInner");
@@ -1068,6 +1001,7 @@ function showToast(delta){
   void toast.offsetWidth;
   toast.classList.add("toast-show");
 }
+
 function shakeCard(){
   const card = document.getElementById("gameCard");
   if(!card) return;
@@ -1076,58 +1010,58 @@ function shakeCard(){
   card.classList.add("shake");
 }
 
-let pendingNext = null;
-function showRankUp(newRankName){
-  const overlay = document.getElementById("rankUpOverlay");
-  document.getElementById("rankUpName").textContent = newRankName;
-  overlay.style.display = "flex";
-}
-function closeRankUp(){
-  const overlay = document.getElementById("rankUpOverlay");
-  overlay.style.display = "none";
-  if(typeof pendingNext === "function"){
-    const fn = pendingNext;
-    pendingNext = null;
-    fn();
-  }
-}
-
 function success(){
   playSound(true);
   score++;
-  const beforeRank = rankFor(getFSD()).name;
-  const res = addFSD(+2);
+  addFSD(+2);
   showToast(+2);
-  const afterRank = rankFor(res.now).name;
   updateHUD();
-  document.getElementById("result").innerText = t("strong");
+  document.getElementById("result").innerText = t("locked");
   stopAudio();
-
-  if(afterRank !== beforeRank){
-    pendingNext = () => setTimeout(nextRound, 250);
-    showRankUp(afterRank);
-    return;
-  }
-  setTimeout(nextRound, 1200);
+  setTimeout(nextRound, 950);
 }
 
 function fail(){
   playSound(false);
+  mistakes++;
   addFSD(-1);
   showToast(-1);
   shakeCard();
   updateHUD();
-  document.getElementById("result").innerText = t("reset");
+  document.getElementById("result").innerText = t("wrong");
   stopAudio();
-  setTimeout(nextRound, 1500);
+
+  const currentNum = levelNum(activeLevel);
+
+  // HARDCORE RULE: Level 2+ => 1 mistake = drop to previous level
+  if(currentNum > 1 && mistakes >= 1){
+    const prev = "L" + (currentNum - 1);
+    setTimeout(() => {
+      document.getElementById("content").innerHTML = `
+        <h2 style="color:#ff1a1a; margin-top:6px;">FAILED.</h2>
+        <p>You made a mistake.</p>
+        <p style="opacity:0.85;">⬇ Back to <b>${prev}</b></p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;">
+          <button onclick="startLevel('${prev}')">GO BACK →</button>
+          <button onclick="renderHome()" style="min-width:unset;">LEVEL SELECT</button>
+        </div>
+      `;
+    }, 650);
+    return;
+  }
+
+  // Level 1: keep going
+  setTimeout(nextRound, 1050);
 }
 
-/* ===== Audio ===== */
+/* =========================
+   Audio
+========================= */
 function playAudio(){
   stopAudio();
-  // You need audio1.mp3 ... audio14.mp3 in same folder as this HTML
-  const lv = LEVELS.find(l => l.id === activeLevel);
-  const globalIndex = lv.idx[currentIndex] + 1;
+  // global index => audio file number
+  const latestIdx = used[used.length - 1];           // last question index in activeItems
+  const globalIndex = activeItems[latestIdx].globalIndex + 1;  // 1..30
   audio = new Audio("audio" + globalIndex + ".mp3");
   audio.play();
 }
@@ -1135,7 +1069,7 @@ function stopAudio(){
   if(audio){ audio.pause(); audio.currentTime = 0; }
 }
 
-/* Soft sound */
+/* Soft click sound */
 function playSound(success){
   const aCtx = new (window.AudioContext||window.webkitAudioContext)();
   const osc = aCtx.createOscillator();
@@ -1145,50 +1079,26 @@ function playSound(success){
   osc.frequency.value = success ? 600 : 220;
   gain.gain.value = 0.05;
   osc.start();
-  setTimeout(()=>osc.stop(), 100);
+  setTimeout(()=>osc.stop(), 90);
 }
 
-  /* ===== Rank modal logic ===== */
-function toggleRankModal(forceOpen) {
+/* =========================
+   Rank modal logic
+========================= */
+function toggleRankModal(force){
   const modal = document.getElementById("rankModal");
-  if (!modal) return;
-
-  const shouldOpen = (typeof forceOpen === "boolean")
-    ? forceOpen
-    : !modal.classList.contains("show");
-
-  if (shouldOpen) modal.classList.add("show");
+  const open = (typeof force === "boolean") ? force : !modal.classList.contains("show");
+  if(open) modal.classList.add("show");
   else modal.classList.remove("show");
 }
-
-// Close when clicking outside the card (backdrop)
-function onRankBackdrop(e) {
-  if (e.target && e.target.id === "rankModal") {
-    toggleRankModal(false);
-  }
+function onRankBackdrop(e){
+  if(e.target && e.target.id === "rankModal") toggleRankModal(false);
 }
+window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal(false); });
 
-// ESC key closes (desktop)
-window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") toggleRankModal(false);
-});
-  
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
