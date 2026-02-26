@@ -1101,10 +1101,14 @@ function fail(){
 ========================= */
 function playAudio(){
   stopAudio();
-  // global index => audio file number
-  const latestIdx = used[used.length - 1];           // last question index in activeItems
-  const globalIndex = activeItems[latestIdx].globalIndex + 1;  // 1..30
-  audio = new Audio("audio" + globalIndex + ".mp3");
+
+  const lv = LEVELS.find(l => l.id === activeLevel);
+  const globalIndex = lv.idx[currentIndex] + 1;
+
+  // current learning language (for now only English)
+  const learnLang = "en";
+
+  audio = new Audio(`${learnLang}_audio${globalIndex}.mp3`);
   audio.play();
 }
 function stopAudio(){
@@ -1141,6 +1145,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
