@@ -766,9 +766,12 @@ function renderHome(){
   document.getElementById("container").innerHTML = html;
 
   const grid = document.getElementById("levelPath");
+  const currentPlayable = unlocked; // highest unlocked level = "next target"
+  
   LEVELS.forEach(lv => {
     const n = levelNum(lv.id);
     const locked = n > unlocked;
+    const isCurrent = (!locked && n === currentPlayable);
     const btn = document.createElement("button");
     btn.style.minWidth = "unset";
     btn.style.width = "100%";
@@ -777,6 +780,12 @@ function renderHome(){
     btn.style.fontSize = "17px";
     btn.style.fontWeight = "900";
     btn.style.position = "relative";
+    if(isCurrent){
+  btn.style.boxShadow = "0 0 0 2px rgba(255,26,26,0.35), 0 18px 55px rgba(255,0,0,0.25)";
+  btn.style.border = "1px solid rgba(255,26,26,0.55)";
+  btn.style.filter = "brightness(1.12)";
+  btn.innerHTML = `🔥 ${lv.name}`;
+}
     btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
     btn.disabled = locked;
     btn.onclick = () => startLevel(lv.id);
@@ -1200,6 +1209,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
