@@ -750,8 +750,13 @@ function renderHome(){
     <div class="card" id="home">
       <h2 style="margin-top:0; letter-spacing:1px;">${t("levels")}</h2>
       <p style="color:#aaa; margin-top:8px;">${t("levelHint")}</p>
-
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:16px;" id="levelGrid"></div>
+<div id="levelPath" style="
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:20px;
+"></div>
+   
 
       <div style="margin-top:16px; color:rgba(255,255,255,0.75); font-size:13px;">
         💰 ${t("fsd")}: <b>${getFSD()}</b> · ${t("rank")}: <b>${rankFor(getFSD()).name}</b>
@@ -760,21 +765,30 @@ function renderHome(){
   `;
   document.getElementById("container").innerHTML = html;
 
-  const grid = document.getElementById("levelGrid");
+  const grid = document.getElementById("levelPath");
   LEVELS.forEach(lv => {
     const n = levelNum(lv.id);
     const locked = n > unlocked;
     const btn = document.createElement("button");
     btn.style.minWidth = "unset";
     btn.style.width = "100%";
-    btn.style.height = "66px";
-    btn.style.borderRadius = "18px";
-    btn.style.fontSize = "16px";
-    btn.style.fontWeight = "950";
+    btn.style.height = "72px";
+    btn.style.borderRadius = "20px";
+    btn.style.fontSize = "17px";
+    btn.style.fontWeight = "900";
+    btn.style.position = "relative";
     btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
     btn.disabled = locked;
     btn.onclick = () => startLevel(lv.id);
     grid.appendChild(btn);
+    if(n < LEVELS.length){
+  const line = document.createElement("div");
+  line.style.height = "18px";
+  line.style.width = "2px";
+  line.style.margin = "0 auto";
+  line.style.background = "rgba(255,255,255,0.2)";
+  grid.appendChild(line);
+}
   });
 }
 
@@ -1186,6 +1200,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
