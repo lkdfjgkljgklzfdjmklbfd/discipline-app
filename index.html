@@ -1105,11 +1105,15 @@ function playAudio(){
   const lv = LEVELS.find(l => l.id === activeLevel);
   const globalIndex = lv.idx[currentIndex] + 1;
 
-  // current learning language (for now only English)
-  const learnLang = "en";
+  const file = `en_audio${globalIndex}.mp3`; // ✅ NEW NAME FORMAT
+  audio = new Audio(file);
 
-  audio = new Audio(`${learnLang}_audio${globalIndex}.mp3`);
-  audio.play();
+  // optional: show errors clearly
+  audio.onerror = () => alert("Audio not found: " + file);
+
+  audio.play().catch(err => {
+    alert("Audio blocked or failed: " + err);
+  });
 }
 function stopAudio(){
   if(audio){ audio.pause(); audio.currentTime = 0; }
@@ -1145,6 +1149,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
