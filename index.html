@@ -683,14 +683,14 @@ function nextRankInfo(v){
 /* =========================
    Unlocks per language
 ========================= */
-function unlockKey(){ return "unlockedLevel_" + (nativeLang || "en"); }
+function unlockKey(){ return "unlockedLevel_" + (learningLang || "en"); }
 function getUnlockedLevel(){ return parseInt(localStorage.getItem(unlockKey()) || "1"); }
 function setUnlockedLevel(n){ localStorage.setItem(unlockKey(), String(n)); }
 function levelNum(id){ return parseInt(id.replace("L",""),10); }
 function isUnlocked(levelId){ return levelNum(levelId) <= getUnlockedLevel(); }
 
 /* Bonus: 2 perfect levels in a row => +5 FSD */
-function noFailKey(){ return "noFailStreak_" + (nativeLang || "en"); }
+function noFailKey(){ return "noFailStreak_" + (learningLang || "en"); }
 function getNoFailStreak(){ return parseInt(localStorage.getItem(noFailKey()) || "0"); }
 function setNoFailStreak(n){ localStorage.setItem(noFailKey(), String(n)); }
 
@@ -1172,6 +1172,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
