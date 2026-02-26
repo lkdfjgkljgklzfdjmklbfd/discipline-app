@@ -798,6 +798,20 @@ function startLevel(levelId){
 
   document.getElementById("container").innerHTML = `
     <div class="card" id="gameCard">
+    <div style="
+  font-size:13px;
+  color:rgba(255,255,255,0.7);
+  font-weight:800;
+  letter-spacing:0.8px;
+  margin-bottom:10px;
+">
+  ${learningLang === "en" ? "🇬🇧 LEARNING ENGLISH" :
+    learningLang === "de" ? "🇩🇪 LEARNING GERMAN" :
+    learningLang === "es" ? "🇪🇸 LEARNING SPANISH" :
+    learningLang === "sv" ? "🇸🇪 LEARNING SWEDISH" :
+    learningLang === "nl" ? "🇳🇱 LEARNING DUTCH" :
+    "🌍 LEARNING"}
+</div>
       <div id="hud" style="text-align:left; margin-bottom:14px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
           <div style="font-size:13px; color:#aaa;">
@@ -1172,6 +1186,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
