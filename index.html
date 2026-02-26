@@ -877,7 +877,7 @@ function nextRound(){
   do{ idx = Math.floor(Math.random()*activeItems.length); }
   while(used.includes(idx));
   used.push(idx);
-
+currentIndex = idx;
   updateHUD();
 
   // MIX: 50/50
@@ -1103,46 +1103,22 @@ function fail(){
    Audio
 ========================= */
 function playAudio() {
-  try {
-    stopAudio();
+  stopAudio();
 
-    // Make sure level exists
-    const lv = LEVELS.find(l => l.id === activeLevel);
-    if (!lv) {
-      alert("ERROR: activeLevel not found in LEVELS: " + activeLevel);
-      return;
-    }
-
-    // Make sure currentIndex points to something in this level
-    if (typeof currentIndex !== "number") {
-      alert("ERROR: currentIndex is not a number: " + currentIndex);
-      return;
-    }
-
-    const baseIndex = lv.idx[currentIndex];
-    if (typeof baseIndex !== "number") {
-      alert("ERROR: lv.idx mismatch.\nactiveLevel=" + activeLevel +
-            "\ncurrentIndex=" + currentIndex +
-            "\nlv.idx[currentIndex]=" + baseIndex);
-      return;
-    }
-
-    // Your new filename format
-    const file = `en_audio${baseIndex + 1}.mp3`;
-
-    audio = new Audio(file);
-
-    audio.addEventListener("error", () => {
-      alert("AUDIO NOT FOUND (or path wrong): " + file);
-    });
-
-    audio.play().catch(err => {
-      alert("PLAY FAILED (browser blocked it): " + err);
-    });
-
-  } catch (e) {
-    alert("JS CRASH inside playAudio(): " + e.message);
+  const obj = activeItems[currentIndex];
+  if (!obj || typeof obj.globalIndex !== "number") {
+    alert("Audio error: invalid current sentence index.");
+    return;
   }
+
+  const file = `en_audio${obj.globalIndex + 1}.mp3`;
+  audio = new Audio(file);
+
+  audio.onerror = () => alert("Audio not found: " + file);
+
+  audio.play().catch(err => {
+    alert("PLAY FAILED: " + err);
+  });
 }
 function stopAudio(){
   if(audio){ audio.pause(); audio.currentTime = 0; }
@@ -1178,6 +1154,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
