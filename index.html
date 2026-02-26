@@ -705,6 +705,7 @@ let round = 0;
 let score = 0;
 let mistakes = 0;
 let audio = null;
+let learningLang = "en"
 
 
 /* =========================
@@ -728,8 +729,20 @@ function startGame(){
 function chooseLang(lang){
   nativeLang = lang;
   localStorage.setItem("nativeLang", lang);
-  renderHome();
+
+  // NEW SCREEN: choose what to learn
+  document.getElementById("container").innerHTML = `
+    <div class="card">
+      <h2 style="margin-top:0;">Choose learning language</h2>
+
+      <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
+        <button onclick="setLearningLang('en')">🇬🇧 Learn English</button>
+        <button onclick="setLearningLang('de')">🇩🇪 Learn German</button>
+      </div>
+    </div>
+  `;
 }
+
 
 function renderHome(){
   const unlocked = getUnlockedLevel();
@@ -763,6 +776,11 @@ function renderHome(){
     btn.onclick = () => startLevel(lv.id);
     grid.appendChild(btn);
   });
+}
+
+  function setLearningLang(lang){
+  learningLang = lang;
+  renderHome();
 }
 
 function startLevel(levelId){
@@ -1111,7 +1129,7 @@ function playAudio() {
     return;
   }
 
-  const file = `en_audio${obj.globalIndex + 1}.mp3`;
+  const file = `${learningLang}_audio${obj.globalIndex + 1}.mp3`;
   audio = new Audio(file);
 
   audio.onerror = () => alert("Audio not found: " + file);
@@ -1154,6 +1172,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
