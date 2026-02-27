@@ -385,6 +385,15 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
     margin: 14px 0 0;
   }
 }
+  /* Allow scrolling only on the home/level screen */
+#container.scrollable{
+  height: 100vh;
+  align-items: flex-start;   /* so it starts from top */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
 </style>
 </head>
 
@@ -769,6 +778,7 @@ function chooseLang(lang){
 
 
 function renderHome(){
+  document.getElementById("container").classList.add("scrollable");
   const unlocked = getUnlockedLevel();
   let html = `
     <div class="card" id="home">
@@ -831,6 +841,7 @@ function renderHome(){
 }
 
 function startLevel(levelId){
+  document.getElementById("container").classList.remove("scrollable");
   activeLevel = levelId;
 
   const lv = LEVELS.find(x => x.id === levelId);
@@ -1233,6 +1244,7 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 </body>
 </html>
+
 
 
 
