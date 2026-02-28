@@ -844,6 +844,13 @@ function renderHome(){
   const unlocked = getUnlockedLevel();
   let html = `
     <div class="card" id="home">
+    <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-bottom:10px;">
+        <button style="min-width:unset; height:42px; border-radius:14px; font-size:13px;"
+          onclick="loginGoogle()">LOGIN</button>
+        <button style="min-width:unset; height:42px; border-radius:14px; font-size:13px; opacity:0.85;"
+          onclick="logout()">LOGOUT</button>
+      </div>
+      <div id="loginStatus" style="opacity:0.75; font-weight:800; margin-bottom:8px; text-align:right;"></div>
       <h2 style="margin-top:0; letter-spacing:1px;">${t("levels")}</h2>
       <p style="color:#aaa; margin-top:8px;">${t("levelHint")}</p>
 <div id="levelPath" style="
@@ -1304,8 +1311,30 @@ function onRankBackdrop(e){
 window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal(false); });
 
 </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAIkdOw6-7DFtZUaBxCws3ix8zrhidzWEU",
+    authDomain: "kontrijalapp.firebaseapp.com",
+    projectId: "kontrijalapp",
+    storageBucket: "kontrijalapp.firebasestorage.app",
+    messagingSenderId: "944622594124",
+    appId: "1:944622594124:web:acb0f28ac4814487216ce9"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
+  
 </body>
 </html>
+
 
 
 
