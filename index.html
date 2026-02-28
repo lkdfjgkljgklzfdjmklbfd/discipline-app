@@ -1444,7 +1444,6 @@ window.learningLang = learningLang;
 </script>
 
 <script type="module">
-  // Firebase (Auth + Firestore)
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
   import {
     getAuth,
@@ -1473,49 +1472,28 @@ window.learningLang = learningLang;
   };
 
   const app = initializeApp(firebaseConfig);
-  import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-window._loginGoogle = async function(){
-  await signInWithPopup(auth, provider);
-};
-
-window._logout = async function(){
-  await signOut(auth);
-};
-
-onAuthStateChanged(auth, (user)=>{
-  window.setAuthUser(user);
-
-  const el = document.getElementById("loginStatus");
-  if(el){
-    el.textContent = user
-      ? ("Logged in: " + (user.email || user.displayName || "User"))
-      : "Not logged in";
-  }
-});
   const auth = getAuth(app);
-  const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
+  const db = getFirestore(app);
 
-  // ---------- User state ----------
+  // ===== expose ONLY these for your non-module buttons =====
+  window._loginGoogle = async () => {
+    await signInWithPopup(auth, provider);
+  };
+
+  window._logout = async () => {
+    await signOut(auth);
+  };
+
+  // ===== Firestore user progress (optional but you already built it) =====
   let currentUser = null;
-  let userData = null; // { fsd, unlocked: {en:1,de:1,...}, updatedAt }
+  let userData = null;
 
-  function safeInt(x, fallback=0){
+  function safeInt(x, fallback = 0){
     const n = parseInt(x, 10);
     return Number.isFinite(n) ? n : fallback;
   }
 
-  // Create/Load user doc
   async function loadOrCreateUser(uid){
     const ref = doc(db, "users", uid);
     const snap = await getDoc(ref);
@@ -1530,18 +1508,18 @@ onAuthStateChanged(auth, (user)=>{
       await setDoc(ref, initial);
       return initial;
     }
+
     const data = snap.data();
-    // Ensure structure exists
     if(!data.unlocked) data.unlocked = { en:1, de:1, es:1, sv:1, nl:1 };
     if(typeof data.fsd !== "number") data.fsd = safeInt(data.fsd, 0);
     return data;
   }
 
-  // Save minimal changes (no spam)
   let saveTimer = null;
   function scheduleSave(){
     if(!currentUser) return;
     if(saveTimer) return;
+
     saveTimer = setTimeout(async () => {
       saveTimer = null;
       try{
@@ -1557,37 +1535,15 @@ onAuthStateChanged(auth, (user)=>{
     }, 500);
   }
 
-  // ---------- Auth buttons (your HTML calls these) ----------
-  window.loginGoogle = async function loginGoogle(){
-    try{
-      await signInWithPopup(auth, provider);
-    }catch(e){
-      alert("Login failed: " + (e?.message || e));
-    }
-  };
-
-  window.logout = async function logout(){
-    try{
-      await signOut(auth);
-    }catch(e){
-      alert("Logout failed: " + (e?.message || e));
-    }
-  };
-
-  // ---------- Replace your localStorage progress with Firestore when logged in ----------
-  // Your existing code uses these functions: getFSD/setFSD/addFSD and getUnlockedLevel/setUnlockedLevel
-  // We override them here.
-
-  window.getFSD = function getFSD_DB(){
+  // Override your localStorage functions when logged in
+  window.getFSD = function(){
     if(currentUser && userData) return safeInt(userData.fsd, 0);
-    // fallback: localStorage
     return safeInt(localStorage.getItem("fsd_forever") || "0", 0);
   };
 
-  window.setFSD = function setFSD_DB(v){
+  window.setFSD = function(v){
     v = safeInt(v, 0);
     if(v < 0) v = 0;
-
     if(currentUser && userData){
       userData.fsd = v;
       scheduleSave();
@@ -1596,24 +1552,21 @@ onAuthStateChanged(auth, (user)=>{
     localStorage.setItem("fsd_forever", String(v));
   };
 
-  window.addFSD = function addFSD_DB(delta){
+  window.addFSD = function(delta){
     const now = window.getFSD() + delta;
     window.setFSD(now);
     return window.getFSD();
   };
 
-  // unlocked per learningLang (en/de/...)
-  window.getUnlockedLevel = function getUnlockedLevel_DB(){
+  window.getUnlockedLevel = function(){
     const lang = (window.learningLang || "en");
     if(currentUser && userData){
       return safeInt(userData.unlocked?.[lang] || 1, 1);
     }
-    // fallback localStorage (your old system)
-    const key = "unlockedLevel_" + lang;
-    return safeInt(localStorage.getItem(key) || "1", 1);
+    return safeInt(localStorage.getItem("unlockedLevel_" + lang) || "1", 1);
   };
 
-  window.setUnlockedLevel = function setUnlockedLevel_DB(n){
+  window.setUnlockedLevel = function(n){
     const lang = (window.learningLang || "en");
     n = safeInt(n, 1);
     if(n < 1) n = 1;
@@ -1624,15 +1577,12 @@ onAuthStateChanged(auth, (user)=>{
       scheduleSave();
       return;
     }
-    const key = "unlockedLevel_" + lang;
-    localStorage.setItem(key, String(n));
+    localStorage.setItem("unlockedLevel_" + lang, String(n));
   };
 
-  // ---------- Update your UI when auth changes ----------
   function setLoginStatusText(){
     const el = document.getElementById("loginStatus");
     if(!el) return;
-
     if(currentUser){
       const name = currentUser.displayName || currentUser.email || "Logged in";
       el.textContent = "✅ " + name;
@@ -1642,19 +1592,19 @@ onAuthStateChanged(auth, (user)=>{
   }
 
   function refreshHomeIfOpen(){
-    const home = document.getElementById("home");
-    if(home){
-      // Re-render so FSD + unlocked buttons update
-      window.renderHome();
+    if(document.getElementById("home")){
+      window.renderHome?.();
     } else {
-      // If you're in a level, just update HUD numbers
-      if(typeof window.updateHUD === "function") window.updateHUD();
+      window.updateHUD?.();
     }
   }
 
   onAuthStateChanged(auth, async (user) => {
     currentUser = user || null;
     userData = null;
+
+    // IMPORTANT: this is what makes Level 2 unlock properly
+    window.setAuthUser?.(currentUser);
 
     if(currentUser){
       try{
@@ -1671,6 +1621,7 @@ onAuthStateChanged(auth, (user)=>{
   
 </body>
 </html>
+
 
 
 
