@@ -1313,12 +1313,17 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 </script>
 
 <script type="module">
-  // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-  // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAIkdOw6-7DFtZUaBxCws3ix8zrhidzWEU",
     authDomain: "kontrijalapp.firebaseapp.com",
@@ -1328,12 +1333,52 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
     appId: "1:944622594124:web:acb0f28ac4814487216ce9"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // ✅ Make these callable from your HTML buttons
+  window.loginGoogle = async function loginGoogle() {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      // Popup blocked (common) → use redirect fallback
+      if (err?.code === "auth/popup-blocked" || err?.code === "auth/cancelled-popup-request") {
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+      alert("Login error: " + err.message);
+      console.error(err);
+    }
+  };
+
+  window.logout = async function logout() {
+    await signOut(auth);
+  };
+
+  // After redirect login, finish it:
+  getRedirectResult(auth).catch(() => {});
+
+  // ✅ Update your UI (loginStatus + hide/show buttons)
+  onAuthStateChanged(auth, (user) => {
+    const status = document.getElementById("loginStatus");
+
+    // buttons exist only on Home screen
+    const loginBtn = document.querySelector(`button[onclick="loginGoogle()"]`);
+    const logoutBtn = document.querySelector(`button[onclick="logout()"]`);
+
+    if (status) {
+      status.textContent = user ? `Logged in: ${user.email || user.displayName || "user"}` : "Not logged in";
+    }
+
+    if (loginBtn) loginBtn.style.display = user ? "none" : "inline-block";
+    if (logoutBtn) logoutBtn.style.display = user ? "inline-block" : "none";
+  });
 </script>
   
 </body>
 </html>
+
 
 
 
