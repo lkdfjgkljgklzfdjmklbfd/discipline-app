@@ -394,6 +394,50 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   padding-top: 16px;
   padding-bottom: 16px;
 }
+  /* ===== MINI STREAK POPUP ===== */
+#miniModal{
+  position: fixed;
+  inset: 0;
+  z-index: 999996;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(10px);
+}
+#miniModal.show{ display:flex; }
+
+.mini-card{
+  width: min(520px, 100%);
+  border-radius: 22px;
+  padding: 18px;
+  background: linear-gradient(180deg, rgba(18,18,18,0.96), rgba(8,8,8,0.96));
+  border: 1px solid rgba(255,26,26,0.25);
+  text-align:center;
+}
+.mini-title{
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+.mini-streak{
+  margin-top:10px;
+  font-size:44px;
+  font-weight:900;
+  color:#ff1a1a;
+}
+.mini-quote{
+  margin-top:10px;
+  font-size:14px;
+  font-weight:800;
+  color:rgba(255,255,255,0.85);
+}
+.mini-btn{
+  margin-top:14px;
+  width:100%;
+  height:46px;
+}
 </style>
 </head>
 
@@ -433,6 +477,19 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   </div>
 </div>
 
+<!-- MINI STREAK MODAL -->
+<div id="miniModal" onclick="closeMiniModal(event)">
+  <div class="mini-card">
+    <h3 class="mini-title">DAILY STREAK</h3>
+    <div class="mini-streak" id="miniStreakNum">🔥 1</div>
+    <div class="mini-quote" id="miniQuote">
+      LOCK IN. THIS SHIT IS GETTING REAL.
+    </div>
+    <button class="mini-btn" onclick="toggleMiniModal(false)">OK →</button>
+  </div>
+</div>
+
+  
 <div id="container">
   <div class="card" id="intro">
     <h1>KONTRIJAL</h1>
@@ -801,6 +858,15 @@ let score = 0;
 let mistakes = 0;
 let audio = null;
 let learningLang = "en"
+  let authUser = null;
+
+function isLoggedIn(){
+  return !!authUser;
+}
+
+window.setAuthUser = function(u){
+  authUser = u;
+};
 
 
 /* =========================
@@ -872,44 +938,65 @@ function renderHome(){
   const currentPlayable = unlocked; // highest unlocked level = "next target"
   
   LEVELS.forEach(lv => {
-    const n = levelNum(lv.id);
-    const locked = n > unlocked;
-    const isCurrent = (!locked && n === currentPlayable);
-    const btn = document.createElement("button");
-    btn.style.minWidth = "unset";
-    btn.style.width = "100%";
-    btn.style.height = "72px";
-    btn.style.borderRadius = "20px";
-    btn.style.fontSize = "17px";
-    btn.style.fontWeight = "900";
-    btn.style.position = "relative";
-    if(isCurrent){
-  btn.style.boxShadow = "0 0 0 2px rgba(255,26,26,0.35), 0 18px 55px rgba(255,0,0,0.25)";
-  btn.style.border = "1px solid rgba(255,26,26,0.55)";
-  btn.style.filter = "brightness(1.12)";
-  btn.innerHTML = `🔥 ${lv.name}`;
-}
+  const n = levelNum(lv.id);
+
+  const lockedByProgress = n > unlocked;
+  const lockedByLogin = (n >= 2 && !isLoggedIn());
+  const locked = lockedByProgress || lockedByLogin;
+
+  const isCurrent = (!locked && n === currentPlayable);
+
+  const btn = document.createElement("button");
+  btn.style.minWidth = "unset";
+  btn.style.width = "100%";
+  btn.style.height = "72px";
+  btn.style.borderRadius = "20px";
+  btn.style.fontSize = "17px";
+  btn.style.fontWeight = "900";
+  btn.style.position = "relative";
+
+  if(isCurrent){
+    btn.style.boxShadow = "0 0 0 2px rgba(255,26,26,0.35), 0 18px 55px rgba(255,0,0,0.25)";
+    btn.style.border = "1px solid rgba(255,26,26,0.55)";
+    btn.style.filter = "brightness(1.12)";
+  }
+
+  // Button text
+  if(lockedByLogin){
+    btn.innerHTML = `🔒 ${lv.name} (LOGIN)`;
+  } else {
     btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
-    btn.disabled = locked;
-    btn.onclick = () => startLevel(lv.id);
-    grid.appendChild(btn);
-    if(n < LEVELS.length){
-  const line = document.createElement("div");
-  line.style.height = "18px";
-  line.style.width = "2px";
-  line.style.margin = "0 auto";
-  line.style.background = "rgba(255,255,255,0.2)";
-  grid.appendChild(line);
-}
-  });
+  }
+
+  btn.disabled = locked;
+
+  btn.onclick = () => {
+    if(lockedByLogin){
+      alert("Login to access Level 2+");
+      return;
+    }
+    startLevel(lv.id);
+  };
+
+  grid.appendChild(btn);
+
+  if(n < LEVELS.length){
+    const line = document.createElement("div");
+    line.style.height = "18px";
+    line.style.width = "2px";
+    line.style.margin = "0 auto";
+    line.style.background = "rgba(255,255,255,0.2)";
+    grid.appendChild(line);
+  }
+});
 }
 
   function setLearningLang(lang){
   learningLang = lang;
-  window.learningLang = learningLang; // ADD THIS LINE
+  window.learningLang = learningLang;
+  showMiniStreak();   // ← ADD THIS
   renderHome();
 }
-
 function startLevel(levelId){
   document.getElementById("container").classList.remove("scrollable");
   activeLevel = levelId;
@@ -1296,7 +1383,28 @@ function playSound(success){
   osc.start();
   setTimeout(()=>osc.stop(), 90);
 }
+/* ===== MINI STREAK ===== */
+function toggleMiniModal(force){
+  const modal = document.getElementById("miniModal");
+  const open = (typeof force === "boolean")
+    ? force
+    : !modal.classList.contains("show");
 
+  if(open) modal.classList.add("show");
+  else modal.classList.remove("show");
+}
+
+function closeMiniModal(e){
+  if(e.target && e.target.id === "miniModal"){
+    toggleMiniModal(false);
+  }
+}
+
+function showMiniStreak(){
+  const s = parseInt(localStorage.getItem("streak") || "1");
+  document.getElementById("miniStreakNum").textContent = "🔥 " + s;
+  toggleMiniModal(true);
+}
 /* =========================
    Rank modal logic
 ========================= */
@@ -1346,6 +1454,28 @@ window.learningLang = learningLang;
   };
 
   const app = initializeApp(firebaseConfig);
+  import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+window._loginGoogle = async function(){
+  await signInWithPopup(auth, provider);
+};
+
+window._logout = async function(){
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, (user)=>{
+  window.setAuthUser(user);
+});
   const auth = getAuth(app);
   const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
@@ -1515,6 +1645,7 @@ window.learningLang = learningLang;
   
 </body>
 </html>
+
 
 
 
