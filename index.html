@@ -904,7 +904,26 @@ function chooseLang(lang){
   `;
 }
 
+// ===== AUTH BUTTON BRIDGE (fix login not working) =====
+function loginGoogle(){
+  if(typeof window._loginGoogle !== "function"){
+    alert("Auth not loaded yet. Refresh and try again.");
+    return;
+  }
+  window._loginGoogle().catch(err => {
+    alert("LOGIN FAILED: " + (err?.message || err));
+  });
+}
 
+function logout(){
+  if(typeof window._logout !== "function"){
+    alert("Auth not loaded yet.");
+    return;
+  }
+  window._logout().catch(err => {
+    alert("LOGOUT FAILED: " + (err?.message || err));
+  });
+}
 function renderHome(){
   document.getElementById("container").classList.add("scrollable");
   const unlocked = getUnlockedLevel();
@@ -1475,6 +1494,13 @@ window._logout = async function(){
 
 onAuthStateChanged(auth, (user)=>{
   window.setAuthUser(user);
+
+  const el = document.getElementById("loginStatus");
+  if(el){
+    el.textContent = user
+      ? ("Logged in: " + (user.email || user.displayName || "User"))
+      : "Not logged in";
+  }
 });
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -1645,6 +1671,7 @@ onAuthStateChanged(auth, (user)=>{
   
 </body>
 </html>
+
 
 
 
