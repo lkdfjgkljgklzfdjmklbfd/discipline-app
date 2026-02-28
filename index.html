@@ -630,7 +630,7 @@ const items = [
   { en:"Bro, we just need to lock in. No one is gonna give you a million dollars. It’s just you, bro.", de:"Bro, wir müssen einfach lock in gehen. Niemand wird dir eine Million Dollar schenken. Am Ende bist nur du es, Bro.", es:"Bro, solo tenemos que lock in. Nadie te va a regalar un millón de dólares. Al final solo estás tú, bro.", sv:"Bro, vi måste bara locka in. Ingen kommer ge dig en miljon dollar. I slutändan är det bara du, bro.", nl:"Bro, we moeten gewoon lock in. Niemand gaat je een miljoen dollar geven. Uiteindelijk ben jij het alleen, bro."},
   { en:"People say “lock in” like it’s easy, but bro, it’s not. There are so many distractions in the world. That’s why this is worth it.", de:"Leute sagen immer „lock in“, als wär’s easy, aber Bro, ist es nicht. Es gibt so viele Ablenkungen auf der Welt. Genau deshalb ist das hier was wert.", es:"La gente dice “lock in” como si fuera fácil, pero bro, no lo es. Hay demasiadas distracciones en el mundo. Por eso esto vale la pena.", sv:"Folk säger “lock in” som om det vore lätt, men bro, det är det inte. Det finns så många distraktioner i världen. Det är därför det här är värt det.", nl:"Mensen zeggen “lock in” alsof het makkelijk is, maar bro, dat is het niet. Er zijn zoveel afleidingen in de wereld. Daarom is dit het waard."},
   { en:"You’re not alone. Everyone has the same thoughts and worries unless they get distracted.", de:"Du bist nicht allein. Jeder hat dieselben Gedanken und Sorgen außer sie lenken sich einfach ab.", es:"No estás solo. Todos tienen los mismos pensamientos y preocupaciones, a menos que se distraigan.", sv:"Du är inte ensam. Alla har samma tankar och oro om de inte distraherar sig själva.", nl:"Je bent niet alleen. Iedereen heeft dezelfde gedachten en zorgen tenzij ze zichzelf afleiden."},
-  { en:"There are always other ways in life, dude. Don’t worry. You can always start again. Don’t give up. You’ll get there eventually.", de:"Im Leben gibt’s immer andere Wege, Bro. Mach dir keinen Kopf. Du kannst immer wieder neu anfangen. Gib nicht auf. Am Ende kommst du da hin.", es:"En la vida siempre hay otros caminos, bro. No te preocupes. Siempre puedes empezar de nuevo. No te rindas. Al final vas a llegar.", sv:"Det finns alltid andra vägar i livet, bro. Oroa dig inte. Du kan alltid börja om. Ge inte upp. Du kommer dit till slut.", de:"Er zijn altijd andere wegen in het leven, bro. Maak je niet druk. Je kunt altijd opnieuw beginnen. Geef niet op. Uiteindelijk kom je er wel."},
+  { en:"There are always other ways in life, dude. Don’t worry. You can always start again. Don’t give up. You’ll get there eventually.", de:"Im Leben gibt’s immer andere Wege, Bro. Mach dir keinen Kopf. Du kannst immer wieder neu anfangen. Gib nicht auf. Am Ende kommst du da hin.", es:"En la vida siempre hay otros caminos, bro. No te preocupes. Siempre puedes empezar de nuevo. No te rindas. Al final vas a llegar.", sv:"Det finns alltid andra vägar i livet, bro. Oroa dig inte. Du kan alltid börja om. Ge inte upp. Du kommer dit till slut.", nl:"Er zijn altijd andere wegen in het leven, bro. Maak je niet druk. Je kunt altijd opnieuw beginnen. Geef niet op. Uiteindelijk kom je er wel."},
   { en:"Take yourself seriously. You’re not a joke.", de:"Nimm dich selbst ernst. Du bist kein Witz.", es:"Tómate en serio. No eres un chiste.", sv:"Ta dig själv på allvar. Du är inget skämt.", nl:"Neem jezelf serieus. Je bent geen grap."},
   { en:"Lazy is not your identity, dude. Stop saying you’re lazy like it’s a real excuse. You’re just a loser. Lazy is a loser’s comfort word.", de:"Faul sein ist nicht deine Identität, Bro. Hör auf zu sagen, du bist faul, als wär das eine echte Ausrede. Du bist einfach nur ein Loser. „Faul“ ist nur ein Komfort Wort für Verlierer.", es:"Ser flojo no es tu identidad, bro. Deja de decir que eres flojo como si fuera una excusa real. Solo estás siendo un perdedor. “Flojo” es la palabra cómoda de los perdedores.", sv:"Lat är inte din identitet, bro. Sluta säga att du är lat som om det vore en riktig ursäkt. Du är bara en loser. “Lat” är ett bekvämlighetsord för förlorare.", nl:"Lui zijn is niet jouw identiteit, bro. Stop met zeggen dat je lui bent alsof het een echte excuus is. Je bent gewoon een loser. ‘Lui’ is een comfortwoord voor verliezers."},
   { en:"You always need to learn. Stay open to new things. Life is full of lessons.", de:"Du musst immer weiter lernen. Bleib offen für neue Dinge. Das Leben steckt voller Lektionen.", es:"Siempre tienes que seguir aprendiendo. Mantente abierto a cosas nuevas. La vida está llena de lecciones.", sv:"Du måste alltid fortsätta lära dig. Var öppen för nya saker. Livet är fullt av lärdomar.", nl:"Je moet altijd blijven leren. Sta open voor nieuwe dingen. Het leven zit vol lessen."},
@@ -906,6 +906,7 @@ function renderHome(){
 
   function setLearningLang(lang){
   learningLang = lang;
+  window.learningLang = learningLang; // ADD THIS LINE
   renderHome();
 }
 
@@ -1309,20 +1310,31 @@ function onRankBackdrop(e){
   if(e.target && e.target.id === "rankModal") toggleRankModal(false);
 }
 window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal(false); });
+  window.renderHome = renderHome;
+window.updateHUD = updateHUD;
+window.learningLang = learningLang;
 
 </script>
 
 <script type="module">
+  // Firebase (Auth + Firestore)
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
   import {
     getAuth,
     GoogleAuthProvider,
     signInWithPopup,
-    signInWithRedirect,
-    getRedirectResult,
-    onAuthStateChanged,
-    signOut
+    signOut,
+    onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAIkdOw6-7DFtZUaBxCws3ix8zrhidzWEU",
@@ -1335,49 +1347,175 @@ window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") toggleRankModal
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
 
-  // ✅ Make these callable from your HTML buttons
-  window.loginGoogle = async function loginGoogle() {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      // Popup blocked (common) → use redirect fallback
-      if (err?.code === "auth/popup-blocked" || err?.code === "auth/cancelled-popup-request") {
-        await signInWithRedirect(auth, provider);
-        return;
+  // ---------- User state ----------
+  let currentUser = null;
+  let userData = null; // { fsd, unlocked: {en:1,de:1,...}, updatedAt }
+
+  function safeInt(x, fallback=0){
+    const n = parseInt(x, 10);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  // Create/Load user doc
+  async function loadOrCreateUser(uid){
+    const ref = doc(db, "users", uid);
+    const snap = await getDoc(ref);
+
+    if(!snap.exists()){
+      const initial = {
+        fsd: 0,
+        unlocked: { en: 1, de: 1, es: 1, sv: 1, nl: 1 },
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+      await setDoc(ref, initial);
+      return initial;
+    }
+    const data = snap.data();
+    // Ensure structure exists
+    if(!data.unlocked) data.unlocked = { en:1, de:1, es:1, sv:1, nl:1 };
+    if(typeof data.fsd !== "number") data.fsd = safeInt(data.fsd, 0);
+    return data;
+  }
+
+  // Save minimal changes (no spam)
+  let saveTimer = null;
+  function scheduleSave(){
+    if(!currentUser) return;
+    if(saveTimer) return;
+    saveTimer = setTimeout(async () => {
+      saveTimer = null;
+      try{
+        const ref = doc(db, "users", currentUser.uid);
+        await updateDoc(ref, {
+          fsd: userData.fsd,
+          unlocked: userData.unlocked,
+          updatedAt: serverTimestamp()
+        });
+      }catch(e){
+        console.log("Save failed:", e);
       }
-      alert("Login error: " + err.message);
-      console.error(err);
+    }, 500);
+  }
+
+  // ---------- Auth buttons (your HTML calls these) ----------
+  window.loginGoogle = async function loginGoogle(){
+    try{
+      await signInWithPopup(auth, provider);
+    }catch(e){
+      alert("Login failed: " + (e?.message || e));
     }
   };
 
-  window.logout = async function logout() {
-    await signOut(auth);
+  window.logout = async function logout(){
+    try{
+      await signOut(auth);
+    }catch(e){
+      alert("Logout failed: " + (e?.message || e));
+    }
   };
 
-  // After redirect login, finish it:
-  getRedirectResult(auth).catch(() => {});
+  // ---------- Replace your localStorage progress with Firestore when logged in ----------
+  // Your existing code uses these functions: getFSD/setFSD/addFSD and getUnlockedLevel/setUnlockedLevel
+  // We override them here.
 
-  // ✅ Update your UI (loginStatus + hide/show buttons)
-  onAuthStateChanged(auth, (user) => {
-    const status = document.getElementById("loginStatus");
+  window.getFSD = function getFSD_DB(){
+    if(currentUser && userData) return safeInt(userData.fsd, 0);
+    // fallback: localStorage
+    return safeInt(localStorage.getItem("fsd_forever") || "0", 0);
+  };
 
-    // buttons exist only on Home screen
-    const loginBtn = document.querySelector(`button[onclick="loginGoogle()"]`);
-    const logoutBtn = document.querySelector(`button[onclick="logout()"]`);
+  window.setFSD = function setFSD_DB(v){
+    v = safeInt(v, 0);
+    if(v < 0) v = 0;
 
-    if (status) {
-      status.textContent = user ? `Logged in: ${user.email || user.displayName || "user"}` : "Not logged in";
+    if(currentUser && userData){
+      userData.fsd = v;
+      scheduleSave();
+      return;
+    }
+    localStorage.setItem("fsd_forever", String(v));
+  };
+
+  window.addFSD = function addFSD_DB(delta){
+    const now = window.getFSD() + delta;
+    window.setFSD(now);
+    return window.getFSD();
+  };
+
+  // unlocked per learningLang (en/de/...)
+  window.getUnlockedLevel = function getUnlockedLevel_DB(){
+    const lang = (window.learningLang || "en");
+    if(currentUser && userData){
+      return safeInt(userData.unlocked?.[lang] || 1, 1);
+    }
+    // fallback localStorage (your old system)
+    const key = "unlockedLevel_" + lang;
+    return safeInt(localStorage.getItem(key) || "1", 1);
+  };
+
+  window.setUnlockedLevel = function setUnlockedLevel_DB(n){
+    const lang = (window.learningLang || "en");
+    n = safeInt(n, 1);
+    if(n < 1) n = 1;
+
+    if(currentUser && userData){
+      if(!userData.unlocked) userData.unlocked = { en:1, de:1, es:1, sv:1, nl:1 };
+      userData.unlocked[lang] = n;
+      scheduleSave();
+      return;
+    }
+    const key = "unlockedLevel_" + lang;
+    localStorage.setItem(key, String(n));
+  };
+
+  // ---------- Update your UI when auth changes ----------
+  function setLoginStatusText(){
+    const el = document.getElementById("loginStatus");
+    if(!el) return;
+
+    if(currentUser){
+      const name = currentUser.displayName || currentUser.email || "Logged in";
+      el.textContent = "✅ " + name;
+    } else {
+      el.textContent = "Not logged in";
+    }
+  }
+
+  function refreshHomeIfOpen(){
+    const home = document.getElementById("home");
+    if(home){
+      // Re-render so FSD + unlocked buttons update
+      window.renderHome();
+    } else {
+      // If you're in a level, just update HUD numbers
+      if(typeof window.updateHUD === "function") window.updateHUD();
+    }
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user || null;
+    userData = null;
+
+    if(currentUser){
+      try{
+        userData = await loadOrCreateUser(currentUser.uid);
+      }catch(e){
+        alert("Could not load your saved progress: " + (e?.message || e));
+      }
     }
 
-    if (loginBtn) loginBtn.style.display = user ? "none" : "inline-block";
-    if (logoutBtn) logoutBtn.style.display = user ? "inline-block" : "none";
+    setLoginStatusText();
+    refreshHomeIfOpen();
   });
 </script>
   
 </body>
 </html>
+
 
 
 
