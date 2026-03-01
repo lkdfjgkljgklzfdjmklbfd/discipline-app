@@ -1259,7 +1259,7 @@ function finishLevel(){
   const currentNum = levelNum(activeLevel);
   if(perfect){
     const unlocked = getUnlockedLevel();
-    if(currentNum >= unlocked && unlocked < 6) setUnlockedLevel(unlocked + 1);
+    if(currentNum >= unlocked && unlocked < LEVELS.length) setUnlockedLevel(unlocked + 1);
   }
 
   // bonus: 2 perfect levels in a row => +5 FSD
@@ -1622,6 +1622,7 @@ window.learningLang = learningLang;
   
 </body>
 </html>
+
 
 
 
