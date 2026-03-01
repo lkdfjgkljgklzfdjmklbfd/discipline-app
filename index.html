@@ -439,6 +439,74 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   width:100%;
   height:46px;
 }
+  /* ===== MOBILE CLEAN LAYOUT FIX (PASTE AT BOTTOM) ===== */
+@media (max-width: 520px){
+
+  /* remove the huge empty space you created for the streak */
+  #hud{
+    padding-right: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* make the top HUD row: left info + right FSD/Rank */
+  #hud > div:first-child{
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    align-items: start !important;
+    gap: 8px !important;
+  }
+  #hud > div:first-child > div:last-child{
+    text-align: right !important;
+    white-space: nowrap !important;
+  }
+
+  /* make the streak smaller + tighter so it doesn't feel like it eats space */
+  #streakBox{
+    top: calc(env(safe-area-inset-top) + 8px) !important;
+    right: 10px !important;
+    font-size: 12px !important;
+    opacity: 0.9 !important;
+  }
+
+  /* bring title up + make it cleaner */
+  #mode{
+    margin: 6px 0 10px !important;
+    font-size: 20px !important;
+  }
+
+  /* PLAY button: full width, smaller, nicer spacing */
+  .btn-play{
+    width: 100% !important;
+    max-width: none !important;
+    height: 48px !important;
+    font-size: 15px !important;
+    border-radius: 16px !important;
+    margin: 6px 0 10px !important;
+  }
+
+  /* options smaller so you can see everything */
+  .choice{
+    padding: 12px 12px !important;
+    margin: 8px 0 !important;
+    font-size: 15px !important;
+    border-radius: 16px !important;
+  }
+
+  /* IMPORTANT: stop CHECK from covering options */
+  .btn-check{
+    position: static !important;   /* removes sticky overlay */
+    width: 100% !important;
+    height: 50px !important;
+    font-size: 15px !important;
+    border-radius: 16px !important;
+    margin: 12px 0 0 !important;
+  }
+
+  /* reduce the huge bottom padding that forces weird scrolling */
+  #content{
+    padding-bottom: 18px !important;
+  }
+}
 </style>
 </head>
 
@@ -1622,6 +1690,7 @@ window.learningLang = learningLang;
   
 </body>
 </html>
+
 
 
 
