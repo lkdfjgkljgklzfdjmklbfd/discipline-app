@@ -930,7 +930,7 @@ let learningLang = "en"
   let authUser = null;
 
 function isLoggedIn(){
-  return !!authUser;
+  return !!(window._currentUser && window._currentUser());
 }
 
 window.setAuthUser = function(u){
@@ -1071,20 +1071,30 @@ function renderHome(){
   let html = `
     <div class="card" id="home">
 
-<div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-bottom:10px; align-items:center;">
-  <div id="userBadge" style="display:none; align-items:center; gap:10px; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.12); background:rgba(20,20,20,0.7);">
-   
-    <div id="userName" style="font-weight:900; font-size:13px; opacity:0.9;"></div>
-  </div>
+${(() => {
+  const u = (window._currentUser && window._currentUser()) ? window._currentUser() : null;
 
-  <button id="btnAuth" style="min-width:unset; height:42px; border-radius:14px; font-size:13px;"
-    onclick="showAuthMenu()">SIGN UP / LOG IN</button>
+  if(u){
+    const name = u.displayName || (u.email ? u.email.split("@")[0] : "User");
+    return `
+      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-bottom:10px; align-items:center;">
+        <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.12); background:rgba(20,20,20,0.7);">
+          <div style="font-weight:900; font-size:13px; opacity:0.9;">✅ ${name}</div>
+        </div>
+        <button style="min-width:unset; height:42px; border-radius:14px; font-size:13px; opacity:0.85;"
+          onclick="logout()">LOGOUT</button>
+      </div>
+    `;
+  }
 
-  <button id="btnLogout" style="min-width:unset; height:42px; border-radius:14px; font-size:13px; opacity:0.85; display:none;"
-    onclick="logout()">LOGOUT</button>
-</div>
-  
-      <div id="loginStatus" style="opacity:0.75; font-weight:800; margin-bottom:8px; text-align:right;"></div>
+  return `
+    <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-bottom:10px; align-items:center;">
+      <button style="min-width:unset; height:42px; border-radius:14px; font-size:13px;"
+        onclick="showAuthMenu()">SIGN UP / LOG IN</button>
+    </div>
+    <div style="opacity:0.75; font-weight:800; margin-bottom:8px; text-align:right;">Not logged in</div>
+  `;
+})()}
       <h2 style="margin-top:0; letter-spacing:1px;">${t("levels")}</h2>
       <p style="color:#aaa; margin-top:8px;">${t("levelHint")}</p>
 <div id="levelPath" style="
@@ -1647,6 +1657,8 @@ import {
     await signOut(auth);
   };
 
+window._currentUser = () => auth.currentUser;
+  
   function cleanUsername(u){
   return (u || "")
     .trim()
@@ -1712,7 +1724,7 @@ window.emailSignup = async () => {
     }, { merge:true });
 
     if(msg) msg.textContent = "✅ Account created!";
-    window.renderHome?.();
+   setTimeout(() => window.renderHome?.(),350);
 
   }catch(e){
     if(msg) msg.textContent = "❌ " + (e?.message || e);
@@ -1749,7 +1761,7 @@ window.emailLogin = async () => {
     await signInWithEmailAndPassword(auth, id, pass);
 
     if(msg) msg.textContent = "✅ Logged in!";
-    window.renderHome?.();
+   setTimeout(() => window.renderHome?.(),350);
 
   }catch(e){
     if(msg) msg.textContent = "❌ " + (e?.message || e);
@@ -1917,6 +1929,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
