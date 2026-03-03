@@ -1611,7 +1611,7 @@ import {
   doc,
   getDoc,
   setDoc,
-  updateDoc,
+
   serverTimestamp,
   runTransaction
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
@@ -1693,22 +1693,25 @@ window.emailSignup = async () => {
     const pass  = document.getElementById("suPass").value;
     const user  = document.getElementById("suUser").value;
 
-
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
 
     const username = await claimUsername(cred.user.uid, email, user);
 
-await updateProfile(cred.user, {
-  displayName: username
-});
-
-    await updateDoc(doc(db,"users",cred.user.uid), {
-      photoURL: photoURL || "",
-      updatedAt: serverTimestamp()
+    await updateProfile(cred.user, {
+      displayName: username
     });
 
+    // create user doc safely
+    await setDoc(doc(db,"users",cred.user.uid), {
+      email: email,
+      username: username,
+      fsd: 0,
+      unlocked: { en:1, de:1, es:1, sv:1, nl:1 },
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }, { merge:true });
+
     if(msg) msg.textContent = "✅ Account created!";
-    // Go back to home after signup:
     window.renderHome?.();
 
   }catch(e){
@@ -1914,6 +1917,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
