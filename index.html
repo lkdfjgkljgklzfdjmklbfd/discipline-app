@@ -1899,6 +1899,7 @@ function updateHomeTopUI(){
 
     if(currentUser){
       try{
+      await currentUser .getIdToken(true);
         userData = await loadOrCreateUser(currentUser.uid);
       }catch(e){
         alert("Could not load your saved progress: " + (e?.message || e));
@@ -1913,6 +1914,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
