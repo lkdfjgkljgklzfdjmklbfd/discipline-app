@@ -976,6 +976,75 @@ function chooseLang(lang){
   `;
 }
 
+function showAuthMenu(){
+  // full page auth menu
+  document.getElementById("container").classList.remove("scrollable");
+  document.getElementById("container").innerHTML = `
+    <div class="card" id="authMenu">
+      <h2 style="margin-top:0; letter-spacing:1px;">ACCOUNT</h2>
+      <p style="opacity:0.75; margin-top:6px;">Create an account or log in to save progress.</p>
+
+      <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
+        <button onclick="showSignupPage()">SIGN UP →</button>
+        <button onclick="showLoginPage()">LOG IN →</button>
+        <button onclick="loginGoogle()">GOOGLE →</button>
+      </div>
+
+      <div style="margin-top:16px; text-align:center;">
+        <button style="min-width:unset; opacity:0.85;" onclick="renderHome()">BACK</button>
+      </div>
+    </div>
+  `;
+}
+
+function showSignupPage(){
+  document.getElementById("container").innerHTML = `
+    <div class="card" id="signupPage">
+      <h2 style="margin-top:0; letter-spacing:1px;">SIGN UP</h2>
+
+      <div style="display:grid; gap:10px; margin-top:14px;">
+        <input id="suEmail" placeholder="Email"
+          style="height:46px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:#111;color:#fff;padding:0 12px;">
+        <input id="suPass" type="password" placeholder="Password"
+          style="height:46px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:#111;color:#fff;padding:0 12px;">
+        <input id="suUser" placeholder="Username"
+          style="height:46px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:#111;color:#fff;padding:0 12px;">
+      
+        <button onclick="emailSignup()">CREATE ACCOUNT →</button>
+        <div id="suMsg" style="opacity:0.8;font-size:13px;"></div>
+      </div>
+
+      <div style="margin-top:16px; display:flex; gap:10px; justify-content:space-between;">
+        <button style="min-width:unset; opacity:0.85;" onclick="showAuthMenu()">BACK</button>
+        <button style="min-width:unset; opacity:0.85;" onclick="showLoginPage()">GO TO LOGIN</button>
+      </div>
+    </div>
+  `;
+}
+
+function showLoginPage(){
+  document.getElementById("container").innerHTML = `
+    <div class="card" id="loginPage">
+      <h2 style="margin-top:0; letter-spacing:1px;">LOG IN</h2>
+
+      <div style="display:grid; gap:10px; margin-top:14px;">
+        <input id="liId" placeholder="Email or Username"
+          style="height:46px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:#111;color:#fff;padding:0 12px;">
+        <input id="liPass" type="password" placeholder="Password"
+          style="height:46px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:#111;color:#fff;padding:0 12px;">
+        <button onclick="emailLogin()">LOG IN →</button>
+        <div id="liMsg" style="opacity:0.8;font-size:13px;"></div>
+      </div>
+
+      <div style="margin-top:16px; display:flex; gap:10px; justify-content:space-between;">
+        <button style="min-width:unset; opacity:0.85;" onclick="showAuthMenu()">BACK</button>
+        <button style="min-width:unset; opacity:0.85;" onclick="showSignupPage()">GO TO SIGN UP</button>
+      </div>
+    </div>
+  `;
+}
+
+  
 // ===== AUTH BUTTON BRIDGE (fix login not working) =====
 function loginGoogle(){
   if(typeof window._loginGoogle !== "function"){
@@ -1001,12 +1070,20 @@ function renderHome(){
   const unlocked = getUnlockedLevel();
   let html = `
     <div class="card" id="home">
-    <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-bottom:10px;">
-        <button style="min-width:unset; height:42px; border-radius:14px; font-size:13px;"
-          onclick="loginGoogle()">LOGIN</button>
-        <button style="min-width:unset; height:42px; border-radius:14px; font-size:13px; opacity:0.85;"
-          onclick="logout()">LOGOUT</button>
-      </div>
+
+<div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-bottom:10px; align-items:center;">
+  <div id="userBadge" style="display:none; align-items:center; gap:10px; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.12); background:rgba(20,20,20,0.7);">
+   
+    <div id="userName" style="font-weight:900; font-size:13px; opacity:0.9;"></div>
+  </div>
+
+  <button id="btnAuth" style="min-width:unset; height:42px; border-radius:14px; font-size:13px;"
+    onclick="showAuthMenu()">SIGN UP / LOG IN</button>
+
+  <button id="btnLogout" style="min-width:unset; height:42px; border-radius:14px; font-size:13px; opacity:0.85; display:none;"
+    onclick="logout()">LOGOUT</button>
+</div>
+  
       <div id="loginStatus" style="opacity:0.75; font-weight:800; margin-bottom:8px; text-align:right;"></div>
       <h2 style="margin-top:0; letter-spacing:1px;">${t("levels")}</h2>
       <p style="color:#aaa; margin-top:8px;">${t("levelHint")}</p>
@@ -1517,22 +1594,34 @@ window.learningLang = learningLang;
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+  
+ import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp,
+  runTransaction
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
   import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc,
-    updateDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  getStorage,
+  ref as sRef,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAIkdOw6-7DFtZUaBxCws3ix8zrhidzWEU",
@@ -1547,6 +1636,7 @@ window.learningLang = learningLang;
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   // ===== expose ONLY these for your non-module buttons =====
   window._loginGoogle = async () => {
@@ -1556,6 +1646,112 @@ window.learningLang = learningLang;
   window._logout = async () => {
     await signOut(auth);
   };
+
+  function cleanUsername(u){
+  return (u || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_]/g, ""); // only a-z 0-9 _
+}
+
+async function claimUsername(uid, email, username){
+  const u = cleanUsername(username);
+  if(u.length < 3) throw new Error("Username must be at least 3 characters.");
+  if(u.length > 20) throw new Error("Username max is 20 characters.");
+
+  const unameRef = doc(db, "usernames", u);
+  const userRef  = doc(db, "users", uid);
+
+  await runTransaction(db, async (tx) => {
+    const unameSnap = await tx.get(unameRef);
+    if(unameSnap.exists()) throw new Error("Username already taken.");
+
+    tx.set(unameRef, { uid, createdAt: serverTimestamp() });
+
+    tx.set(userRef, {
+      email: email || "",
+      username: u,
+      fsd: 0,
+      unlocked: { en: 1, de: 1, es: 1, sv: 1, nl: 1 },
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }, { merge:true });
+  });
+
+  return u;
+}
+
+
+
+// SIGN UP (Email/Password)
+window.emailSignup = async () => {
+  const msg = document.getElementById("suMsg");
+  if(msg) msg.textContent = "Creating account...";
+
+  try{
+    const email = document.getElementById("suEmail").value.trim();
+    const pass  = document.getElementById("suPass").value;
+    const user  = document.getElementById("suUser").value;
+
+
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+
+    const username = await claimUsername(cred.user.uid, email, user);
+
+await updateProfile(cred.user, {
+  displayName: username
+});
+
+    await updateDoc(doc(db,"users",cred.user.uid), {
+      photoURL: photoURL || "",
+      updatedAt: serverTimestamp()
+    });
+
+    if(msg) msg.textContent = "✅ Account created!";
+    // Go back to home after signup:
+    window.renderHome?.();
+
+  }catch(e){
+    if(msg) msg.textContent = "❌ " + (e?.message || e);
+  }
+};
+
+// LOGIN (Email OR Username)
+async function emailFromUsername(username){
+  const u = cleanUsername(username);
+  const unameSnap = await getDoc(doc(db, "usernames", u));
+  if(!unameSnap.exists()) throw new Error("Username not found.");
+
+  const uid = unameSnap.data().uid;
+  const userSnap = await getDoc(doc(db, "users", uid));
+  if(!userSnap.exists()) throw new Error("User profile missing.");
+
+  const email = userSnap.data().email;
+  if(!email) throw new Error("No email saved for that username.");
+  return email;
+}
+
+window.emailLogin = async () => {
+  const msg = document.getElementById("liMsg");
+  if(msg) msg.textContent = "Logging in...";
+
+  try{
+    let id = document.getElementById("liId").value.trim();
+    const pass = document.getElementById("liPass").value;
+
+    if(!id.includes("@")){
+      id = await emailFromUsername(id);
+    }
+
+    await signInWithEmailAndPassword(auth, id, pass);
+
+    if(msg) msg.textContent = "✅ Logged in!";
+    window.renderHome?.();
+
+  }catch(e){
+    if(msg) msg.textContent = "❌ " + (e?.message || e);
+  }
+};
 
   // ===== Firestore user progress (optional but you already built it) =====
   let currentUser = null;
@@ -1671,6 +1867,29 @@ window.learningLang = learningLang;
     }
   }
 
+function updateHomeTopUI(){
+  const btnAuth = document.getElementById("btnAuth");
+  const btnLogout = document.getElementById("btnLogout");
+  const badge = document.getElementById("userBadge");
+  
+  const name = document.getElementById("userName");
+
+  if(!btnAuth || !btnLogout || !badge) return;
+
+  if(currentUser){
+    btnAuth.style.display = "none";
+    btnLogout.style.display = "inline-block";
+    badge.style.display = "flex";
+    if(name) name.textContent = currentUser.displayName || "user";
+   
+  }else{
+    btnAuth.style.display = "inline-block";
+    btnLogout.style.display = "none";
+    badge.style.display = "none";
+  }
+}
+
+  
   onAuthStateChanged(auth, async (user) => {
     currentUser = user || null;
     userData = null;
@@ -1688,11 +1907,13 @@ window.learningLang = learningLang;
 
     setLoginStatusText();
     refreshHomeIfOpen();
+    setTimeout(updateHomeTopUI, 50);
   });
 </script>
   
 </body>
 </html>
+
 
 
 
