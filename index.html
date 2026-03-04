@@ -647,20 +647,24 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   }
 
   /* Money fills the TOP of the phone */
-  #intro .money-hero{
-    width: 100vw !important;
-    height: 42vh !important;
-    min-height: 260px !important;
-    max-height: 360px !important;
-    border-radius: 0 !important;
+ #intro .money-hero{
+  width: 100vw;
+  height: 38vh;
+  min-height: 240px;
+  max-height: 320px;
 
-    margin-left: calc(50% - 50vw) !important;
-    margin-right: calc(50% - 50vw) !important;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
 
-    background-image: url("moneypic.png?v=999") !important;
-    background-size: cover !important;
-  }
+  background-image: url("moneypic.png?v=3");
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 180;
 
+  /* THIS hides the lower part of the image */
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
   /* Center the rest under it */
   #intro .intro-wrap{
     flex: 1 !important;
@@ -2178,6 +2182,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
