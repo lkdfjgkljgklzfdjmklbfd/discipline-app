@@ -218,7 +218,51 @@ body.is-intro::before{ display:none !important; }
 @media (max-width: 520px){
   #container{ padding:0; height:100dvh; align-items:stretch; }
 }
+/* =========================
+   REPAIR: undo global damage
+   + apply intro-only layout
+   Paste at VERY BOTTOM of <style>
+   ========================= */
 
+/* 1) Default = normal screens (rank ladder, home, etc.) */
+#container{
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 2) Intro-only override (only when #intro exists on the page)
+   NOTE: :has() works on modern Safari iOS (15.4+). */
+#container:has(#intro){
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
+/* 3) Hide streak ONLY on intro (so money can go to the top) */
+#container:has(#intro) #streakBox{
+  display: none !important;
+}
+
+/* 4) Remove the huge top padding that was pushing everything down (intro only) */
+#container:has(#intro) .card{
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* 5) Money banner: slam it to the top edge (intro only) */
+#container:has(#intro) .money-hero{
+  margin-top: 0 !important;
+  width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  background-position: top center !important;
+  background-size: cover !important;
+}
+
+/* 6) If you still want KONTRIJAL block more centered (intro only) */
+#container:has(#intro) #intro .intro-wrap{
+  margin-top: 0 !important;
+  padding-top: 10px !important;
+}
 </style>
 </head>
 
@@ -1733,6 +1777,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
