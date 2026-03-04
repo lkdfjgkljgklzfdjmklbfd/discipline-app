@@ -218,32 +218,7 @@ body.is-intro::before{ display:none !important; }
 @media (max-width: 520px){
   #container{ padding:0; height:100dvh; align-items:stretch; }
 }
-  /* ===== FIX INTRO LAYOUT ===== */
 
-/* stop vertically centering the intro card */
-#container{
-  align-items: flex-start !important;
-  justify-content: flex-start !important;
-}
-
-/* remove card spacing on intro */
-#intro.card{
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-}
-
-/* make the money image stick to the top */
-#intro .money-hero{
-  width: 100vw !important;
-  height: 28vh !important;
-
-  margin-top: 0 !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-
-  background-position: top center !important;
-  background-size: cover !important;
-}
 </style>
 </head>
 
@@ -1758,6 +1733,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
