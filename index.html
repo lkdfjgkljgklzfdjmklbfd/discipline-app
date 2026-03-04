@@ -651,6 +651,131 @@ body{
     radial-gradient(900px 600px at 50% 85%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
     linear-gradient(180deg, #101014 0%, #050506 100%);
 }
+
+
+/* ===== FORCE INTRO LAYOUT (MOBILE FIRST) ===== */
+#intro{
+  min-height: 100dvh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px 16px !important;
+}
+
+#intro .intro-wrap{
+  width: 100% !important;
+  max-width: 520px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  text-align: center !important;
+}
+
+/* money "fills" the top area */
+#intro .money-hero{
+  width: 100% !important;
+  height: 240px !important;             /* increase if you want bigger */
+  border-radius: 18px !important;
+  background-image: url("./moneypic.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: cover !important;    /* THIS is what makes it fill */
+  box-shadow: 0 18px 40px rgba(0,0,0,0.55) !important;
+  opacity: 0.95 !important;
+}
+
+/* KONTRIJAL glow red */
+#intro h1{
+  color:#ff1a1a !important;
+  letter-spacing:0.12em !important;
+  text-shadow: 0 0 14px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.22) !important;
+}
+
+/* ===== FIX "MOBILE SCREEN IS STILL BLACK" ===== */
+/* your canvas is likely painting black; at least make it sit behind content */
+#bg{
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -1 !important;
+}
+
+/* Add silver premium base background */
+html, body{
+  margin: 0 !important;
+  min-height: 100% !important;
+  background:
+    radial-gradient(1200px 700px at 50% 15%, rgba(230,230,240,0.22), rgba(0,0,0,0) 60%),
+    radial-gradient(900px 600px at 50% 85%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
+    linear-gradient(180deg, #101014 0%, #050506 100%) !important;
+}
+
+/* =========================
+   FINAL MOBILE INTRO OVERRIDE
+   Paste this at the VERY BOTTOM of your <style>
+   ========================= */
+
+#intro h1{
+  color:#ff1111 !important;
+  text-shadow: 0 0 14px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.22) !important;
+}
+
+/* Fix your missing semicolon bug if it still exists somewhere */
+#intro h1{ color:#ff1111 !important; }
+
+@media (max-width: 520px){
+
+  /* stop the black fog overlay */
+  body::before{ display:none !important; }
+
+  /* silver-ish premium background */
+  html, body{
+    background:
+      radial-gradient(900px 600px at 50% 10%, rgba(240,240,255,0.28), rgba(0,0,0,0) 60%),
+      radial-gradient(900px 600px at 50% 90%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
+      linear-gradient(180deg, #1a1a1f 0%, #070708 100%) !important;
+  }
+
+  /* center intro vertically */
+  #intro.card{
+    min-height: 100dvh !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding: 0 !important;
+  }
+
+  #intro .intro-wrap{
+    width: 100% !important;
+    max-width: none !important;
+    padding: 22px 16px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+    gap: 14px !important;
+  }
+
+  /* make money banner BIG and full width */
+  #intro .money-hero{
+    width: 100vw !important;
+    height: 36vh !important;
+    max-height: 320px !important;
+    border-radius: 0 !important;
+
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+
+    background-image: url("./moneypic.png?v=2") !important; /* cache refresh */
+    background-repeat:no-repeat !important;
+    background-position:center !important;
+    background-size: cover !important;
+  }
+}
   
 </style>
 </head>
@@ -705,13 +830,14 @@ body{
 
   
 <div id="container">
- <div class="card" id="intro">
+<div class="card" id="intro">
   <div class="intro-wrap">
-    <img class="money-banner" src="./moneypic.png" alt="">
+    <div class="money-hero"></div>
 
     <h1>KONTRIJAL</h1>
     <h2>YOU VS YOU</h2>
     <div class="terminal-line"></div>
+
     <button onclick="startGame()">START SESSION →</button>
   </div>
 </div>
@@ -2157,6 +2283,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
