@@ -7,37 +7,29 @@
 <title>KONTRIJAL</title>
 
 <style>
-
-.money-banner{
-  width: min(720px, 92vw);   /* almost full width */
-  height: auto;
-  max-height: 210px;         /* controls how tall it is */
-  object-fit: contain;       /* no cropping */
-  display: block;
-  margin: 0 auto;
-  opacity: 0.95;
-  filter: drop-shadow(0 12px 28px rgba(0,0,0,0.65));
-}
-  
 :root{
   --red:#ff1a1a;
   --red2:#b30000;
-  --panel: rgba(10,10,10,0.92);
-  --panel2: rgba(18,18,18,0.92);
   --text: rgba(255,255,255,0.92);
   --muted: rgba(255,255,255,0.65);
 }
+
 *{ box-sizing:border-box; }
-html, body{ height:100%; }
+html, body{ height:100%; margin:0; }
+
 body{
-  margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background:
-    radial-gradient(1200px 700px at 50% 45%, rgba(240,240,240,0.12), rgba(0,0,0,0.92) 60%),
-    #000;
-  color:var(--text);
+  color: var(--text);
   overflow:hidden;
+
+  /* deep luxury silver (default background) */
+  background:
+    radial-gradient(1100px 700px at 50% 12%, rgba(235,235,245,0.22), rgba(0,0,0,0) 60%),
+    radial-gradient(900px 600px at 50% 88%, rgba(255,255,255,0.12), rgba(0,0,0,0) 55%),
+    linear-gradient(180deg, #141419 0%, #060607 100%);
 }
+
+/* Optional canvas behind everything */
 canvas{
   position:fixed;
   inset:0;
@@ -45,6 +37,8 @@ canvas{
   height:100vh;
   z-index:-2;
 }
+
+/* Dark fog overlay (NOT on intro) */
 body::before{
   content:"";
   position:fixed;
@@ -53,7 +47,7 @@ body::before{
   z-index:-1;
 }
 
-/* top-right streak */
+/* ===== Fixed UI bits ===== */
 #streakBox{
   position:fixed;
   top: calc(env(safe-area-inset-top) + 12px);
@@ -63,7 +57,6 @@ body::before{
   z-index:99999;
   pointer-events:none;
 }
-/* bottom-right credit */
 #credit{
   position:fixed;
   bottom: calc(env(safe-area-inset-bottom) + 12px);
@@ -75,6 +68,7 @@ body::before{
   pointer-events:none;
 }
 
+/* ===== Layout container ===== */
 #container{
   height:100vh;
   display:flex;
@@ -82,9 +76,11 @@ body::before{
   justify-content:center;
   padding:16px;
 }
+
+/* Card default (for other pages) */
 .card{
   width:min(860px, 100%);
-  background: linear-gradient(180deg, var(--panel), var(--panel2));
+  background: linear-gradient(180deg, rgba(10,10,10,0.92), rgba(18,18,18,0.92));
   border:1px solid rgba(255,26,26,0.14);
   border-radius:24px;
   box-shadow:
@@ -95,7 +91,71 @@ body::before{
   padding:28px;
   transform: translateZ(0);
 }
-#intro{ text-align:center; }
+
+/* =========================================================
+   INTRO (FIRST PAGE) — money touches TOP, content centered
+   ========================================================= */
+#intro.card{
+  /* intro should NOT be a dark panel */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  /* full screen */
+  width:100%;
+  min-height:100dvh;
+  border-radius:0;
+  padding:0;
+
+  display:flex;
+  justify-content:center;
+}
+
+#intro .intro-wrap{
+  width:100%;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  padding:0;
+}
+
+/* MONEY HERO: touches the very top (full-bleed) */
+#intro .money-hero{
+  width:100vw;
+  height:25vh;            /* ~1/4 screen */
+  min-height:190px;
+  max-height:320px;
+
+  margin:0;
+  border-radius:0;
+
+  /* full-bleed trick */
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  background-image: url("./moneypic1.png?v=999");
+  background-repeat:no-repeat;
+  background-position: top center;
+  background-size: cover;
+
+  /* soften bottom edge so it feels “transparent-ish” */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 100%);
+}
+
+/* Center block UNDER money */
+#intro .intro-center{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding: 18px 16px calc(env(safe-area-inset-bottom) + 24px);
+  gap: 14px;
+}
+
+/* Title / subtitle */
 #intro h1{
   font-size: clamp(42px, 7vw, 66px);
   font-weight: 900;
@@ -109,21 +169,23 @@ body::before{
     0 0 26px rgba(255,0,0,0.22);
 }
 #intro h2{
-  margin-top: 12px;
+  margin: 0;
   font-size: 12px;
   letter-spacing: 0.35em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.65);
   font-weight: 750;
 }
+
 .terminal-line{
   width: min(360px, 85%);
   height: 2px;
-  margin: 16px auto 10px;
+  margin: 6px auto 6px;
   background: linear-gradient(90deg, transparent, rgba(255,0,0,0.95), transparent);
   box-shadow: 0 0 14px rgba(255,0,0,0.4);
 }
 
+/* Buttons */
 button{
   appearance:none;
   border:none;
@@ -143,646 +205,39 @@ button:hover{ filter:brightness(1.08); }
 button:active{ transform: scale(0.98); }
 button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightness(0.85); }
 
-.choice{
-  background: rgba(28,28,28,0.92);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 20px;
-  padding: 18px 16px;
-  margin: 12px 0;
-  cursor: pointer;
-  font-size: 19px;
-  line-height: 1.35;
-  text-align: left;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-  font-weight: 600;
-  letter-spacing: 0.2px;
-  color: rgba(255,255,255,0.88);
-}
-.choice.selected{
-  border-color: rgba(255,26,26,0.90);
-  box-shadow: 0 0 0 2px rgba(255,26,26,0.28), 0 12px 34px rgba(0,0,0,0.5);
+/* Intro button nicer width on phones */
+#intro button{
+  width: min(360px, 92vw);
 }
 
-.word-container{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-  margin:16px 0;
-  min-height:64px;
-  padding:10px;
-  border-radius:16px;
-  background: rgba(28,28,28,0.75);
-  border:1px solid rgba(255,255,255,0.10);
-}
-.word{
-  background: rgba(255,26,26,0.18);
-  border:1px solid rgba(255,26,26,0.28);
-  padding:10px 14px;
-  border-radius:16px;
-  font-size:17px;
-  font-weight:600; /* not too thick */
-  user-select:none;
-  cursor:pointer;
-}
+/* Hide streak + fog ONLY on intro */
+body.is-intro #streakBox{ display:none !important; }
+body.is-intro::before{ display:none !important; }
 
-#hud{
-  margin-bottom:14px;
-  padding-right: 120px; /* avoid overlap with streak */
-}
-#hud *{ font-size:14px !important; }
-
-#result{
-  margin-top:14px;
-  font-size:18px;
-  font-weight:950;
-  letter-spacing:0.5px;
-}
-.hint{
-  margin-top:12px;
-  color:var(--muted);
-  font-size:13px;
-}
-
-#toast{
-  position: fixed;
-  left: 50%;
-  top: calc(env(safe-area-inset-top) + 20px);
-  transform: translateX(-50%);
-  z-index: 999999;
-  pointer-events: none;
-  opacity: 0;
-}
-.toast-inner{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  background: rgba(20,20,20,0.92);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 999px;
-  padding: 10px 14px;
-  box-shadow: 0 16px 50px rgba(0,0,0,0.55);
-  font-weight: 950;
-  letter-spacing: 0.6px;
-}
-.toast-inner.good{
-  border-color: rgba(255,26,26,0.45);
-  box-shadow: 0 0 0 2px rgba(255,26,26,0.14), 0 16px 50px rgba(0,0,0,0.55);
-}
-.toast-inner.bad{
-  border-color: rgba(255,255,255,0.12);
-  opacity: 0.95;
-}
-.toast-show{ animation: toastInOut 1.0s ease forwards; }
-@keyframes toastInOut{
-  0%{ opacity:0; transform: translateX(-50%) translateY(-8px) scale(0.96); }
-  15%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
-  80%{ opacity:1; transform: translateX(-50%) translateY(0px) scale(1); }
-  100%{ opacity:0; transform: translateX(-50%) translateY(-10px) scale(0.98); }
-}
-
-.shake{ animation: shake 0.35s ease; }
-@keyframes shake{
-  0%{ transform: translateX(0); }
-  20%{ transform: translateX(-10px); }
-  40%{ transform: translateX(10px); }
-  60%{ transform: translateX(-7px); }
-  80%{ transform: translateX(7px); }
-  100%{ transform: translateX(0); }
-}
-
-/* Clickable rank in HUD */
-#rankBtn{
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.16);
-  color: rgba(255,255,255,0.88);
-  height: 34px;
-  min-width: unset;
-  padding: 0 10px;
-  border-radius: 12px;
-  font-weight: 950;
-  letter-spacing: 0.6px;
-  box-shadow: none;
-}
-#rankBtn:hover{ filter: brightness(1.1); }
-
-/* Rank modal */
-#rankModal{
-  position: fixed;
-  inset: 0;
-  z-index: 999997;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: rgba(0,0,0,0.72);
-  backdrop-filter: blur(8px);
-}
-#rankModal.show{ display:flex; }
-.rank-modal-card{
-  width: min(560px, 100%);
-  border-radius: 22px;
-  padding: 18px 18px 16px;
-  background: linear-gradient(180deg, rgba(16,16,16,0.96), rgba(8,8,8,0.96));
-  border: 1px solid rgba(255,26,26,0.22);
-  box-shadow: 0 28px 90px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,26,26,0.12);
-  position: relative;
-}
-.rank-close{
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  min-width: unset;
-  padding: 0;
-  font-weight: 950;
-  letter-spacing: 0;
-}
-.rank-modal-title{
-  margin: 0;
-  font-weight: 950;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.92);
-  font-size: 16px;
-}
-.rank-modal-sub{
-  margin: 6px 0 14px;
-  color: rgba(255,255,255,0.65);
-  font-size: 13px;
-  line-height: 1.35;
-}
-.rank-table{
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.12);
-}
-.rank-table th, .rank-table td{
-  padding: 12px 12px;
-  font-size: 14px;
-  color: rgba(255,255,255,0.88);
-}
-.rank-table th{
-  text-align: left;
-  color: rgba(255,255,255,0.70);
-  font-weight: 900;
-  background: rgba(28,28,28,0.85);
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-}
-.rank-table tr{ background: rgba(20,20,20,0.70); }
-.rank-table tr + tr td{ border-top: 1px solid rgba(255,255,255,0.08); }
-.rank-badge{
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,26,26,0.22);
-  background: rgba(255,26,26,0.10);
-  font-weight: 950;
-  letter-spacing: 0.6px;
-}
-.rank-range{ color: rgba(255,255,255,0.70); font-weight: 800; }
-.rank-hintline{
-  margin-top: 12px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.62);
-}
-
-/* Mobile fullscreen */
+/* ===== mobile container cleanup ===== */
 @media (max-width: 520px){
-  #container{
-    padding: 0 !important;
-    height: 100dvh;
-    align-items: stretch;
-  }
-  .card{
-    width: 100%;
-    min-height: 100dvh;
-    border-radius: 0 !important;
-    padding:
-      calc(env(safe-area-inset-top) + 16px)
-      16px
-      calc(env(safe-area-inset-bottom) + 18px)
-      16px !important;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-  }
-  #content{
-    flex:1;
-    overflow:auto;
-    padding-bottom: 140px;
-    -webkit-overflow-scrolling: touch;
-  }
-  .btn-play{
-    width: 64%;
-    max-width: 320px;
-    min-width: unset;
-    height: 52px;
-    font-size: 15px;
-    border-radius: 18px;
-    align-self:center;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  .btn-check{
-    position: sticky;
-    z-index: 50;
-    bottom: calc(env(safe-area-inset-bottom) + 10px);
-    width: 100%;
-    min-width: unset;
-    height: 58px;
-    font-size: 16px;
-    border-radius: 18px;
-    margin: 14px 0 0;
-  }
+  #container{ padding:0; height:100dvh; align-items:stretch; }
 }
-  /* Allow scrolling only on the home/level screen */
-#container.scrollable{
-  height: 100vh;
-  align-items: flex-start;   /* so it starts from top */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-top: 16px;
-  padding-bottom: 16px;
-}
-  /* ===== MINI STREAK POPUP ===== */
-#miniModal{
-  position: fixed;
-  inset: 0;
-  z-index: 999996;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: rgba(0,0,0,0.78);
-  backdrop-filter: blur(10px);
-}
-#miniModal.show{ display:flex; }
+  /* ===== FIX INTRO LAYOUT ===== */
 
-.mini-card{
-  width: min(520px, 100%);
-  border-radius: 22px;
-  padding: 18px;
-  background: linear-gradient(180deg, rgba(18,18,18,0.96), rgba(8,8,8,0.96));
-  border: 1px solid rgba(255,26,26,0.25);
-  text-align:center;
-}
-.mini-title{
-  font-size:14px;
-  font-weight:900;
-  letter-spacing:2px;
-}
-.mini-streak{
-  margin-top:10px;
-  font-size:44px;
-  font-weight:900;
-  color:#ff1a1a;
-}
-.mini-quote{
-  margin-top:10px;
-  font-size:14px;
-  font-weight:800;
-  color:rgba(255,255,255,0.85);
-}
-.mini-btn{
-  margin-top:14px;
-  width:100%;
-  height:46px;
-}
-  /* ===== MOBILE CLEAN LAYOUT FIX (PASTE AT BOTTOM) ===== */
-@media (max-width: 520px){
-
-  /* remove the huge empty space you created for the streak */
-  #hud{
-    padding-right: 0 !important;
-    margin-bottom: 10px !important;
-  }
-
-  /* make the top HUD row: left info + right FSD/Rank */
-  #hud > div:first-child{
-    display: grid !important;
-    grid-template-columns: 1fr auto !important;
-    align-items: start !important;
-    gap: 8px !important;
-  }
-  #hud > div:first-child > div:last-child{
-    text-align: right !important;
-    white-space: nowrap !important;
-  }
-
-  /* make the streak smaller + tighter so it doesn't feel like it eats space */
-  #streakBox{
-    top: calc(env(safe-area-inset-top) + 8px) !important;
-    right: 10px !important;
-    font-size: 12px !important;
-    opacity: 0.9 !important;
-  }
-
-  /* bring title up + make it cleaner */
-  #mode{
-    margin: 6px 0 10px !important;
-    font-size: 20px !important;
-  }
-
-  /* PLAY button: full width, smaller, nicer spacing */
-  .btn-play{
-    width: 100% !important;
-    max-width: none !important;
-    height: 48px !important;
-    font-size: 15px !important;
-    border-radius: 16px !important;
-    margin: 6px 0 10px !important;
-  }
-
-  /* options smaller so you can see everything */
-  .choice{
-    padding: 12px 12px !important;
-    margin: 8px 0 !important;
-    font-size: 15px !important;
-    border-radius: 16px !important;
-  }
-
-  /* IMPORTANT: stop CHECK from covering options */
-  .btn-check{
-    position: static !important;   /* removes sticky overlay */
-    width: 100% !important;
-    height: 50px !important;
-    font-size: 15px !important;
-    border-radius: 16px !important;
-    margin: 12px 0 0 !important;
-  }
-
-  /* reduce the huge bottom padding that forces weird scrolling */
-  #content{
-    padding-bottom: 18px !important;
-  }
+/* stop vertically centering the intro card */
+#container{
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
 }
 
-/* =========================
-   FINAL MOBILE INTRO (ONLY ONE)
-   ========================= */
-
-/* Luxury silver background (mobile) */
-@media (max-width: 520px){
-  body{
-    background:
-      radial-gradient(900px 600px at 50% 10%, rgba(240,240,255,0.28), rgba(0,0,0,0) 60%),
-      radial-gradient(900px 600px at 50% 90%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
-      linear-gradient(180deg, #1a1a1f 0%, #070708 100%) !important;
-  }
-
-  /* remove dark overlay that makes it look black */
-  body::before{ display:none !important; }
-
-  /* make the intro card full screen */
-  #container{ padding:0 !important; height:100dvh !important; align-items:stretch !important; }
-  #intro.card{
-    width:100% !important;
-    min-height:100dvh !important;
-    border-radius:0 !important;
-    padding:0 !important;
-    display:flex !important;
-    flex-direction:column !important;
-    justify-content:flex-start !important;
-  }
-
-  /* MONEY fills top area (full width) */
-  #intro .money-hero{
-    width:100vw !important;
-    height:44vh !important;
-    min-height:260px !important;
-    max-height:340px !important;
-    border-radius:0 !important;
-    margin-left:calc(50% - 50vw) !important;
-    margin-right:calc(50% - 50vw) !important;
-
-    background-image:url("./moneypic1.png?v=99") !important; /* cache-bust */
-    background-repeat:no-repeat !important;
-    background-position:center !important;
-    background-size:cover !important;
-  }
-
-  /* Center KONTRIJAL / YOU VS YOU / button in remaining space */
-  #intro .intro-wrap{
-    flex:1 !important;
-    width:100% !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    justify-content:center !important;
-    text-align:center !important;
-    padding: 18px 16px 24px !important;
-    gap: 14px !important;
-  }
-
-  #intro button{
-    width:min(360px, 92vw) !important;
-    margin: 8px auto 0 !important;
-  }
-}
-
-/* make sure red title always works */
-#intro h1{
-  color:#ff1111 !important;
-  text-shadow: 0 0 14px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.22) !important;
-}
-
-/* ========= FIX INTRO ON ALL DEVICES ========= */
-
-/* Make sure the money area has a height on DESKTOP too */
-#intro .money-hero{
-  width: 100%;
-  height: 240px;                /* desktop height */
-  border-radius: 18px;
-  background-image: url("moneypic1.png?v=999");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.55);
-}
-
-/* Center intro content on ALL screen sizes */
+/* remove card spacing on intro */
 #intro.card{
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  text-align: center !important;
-}
-
-#intro .intro-wrap{
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 14px !important;
-}
-
-/* ========= MOBILE ONLY ========= */
-@media (max-width: 520px){
-
-  /* Make background actually look silver (and remove dark fog) */
-  body::before{ display:none !important; }
-  html, body{
-    background:
-      radial-gradient(900px 600px at 50% 10%, rgba(240,240,255,0.30), rgba(0,0,0,0) 60%),
-      radial-gradient(900px 600px at 50% 90%, rgba(255,255,255,0.16), rgba(0,0,0,0) 55%),
-      linear-gradient(180deg, #1a1a1f 0%, #070708 100%) !important;
-  }
-
-  /* IMPORTANT: intro card should NOT be a dark panel on mobile */
-  #intro.card{
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    min-height: 100dvh !important;
-    width: 100% !important;
-    border-radius: 0 !important;
-  }
-
-  /* Money fills the TOP of the phone */
- #intro .money-hero{
-  width: 100vw;
-  height: 38vh;
-  min-height: 240px;
-  max-height: 320px;
-
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-
-  background-image: url("moneypic1.png?v=3");
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: 150%;
-
-  /* THIS hides the lower part of the image */
-  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-}
-  /* Center the rest under it */
-  #intro .intro-wrap{
-    flex: 1 !important;
-    padding: 18px 16px 26px !important;
-  }
-
-  #intro button{
-    width: min(360px, 92vw) !important;
-  }
-}
-
-  /* ===== FORCE MONEY IMAGE TO TOP ===== */
-
-#intro{
-  padding-top: 0 !important;
-}
-
-/* move the hero image up and fill the top */
-#intro .money-hero{
-  width: 100vw !important;
-  height: 42vh !important;
-
-  margin-top: 0 !important;
-  margin-bottom: 10px !important;
-
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-
-  background-position: top center !important; /* stick to top */
-  background-size: 150% !important; /* zoom out naturally */
-}
-
-/* pull the title section upward */
-#intro h1{
-  margin-top: -6px !important;
-}
-
-#intro h2{
-  margin-top: 6px !important;
-}
-
-/* ===============================
-   INTRO PAGE ONLY (FIRST PAGE)
-   - Hide streak
-   - Money touches top
-   - Make overlay feel transparent
-   =============================== */
-
-/* 1) Hide streak + credit ONLY when intro is showing */
-#intro #streakBox,
-#intro ~ #streakBox,
-body.intro #streakBox{
-  display:none !important;
-}
-
-/* If your streakBox is not inside intro, this also works:
-   hide it whenever the intro section exists */
-body:has(#intro) #streakBox{
-  display:none !important;
-}
-
-/* 2) Remove any top spacing on intro */
-#intro{
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
 
-/* If intro is inside .card and .card adds padding */
-#intro.card{
-  padding-top: 0 !important;
-}
-
-/* 3) Money hero touches the very top (including safe area) */
+/* make the money image stick to the top */
 #intro .money-hero{
   width: 100vw !important;
+  height: 28vh !important;
 
-  /* fills top part */
-  height: 30vh !important;         /* ~1/4 of screen 느낌 */
-  min-height: 180px !important;
-  max-height: 320px !important;
-
-  /* remove any gaps */
-  margin: 0 !important;
-  border-radius: 0 !important;
-
-  /* full-bleed trick */
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-
-  /* stick image to top edge */
-  background-position: top center !important;
-  background-size: cover !important;
-}
-
-/* 4) Make the intro overlay “transparent” so middle feels clean
-      (your intro has dark fog / gradients) */
-#intro,
-#intro .intro-wrap{
-  background: transparent !important;
-}
-
-/* If you still see a dark fog layer, kill it only on intro */
-body:has(#intro)::before{
-  display:none !important;
-}
-  /* ===== FORCE MONEY IMAGE TO TOUCH TOP ===== */
-
-/* remove top padding from the intro card */
-#intro.card{
-  padding-top: 0 !important;
-}
-
-/* make the money image start at the very top */
-#intro .money-hero{
-  margin-top: calc(env(safe-area-inset-top) * -1) !important;
-  width: 100vw !important;
-  height: 32vh !important;
-
+  margin-top: 0 !important;
   margin-left: calc(50% - 50vw) !important;
   margin-right: calc(50% - 50vw) !important;
 
@@ -846,11 +301,12 @@ body:has(#intro)::before{
   <div class="intro-wrap">
     <div class="money-hero"></div>
 
-    <h1>KONTRIJAL</h1>
-    <h2>YOU VS YOU</h2>
-    <div class="terminal-line"></div>
-
-    <button onclick="startGame()">START SESSION →</button>
+    <div class="intro-center">
+      <h1>KONTRIJAL</h1>
+      <h2>YOU VS YOU</h2>
+      <div class="terminal-line"></div>
+      <button onclick="startGame()">START SESSION →</button>
+    </div>
   </div>
 </div>
 
@@ -2292,9 +1748,17 @@ function updateHomeTopUI(){
   setTimeout(updateHomeTopUI, 50);
 });
 </script>
-  
+  <script>
+  // Add/remove a body class depending on whether the intro exists on screen
+  if (document.getElementById("intro")) {
+    document.body.classList.add("is-intro");
+  } else {
+    document.body.classList.remove("is-intro");
+  }
+</script>
 </body>
 </html>
+
 
 
 
