@@ -659,7 +659,7 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   background-image: url("moneypic1.png?v=3");
   background-repeat: no-repeat;
   background-position: top center;
-  background-size: 180;
+  background-size: 120;
 
   /* THIS hides the lower part of the image */
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
@@ -674,6 +674,36 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   #intro button{
     width: min(360px, 92vw) !important;
   }
+}
+
+  /* ===== FORCE MONEY IMAGE TO TOP ===== */
+
+#intro{
+  padding-top: 0 !important;
+}
+
+/* move the hero image up and fill the top */
+#intro .money-hero{
+  width: 100vw !important;
+  height: 42vh !important;
+
+  margin-top: 0 !important;
+  margin-bottom: 10px !important;
+
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+
+  background-position: top center !important; /* stick to top */
+  background-size: 120% !important; /* zoom out naturally */
+}
+
+/* pull the title section upward */
+#intro h1{
+  margin-top: -6px !important;
+}
+
+#intro h2{
+  margin-top: 6px !important;
 }
   
 </style>
@@ -2182,6 +2212,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
