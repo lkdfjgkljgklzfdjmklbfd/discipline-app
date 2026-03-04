@@ -103,7 +103,7 @@ body::before{
   text-transform: uppercase;
   margin: 0;
   line-height: 1;
-  color: #ff1111
+  color: #ff1111;
   text-shadow:
     0 0 10px rgba(255,0,0,0.42),
     0 0 26px rgba(255,0,0,0.22);
@@ -522,261 +522,75 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   }
 }
 
-/* ===== INTRO SCREEN: CENTER IT ON MOBILE ===== */
-@media (max-width: 520px){
-
-  /* Center everything on the very first screen */
-  #intro{
-    justify-content: center !important;
-    text-align: center !important;
-    gap: 10px;
-  }
-
-  /* Slightly tighter + cleaner spacing */
-  #intro h1{
-    margin-top: 0 !important;
-  }
-
-  #intro h2{
-    margin-bottom: 6px !important;
-  }
-
-  /* Make the button feel more premium and centered */
-  #intro button{
-    width: 100% !important;
-    max-width: 360px !important;
-    margin: 10px auto 0 !important;
-  }
-
-  .terminal-line{
-    margin: 14px auto 10px !important;
-  }
-}
-
-#intro h1{
-  color: #ff1a1a !important;
-  letter-spacing: 0.14em !important;  /* reduce from 0.22 */
-  text-shadow:
-    0 0 10px rgba(255,0,0,0.45),
-    0 0 24px rgba(255,0,0,0.20) !important;
-}
-
-body{
-  background:
-    radial-gradient(ellipse at top, rgba(220,220,230,0.10), rgba(0,0,0,0.92)),
-    radial-gradient(ellipse at bottom, rgba(255,255,255,0.06), rgba(0,0,0,0.98));
-}
-
-/* === MOBILE INTRO HERO FIX === */
-@media (max-width: 520px){
-
-  /* make the first screen fill the phone height */
-  #intro{
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;  /* center vertically */
-    align-items: center;
-    text-align: center;
-    padding: 24px 16px;
-  }
-
-  /* hero layout: money on top, title center */
-  #intro .intro-wrap{
-    width: 100%;
-    max-width: 520px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-  }
-}
-
-/* Silver premium background behind everything */
-body{
-  background:
-    radial-gradient(1200px 700px at 50% 15%, rgba(230,230,240,0.18), rgba(0,0,0,0) 60%),
-    radial-gradient(900px 600px at 50% 85%, rgba(255,255,255,0.10), rgba(0,0,0,0) 55%),
-    linear-gradient(180deg, #0b0b0e 0%, #050506 100%);
-}
-
-  #intro h1{
-  color:#ff1a1a !important;
-  letter-spacing:0.14em !important;
-  text-shadow: 0 0 12px rgba(255,0,0,0.45), 0 0 28px rgba(255,0,0,0.22) !important;
-}
-
-/* money banner sizing (all devices) */
-.money-banner{
-  width: min(760px, 92vw);
-  max-height: 220px;
-  height: auto;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto 10px;
-  filter: drop-shadow(0 12px 28px rgba(0,0,0,0.6));
-}
-
-/* intro centered on mobile */
-@media (max-width: 520px){
-  #intro{
-    min-height: 100dvh !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 22px 14px !important;
-  }
-
-  #intro .intro-wrap{
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 14px !important;
-    text-align: center !important;
-  }
-}
-
-  /* Make the canvas itself have the silver premium background */
-#bg{
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;           /* behind everything */
-  background:
-    radial-gradient(1200px 700px at 50% 15%, rgba(230,230,240,0.22), rgba(0,0,0,0) 60%),
-    radial-gradient(900px 600px at 50% 85%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
-    linear-gradient(180deg, #101014 0%, #050506 100%);
-}
-
-
-/* ===== FORCE INTRO LAYOUT (MOBILE FIRST) ===== */
-#intro{
-  min-height: 100dvh !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 24px 16px !important;
-}
-
-#intro .intro-wrap{
-  width: 100% !important;
-  max-width: 520px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 14px !important;
-  text-align: center !important;
-}
-
-/* money "fills" the top area */
-#intro .money-hero{
-  width: 100% !important;
-  height: 240px !important;             /* increase if you want bigger */
-  border-radius: 18px !important;
-  background-image: url("./moneypic.png") !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  background-size: cover !important;    /* THIS is what makes it fill */
-  box-shadow: 0 18px 40px rgba(0,0,0,0.55) !important;
-  opacity: 0.95 !important;
-}
-
-/* KONTRIJAL glow red */
-#intro h1{
-  color:#ff1a1a !important;
-  letter-spacing:0.12em !important;
-  text-shadow: 0 0 14px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.22) !important;
-}
-
-/* ===== FIX "MOBILE SCREEN IS STILL BLACK" ===== */
-/* your canvas is likely painting black; at least make it sit behind content */
-#bg{
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: -1 !important;
-}
-
-/* Add silver premium base background */
-html, body{
-  margin: 0 !important;
-  min-height: 100% !important;
-  background:
-    radial-gradient(1200px 700px at 50% 15%, rgba(230,230,240,0.22), rgba(0,0,0,0) 60%),
-    radial-gradient(900px 600px at 50% 85%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
-    linear-gradient(180deg, #101014 0%, #050506 100%) !important;
-}
-
 /* =========================
-   FINAL MOBILE INTRO OVERRIDE
-   Paste this at the VERY BOTTOM of your <style>
+   FINAL MOBILE INTRO (ONLY ONE)
    ========================= */
 
-#intro h1{
-  color:#ff1111 !important;
-  text-shadow: 0 0 14px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.22) !important;
-}
-
-/* Fix your missing semicolon bug if it still exists somewhere */
-#intro h1{ color:#ff1111 !important; }
-
+/* Luxury silver background (mobile) */
 @media (max-width: 520px){
-
-  /* stop the black fog overlay */
-  body::before{ display:none !important; }
-
-  /* silver-ish premium background */
-  html, body{
+  body{
     background:
       radial-gradient(900px 600px at 50% 10%, rgba(240,240,255,0.28), rgba(0,0,0,0) 60%),
       radial-gradient(900px 600px at 50% 90%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
       linear-gradient(180deg, #1a1a1f 0%, #070708 100%) !important;
   }
 
-  /* center intro vertically */
+  /* remove dark overlay that makes it look black */
+  body::before{ display:none !important; }
+
+  /* make the intro card full screen */
+  #container{ padding:0 !important; height:100dvh !important; align-items:stretch !important; }
   #intro.card{
-    min-height: 100dvh !important;
+    width:100% !important;
+    min-height:100dvh !important;
+    border-radius:0 !important;
+    padding:0 !important;
     display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    padding: 0 !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
   }
 
+  /* MONEY fills top area (full width) */
+  #intro .money-hero{
+    width:100vw !important;
+    height:44vh !important;
+    min-height:260px !important;
+    max-height:340px !important;
+    border-radius:0 !important;
+    margin-left:calc(50% - 50vw) !important;
+    margin-right:calc(50% - 50vw) !important;
+
+    background-image:url("./moneypic.png?v=99") !important; /* cache-bust */
+    background-repeat:no-repeat !important;
+    background-position:center !important;
+    background-size:cover !important;
+  }
+
+  /* Center KONTRIJAL / YOU VS YOU / button in remaining space */
   #intro .intro-wrap{
-    width: 100% !important;
-    max-width: none !important;
-    padding: 22px 16px !important;
+    flex:1 !important;
+    width:100% !important;
     display:flex !important;
     flex-direction:column !important;
     align-items:center !important;
     justify-content:center !important;
     text-align:center !important;
+    padding: 18px 16px 24px !important;
     gap: 14px !important;
   }
 
-  /* make money banner BIG and full width */
-  #intro .money-hero{
-    width: 100vw !important;
-    height: 36vh !important;
-    max-height: 320px !important;
-    border-radius: 0 !important;
-
-    margin-left: calc(50% - 50vw) !important;
-    margin-right: calc(50% - 50vw) !important;
-
-    background-image: url("./moneypic.png?v=2") !important; /* cache refresh */
-    background-repeat:no-repeat !important;
-    background-position:center !important;
-    background-size: cover !important;
+  #intro button{
+    width:min(360px, 92vw) !important;
+    margin: 8px auto 0 !important;
   }
 }
-  
+
+/* make sure red title always works */
+#intro h1{
+  color:#ff1111 !important;
+  text-shadow: 0 0 14px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.22) !important;
+}
+
 </style>
 </head>
 
@@ -2283,6 +2097,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
