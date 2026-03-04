@@ -10,12 +10,13 @@
 
 .money-banner{
   width: min(520px, 92vw);
-  max-height: 130px;
-  object-fit: cover;
-  opacity: 0.9;
+  height: auto;
+  max-height: 190px;
+  object-fit: contain;        /* IMPORTANT: no crop */
+  display: block;
+  margin: 0 auto 18px;
+  opacity: 0.95;
   filter: drop-shadow(0 10px 30px rgba(0,0,0,0.6));
-  margin-bottom: 18px;
-  border-radius: 16px;
 }
   
 :root{
@@ -552,7 +553,19 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   }
 }
 
+#intro h1{
+  color: #ff1a1a !important;
+  letter-spacing: 0.14em !important;  /* reduce from 0.22 */
+  text-shadow:
+    0 0 10px rgba(255,0,0,0.45),
+    0 0 24px rgba(255,0,0,0.20) !important;
+}
 
+body{
+  background:
+    radial-gradient(ellipse at top, rgba(220,220,230,0.10), rgba(0,0,0,0.92)),
+    radial-gradient(ellipse at bottom, rgba(255,255,255,0.06), rgba(0,0,0,0.98));
+}
   
 </style>
 </head>
@@ -609,7 +622,7 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
 <div id="container">
   <div class="card" id="intro">
 
-<img class="money-banner" src="moneypic.png" alt="money">
+<img class="money-banner" src="./moneypic.png" alt="">
     
     <h1>KONTRIJAL</h1>
     <h2>YOU VS YOU</h2>
@@ -2060,6 +2073,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
