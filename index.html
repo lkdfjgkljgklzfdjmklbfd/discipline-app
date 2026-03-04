@@ -705,6 +705,71 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
 #intro h2{
   margin-top: 6px !important;
 }
+
+/* ===============================
+   INTRO PAGE ONLY (FIRST PAGE)
+   - Hide streak
+   - Money touches top
+   - Make overlay feel transparent
+   =============================== */
+
+/* 1) Hide streak + credit ONLY when intro is showing */
+#intro #streakBox,
+#intro ~ #streakBox,
+body.intro #streakBox{
+  display:none !important;
+}
+
+/* If your streakBox is not inside intro, this also works:
+   hide it whenever the intro section exists */
+body:has(#intro) #streakBox{
+  display:none !important;
+}
+
+/* 2) Remove any top spacing on intro */
+#intro{
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* If intro is inside .card and .card adds padding */
+#intro.card{
+  padding-top: 0 !important;
+}
+
+/* 3) Money hero touches the very top (including safe area) */
+#intro .money-hero{
+  width: 100vw !important;
+
+  /* fills top part */
+  height: 30vh !important;         /* ~1/4 of screen 느낌 */
+  min-height: 180px !important;
+  max-height: 320px !important;
+
+  /* remove any gaps */
+  margin: 0 !important;
+  border-radius: 0 !important;
+
+  /* full-bleed trick */
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+
+  /* stick image to top edge */
+  background-position: top center !important;
+  background-size: cover !important;
+}
+
+/* 4) Make the intro overlay “transparent” so middle feels clean
+      (your intro has dark fog / gradients) */
+#intro,
+#intro .intro-wrap{
+  background: transparent !important;
+}
+
+/* If you still see a dark fog layer, kill it only on intro */
+body:has(#intro)::before{
+  display:none !important;
+}
   
 </style>
 </head>
@@ -2212,6 +2277,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
