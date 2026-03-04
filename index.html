@@ -606,6 +606,51 @@ body{
   letter-spacing:0.14em !important;
   text-shadow: 0 0 12px rgba(255,0,0,0.45), 0 0 28px rgba(255,0,0,0.22) !important;
 }
+
+/* money banner sizing (all devices) */
+.money-banner{
+  width: min(760px, 92vw);
+  max-height: 220px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 10px;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,0.6));
+}
+
+/* intro centered on mobile */
+@media (max-width: 520px){
+  #intro{
+    min-height: 100dvh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 22px 14px !important;
+  }
+
+  #intro .intro-wrap{
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 14px !important;
+    text-align: center !important;
+  }
+}
+
+  /* Make the canvas itself have the silver premium background */
+#bg{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;           /* behind everything */
+  background:
+    radial-gradient(1200px 700px at 50% 15%, rgba(230,230,240,0.22), rgba(0,0,0,0) 60%),
+    radial-gradient(900px 600px at 50% 85%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
+    linear-gradient(180deg, #101014 0%, #050506 100%);
+}
   
 </style>
 </head>
@@ -660,18 +705,14 @@ body{
 
   
 <div id="container">
-  <div class="card" id="intro">
+ <div class="card" id="intro">
+  <div class="intro-wrap">
+    <img class="money-banner" src="./moneypic.png" alt="">
 
-<div class="intro-wrap">
-  <img class="money-banner" src="./moneypic.png" alt="">
-  <!-- your KONTRIJAL / YOU VS YOU / button stays below -->
-</div>
-    
     <h1>KONTRIJAL</h1>
     <h2>YOU VS YOU</h2>
     <div class="terminal-line"></div>
     <button onclick="startGame()">START SESSION →</button>
-   
   </div>
 </div>
 
@@ -2116,6 +2157,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
