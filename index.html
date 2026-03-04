@@ -591,6 +591,87 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   text-shadow: 0 0 14px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.22) !important;
 }
 
+/* ========= FIX INTRO ON ALL DEVICES ========= */
+
+/* Make sure the money area has a height on DESKTOP too */
+#intro .money-hero{
+  width: 100%;
+  height: 240px;                /* desktop height */
+  border-radius: 18px;
+  background-image: url("moneypic.png?v=999");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+}
+
+/* Center intro content on ALL screen sizes */
+#intro.card{
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+#intro .intro-wrap{
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 14px !important;
+}
+
+/* ========= MOBILE ONLY ========= */
+@media (max-width: 520px){
+
+  /* Make background actually look silver (and remove dark fog) */
+  body::before{ display:none !important; }
+  html, body{
+    background:
+      radial-gradient(900px 600px at 50% 10%, rgba(240,240,255,0.30), rgba(0,0,0,0) 60%),
+      radial-gradient(900px 600px at 50% 90%, rgba(255,255,255,0.16), rgba(0,0,0,0) 55%),
+      linear-gradient(180deg, #1a1a1f 0%, #070708 100%) !important;
+  }
+
+  /* IMPORTANT: intro card should NOT be a dark panel on mobile */
+  #intro.card{
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    min-height: 100dvh !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+  }
+
+  /* Money fills the TOP of the phone */
+  #intro .money-hero{
+    width: 100vw !important;
+    height: 42vh !important;
+    min-height: 260px !important;
+    max-height: 360px !important;
+    border-radius: 0 !important;
+
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+
+    background-image: url("moneypic.png?v=999") !important;
+    background-size: cover !important;
+  }
+
+  /* Center the rest under it */
+  #intro .intro-wrap{
+    flex: 1 !important;
+    padding: 18px 16px 26px !important;
+  }
+
+  #intro button{
+    width: min(360px, 92vw) !important;
+  }
+}
+  
 </style>
 </head>
 
@@ -2097,6 +2178,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
