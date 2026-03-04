@@ -1613,7 +1613,8 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  updateProfile
+  updateProfile,
+  sendEmailVerification
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
   
  import {
@@ -1707,6 +1708,37 @@ window.emailSignup = async () => {
 
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
 
+await sendEmailVerification(cred.user);
+
+document.getElementById("container").innerHTML = `
+  <div class="card">
+    <h2 style="margin-top:0;">✅ Check your email</h2>
+    <p style="opacity:0.8; line-height:1.5;">
+      We sent a verification link to:<br>
+      <b>${cred.user.email}</b><br><br>
+      1) Open your inbox (check Spam too)<br>
+      2) Click the verification link<br>
+      3) Come back here and log in
+    </p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; justify-content:center;">
+      <button onclick="window.emailResendVerify()">RESEND EMAIL</button>
+      <button onclick="window.renderHome?.()">GO HOME</button>
+    </div>
+  </div>
+`;
+
+await signOut(auth);
+return;
+    
+  await sendEmailVerification(cred.user);
+
+alert("Verification email sent. Check your inbox and verify before logging in.");
+
+await signOut(auth);
+window.renderHome?.();
+return;
+
     const username = await claimUsername(cred.user.uid, email, user);
 
     await updateProfile(cred.user, {
@@ -1759,12 +1791,34 @@ window.emailLogin = async () => {
     }
 
     await signInWithEmailAndPassword(auth, id, pass);
+    const u = auth.currentUser;
+await u.reload();
+
+if(!u.emailVerified){
+  await signOut(auth);
+  alert("Please verify your email first. Check your inbox.");
+  return;
+}
 
     if(msg) msg.textContent = "✅ Logged in!";
    setTimeout(() => window.renderHome?.(),350);
 
   }catch(e){
     if(msg) msg.textContent = "❌ " + (e?.message || e);
+  }
+};
+
+  window.emailResendVerify = async () => {
+  try{
+    const u = auth.currentUser;
+    if(!u){
+      alert("Please sign up again or log in first to resend.");
+      return;
+    }
+    await sendEmailVerification(u);
+    alert("Verification email resent. Check inbox/spam.");
+  }catch(e){
+    alert(e?.message || e);
   }
 };
 
@@ -1904,31 +1958,41 @@ function updateHomeTopUI(){
   }
 }
 
-  
   onAuthStateChanged(auth, async (user) => {
-    currentUser = user || null;
-    userData = null;
+  currentUser = user || null;
+  userData = null;
 
-    // IMPORTANT: this is what makes Level 2 unlock properly
-    window.setAuthUser?.(currentUser);
+  // IMPORTANT: makes Level 2 unlock properly
+  window.setAuthUser?.(currentUser);
 
-    if(currentUser){
-      try{
-      await currentUser .getIdToken(true);
-        userData = await loadOrCreateUser(currentUser.uid);
-      }catch(e){
-        alert("Could not load your saved progress: " + (e?.message || e));
-      }
-    }
-
+  // ✅ If signed in but email NOT verified yet,
+  // skip Firestore (prevents "insufficient permissions" popup during signup flow)
+  if (currentUser && !currentUser.emailVerified) {
     setLoginStatusText();
     refreshHomeIfOpen();
     setTimeout(updateHomeTopUI, 50);
-  });
+    return;
+  }
+
+  if (currentUser) {
+    try {
+      await currentUser.getIdToken(true);
+      userData = await loadOrCreateUser(currentUser.uid);
+    } catch (e) {
+      // Optional: change alert -> console.log if you don't want popups
+      alert("Could not load your saved progress: " + (e?.message || e));
+    }
+  }
+
+  setLoginStatusText();
+  refreshHomeIfOpen();
+  setTimeout(updateHomeTopUI, 50);
+});
 </script>
   
 </body>
 </html>
+
 
 
 
