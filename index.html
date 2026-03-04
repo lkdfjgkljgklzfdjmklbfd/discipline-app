@@ -522,68 +522,7 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   }
 }
 
-/* =========================
-   FINAL MOBILE INTRO (ONLY ONE)
-   ========================= */
 
-/* Luxury silver background (mobile) */
-@media (max-width: 520px){
-  body{
-    background:
-      radial-gradient(900px 600px at 50% 10%, rgba(240,240,255,0.28), rgba(0,0,0,0) 60%),
-      radial-gradient(900px 600px at 50% 90%, rgba(255,255,255,0.14), rgba(0,0,0,0) 55%),
-      linear-gradient(180deg, #1a1a1f 0%, #070708 100%) !important;
-  }
-
-  /* remove dark overlay that makes it look black */
-  body::before{ display:none !important; }
-
-  /* make the intro card full screen */
-  #container{ padding:0 !important; height:100dvh !important; align-items:stretch !important; }
-  #intro.card{
-    width:100% !important;
-    min-height:100dvh !important;
-    border-radius:0 !important;
-    padding:0 !important;
-    display:flex !important;
-    flex-direction:column !important;
-    justify-content:flex-start !important;
-  }
-
-  /* MONEY fills top area (full width) */
-  #intro .money-hero{
-    width:100vw !important;
-    height:44vh !important;
-    min-height:260px !important;
-    max-height:340px !important;
-    border-radius:0 !important;
-    margin-left:calc(50% - 50vw) !important;
-    margin-right:calc(50% - 50vw) !important;
-
-    background-image:url("./moneypic1.png?v=99") !important; /* cache-bust */
-    background-repeat:no-repeat !important;
-    background-position:center !important;
-    background-size:cover !important;
-  }
-
-  /* Center KONTRIJAL / YOU VS YOU / button in remaining space */
-  #intro .intro-wrap{
-    flex:1 !important;
-    width:100% !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    justify-content:center !important;
-    text-align:center !important;
-    padding: 18px 16px 24px !important;
-    gap: 14px !important;
-  }
-
-  #intro button{
-    width:min(360px, 92vw) !important;
-    margin: 8px auto 0 !important;
-  }
-}
 
 /* make sure red title always works */
 #intro h1{
@@ -591,208 +530,103 @@ button:disabled{ opacity:0.45; cursor:not-allowed; filter: grayscale(1) brightne
   text-shadow: 0 0 14px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.22) !important;
 }
 
-/* ========= FIX INTRO ON ALL DEVICES ========= */
 
-/* Make sure the money area has a height on DESKTOP too */
-#intro .money-hero{
-  width: 100%;
-  height: 240px;                /* desktop height */
-  border-radius: 18px;
-  background-image: url("moneypic1.png?v=999");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+
+
+/* =========================
+   INTRO (FIRST PAGE) CLEAN
+   Requires: <body class="intro">
+   ========================= */
+
+body.intro{
+  overflow: hidden;
 }
 
-/* Center intro content on ALL screen sizes */
-#intro.card{
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  text-align: center !important;
-}
-
-#intro .intro-wrap{
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 14px !important;
-}
-
-/* ========= MOBILE ONLY ========= */
-@media (max-width: 520px){
-
-  /* Make background actually look silver (and remove dark fog) */
-  body::before{ display:none !important; }
-  html, body{
-    background:
-      radial-gradient(900px 600px at 50% 10%, rgba(240,240,255,0.30), rgba(0,0,0,0) 60%),
-      radial-gradient(900px 600px at 50% 90%, rgba(255,255,255,0.16), rgba(0,0,0,0) 55%),
-      linear-gradient(180deg, #1a1a1f 0%, #070708 100%) !important;
-  }
-
-  /* IMPORTANT: intro card should NOT be a dark panel on mobile */
-  #intro.card{
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    min-height: 100dvh !important;
-    width: 100% !important;
-    border-radius: 0 !important;
-  }
-
-  /* Money fills the TOP of the phone */
- #intro .money-hero{
-  width: 100vw;
-  height: 38vh;
-  min-height: 240px;
-  max-height: 320px;
-
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-
-  background-image: url("moneypic1.png?v=3");
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: 150%;
-
-  /* THIS hides the lower part of the image */
-  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-}
-  /* Center the rest under it */
-  #intro .intro-wrap{
-    flex: 1 !important;
-    padding: 18px 16px 26px !important;
-  }
-
-  #intro button{
-    width: min(360px, 92vw) !important;
-  }
-}
-
-  /* ===== FORCE MONEY IMAGE TO TOP ===== */
-
-#intro{
-  padding-top: 0 !important;
-}
-
-/* move the hero image up and fill the top */
-#intro .money-hero{
-  width: 100vw !important;
-  height: 42vh !important;
-
-  margin-top: 0 !important;
-  margin-bottom: 10px !important;
-
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-
-  background-position: top center !important; /* stick to top */
-  background-size: 150% !important; /* zoom out naturally */
-}
-
-/* pull the title section upward */
-#intro h1{
-  margin-top: -6px !important;
-}
-
-#intro h2{
-  margin-top: 6px !important;
-}
-
-/* ===============================
-   INTRO PAGE ONLY (FIRST PAGE)
-   - Hide streak
-   - Money touches top
-   - Make overlay feel transparent
-   =============================== */
-
-/* 1) Hide streak + credit ONLY when intro is showing */
-#intro #streakBox,
-#intro ~ #streakBox,
-body.intro #streakBox{
+/* Hide streak + credit ONLY on intro */
+body.intro #streakBox,
+body.intro #credit{
   display:none !important;
 }
 
-/* If your streakBox is not inside intro, this also works:
-   hide it whenever the intro section exists */
-body:has(#intro) #streakBox{
+/* Remove fog overlay ONLY on intro */
+body.intro::before{
   display:none !important;
 }
 
-/* 2) Remove any top spacing on intro */
-#intro{
-  padding-top: 0 !important;
-  margin-top: 0 !important;
+/* Fullscreen intro */
+body.intro #container{
+  padding:0 !important;
+  height:100dvh !important;
+  align-items:stretch !important;
 }
 
-/* If intro is inside .card and .card adds padding */
-#intro.card{
-  padding-top: 0 !important;
+body.intro #intro.card{
+  width:100% !important;
+  min-height:100dvh !important;
+  padding:0 !important;               /* removes top gap */
+  border-radius:0 !important;
+
+  /* intro is clean/transparent */
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+
+  display:flex !important;
+  flex-direction:column !important;
 }
 
-/* 3) Money hero touches the very top (including safe area) */
-#intro .money-hero{
-  width: 100vw !important;
+/* MONEY touches TOP */
+body.intro #intro .money-hero{
+  width:100vw !important;
+  height:42vh !important;
+  min-height:220px !important;
+  max-height:360px !important;
 
-  /* fills top part */
-  height: 30vh !important;         /* ~1/4 of screen 느낌 */
-  min-height: 180px !important;
-  max-height: 320px !important;
+  margin:0 !important;
+  margin-left:calc(50% - 50vw) !important;
+  margin-right:calc(50% - 50vw) !important;
 
-  /* remove any gaps */
-  margin: 0 !important;
-  border-radius: 0 !important;
+  border-radius:0 !important;
 
-  /* full-bleed trick */
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-
-  /* stick image to top edge */
-  background-position: top center !important;
-  background-size: cover !important;
+  background-image:url("moneypic1.png?v=999") !important;
+  background-repeat:no-repeat !important;
+  background-position:top center !important;
+  background-size:cover !important;
 }
 
-/* 4) Make the intro overlay “transparent” so middle feels clean
-      (your intro has dark fog / gradients) */
-#intro,
-#intro .intro-wrap{
-  background: transparent !important;
+/* Center title + button */
+body.intro #intro .intro-wrap{
+  flex:1 !important;
+  width:100% !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  text-align:center !important;
+
+  padding:18px 16px calc(env(safe-area-inset-bottom) + 24px) !important;
+  gap:14px !important;
+
+  background:transparent !important;
 }
 
-/* If you still see a dark fog layer, kill it only on intro */
-body:has(#intro)::before{
-  display:none !important;
-}
-  /* ===== FORCE MONEY IMAGE TO TOUCH TOP ===== */
-
-/* remove top padding from the intro card */
-#intro.card{
-  padding-top: 0 !important;
+body.intro #intro button{
+  width:min(360px, 92vw) !important;
+  margin:6px auto 0 !important;
 }
 
-/* make the money image start at the very top */
-#intro .money-hero{
-  margin-top: calc(env(safe-area-inset-top) * -1) !important;
-  width: 100vw !important;
-  height: 32vh !important;
+body.intro #intro h1{ margin:0 !important; }
+body.intro #intro h2{ margin-top:10px !important; }
+ 
 
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
 
-  background-position: top center !important;
-  background-size: cover !important;
-}
+ 
 </style>
 </head>
 
-<body>
+<body class="intro">
 <canvas id="bg"></canvas>
 <div id="streakBox"></div>
 <div id="credit">© KONTRIJAL</div>
@@ -842,16 +676,19 @@ body:has(#intro)::before{
 
   
 <div id="container">
-<div class="card" id="intro">
-  <div class="intro-wrap">
+  <div class="card" id="intro">
+
     <div class="money-hero"></div>
 
-    <div class="intro-center">
-      <h1>KONTRIJAL</h1>
-      <h2>YOU VS YOU</h2>
-      <div class="terminal-line"></div>
-      <button onclick="startGame()">START SESSION →</button>
+    <div class="intro-wrap">
+      <div class="intro-center">
+        <h1>KONTRIJAL</h1>
+        <h2>YOU VS YOU</h2>
+        <div class="terminal-line"></div>
+        <button onclick="startGame()">START SESSION →</button>
+      </div>
     </div>
+
   </div>
 </div>
 
@@ -2303,18 +2140,6 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
