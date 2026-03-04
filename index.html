@@ -770,7 +770,25 @@ body:has(#intro) #streakBox{
 body:has(#intro)::before{
   display:none !important;
 }
-  
+  /* ===== FORCE MONEY IMAGE TO TOUCH TOP ===== */
+
+/* remove top padding from the intro card */
+#intro.card{
+  padding-top: 0 !important;
+}
+
+/* make the money image start at the very top */
+#intro .money-hero{
+  margin-top: calc(env(safe-area-inset-top) * -1) !important;
+  width: 100vw !important;
+  height: 32vh !important;
+
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+
+  background-position: top center !important;
+  background-size: cover !important;
+}
 </style>
 </head>
 
@@ -2277,6 +2295,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
