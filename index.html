@@ -1139,12 +1139,8 @@ ${(() => {
     btn.style.filter = "brightness(1.12)";
   }
 
-  // Button text
-  if(lockedByLogin){
-    btn.innerHTML = `🔒 ${lv.name} (LOGIN)`;
-  } else {
-    btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
-  }
+// Button text (NO more "(LOGIN)")
+btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
 
   btn.disabled = locked;
 
@@ -1247,6 +1243,13 @@ function startLevel(levelId){
     </div>
   `;
 
+// ✅ Re-show gameplay UI (in case it was hidden after finishing a level)
+  const playBtn = document.querySelector(".btn-play");
+  if (playBtn) playBtn.style.display = "";
+
+  const modeTitle = document.getElementById("mode");
+  if (modeTitle) modeTitle.style.display = "";
+  
   updateHUD();
   nextRound();
 }
@@ -1435,12 +1438,27 @@ function finishLevel(){
 
   updateHUD();
 
+ // Hide gameplay UI on result screen
+const playBtn = document.querySelector(".btn-play");
+if(playBtn) playBtn.style.display = "none";
+const modeTitle = document.getElementById("mode");
+if(modeTitle) modeTitle.style.display = "none";
+stopAudio();
+  
   document.getElementById("content").innerHTML = `
     <h2 style="margin-top:6px;">${t("levelComplete")}</h2>
     <p>${t("progress")}: <b>${score} / ${activeItems.length}</b></p>
     <p style="margin-top:10px; font-weight:950;">
       ${perfect ? t("perfect") : t("notPerfect")}
     </p>
+
+    ${(levelNum(activeLevel) === 1 && !isLoggedIn())
+  ? `<p style="margin-top:12px; color:rgba(255,255,255,0.85); font-weight:900;">
+       🔒 Log in to unlock <b>Level 2+</b>.
+     </p>
+     <button style="margin-top:10px;" onclick="showAuthMenu()">SIGN UP / LOG IN →</button>`
+  : ``
+}
 
     <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;">
       <button onclick="${perfect ? "renderHome()" : "startLevel(activeLevel)"}">
@@ -1992,6 +2010,7 @@ function updateHomeTopUI(){
   
 </body>
 </html>
+
 
 
 
