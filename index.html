@@ -1076,7 +1076,8 @@ let round = 0;
 let score = 0;
 let mistakes = 0;
 let audio = null;
-let learningLang = "en"
+let learningLang = localStorage.getItem("learningLang") || "en";
+window.learningLang = learningLang;
   let authUser = null;
 
 function isLoggedIn(){
@@ -1317,8 +1318,9 @@ btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
 
   function setLearningLang(lang){
   learningLang = lang;
-  window.learningLang = learningLang;
-  showMiniStreak();   // ← ADD THIS
+  window.learningLang = lang;
+  localStorage.setItem("learningLang", lang);
+  showMiniStreak();
   renderHome();
 }
 function startLevel(levelId){
@@ -1568,10 +1570,17 @@ function finishLevel(){
 
   // unlock next level ONLY if perfect
   const currentNum = levelNum(activeLevel);
-  if(perfect){
-    const unlocked = getUnlockedLevel();
-    if(currentNum >= unlocked && unlocked < LEVELS.length) setUnlockedLevel(unlocked + 1);
+ if (perfect) {
+  const unlocked = getUnlockedLevel();
+  const newUnlocked = Math.max(unlocked, currentNum + 1);
+
+  if (newUnlocked <= LEVELS.length) {
+    setUnlockedLevel(newUnlocked);
+
+    // extra safety for local save too
+    localStorage.setItem("unlockedLevel_" + learningLang, String(newUnlocked));
   }
+}
 
   // bonus: 2 perfect levels in a row => +5 FSD
   if(perfect){
@@ -2167,6 +2176,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
