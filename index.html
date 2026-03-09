@@ -1970,16 +1970,15 @@ import {
   sendEmailVerification
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
   
- import {
+import {
   getFirestore,
   doc,
   getDoc,
   setDoc,
-
+  updateDoc,
   serverTimestamp,
   runTransaction
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
   import {
   getStorage,
   ref as sRef,
@@ -2061,56 +2060,45 @@ window.emailSignup = async () => {
 
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
 
-await sendEmailVerification(cred.user);
-
-document.getElementById("container").innerHTML = `
-  <div class="card">
-    <h2 style="margin-top:0;">✅ Check your email</h2>
-    <p style="opacity:0.8; line-height:1.5;">
-      We sent a verification link to:<br>
-      <b>${cred.user.email}</b><br><br>
-      1) Open your inbox (check Spam too)<br>
-      2) Click the verification link<br>
-      3) Come back here and log in
-    </p>
-
-    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; justify-content:center;">
-      <button onclick="window.emailResendVerify()">RESEND EMAIL</button>
-      <button onclick="window.renderHome?.()">GO HOME</button>
-    </div>
-  </div>
-`;
-
-await signOut(auth);
-return;
-    
-  await sendEmailVerification(cred.user);
-
-alert("Verification email sent. Check your inbox and verify before logging in.");
-
-await signOut(auth);
-window.renderHome?.();
-return;
-
     const username = await claimUsername(cred.user.uid, email, user);
 
     await updateProfile(cred.user, {
       displayName: username
     });
 
-    // create user doc safely
     await setDoc(doc(db,"users",cred.user.uid), {
       email: email,
       username: username,
       fsd: 0,
+      plan: "free",
+      subscriptionStatus: "inactive",
+      billingType: null,
+      paypalSubscriptionId: null,
       unlocked: { en:1, de:1, es:1, sv:1, nl:1 },
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     }, { merge:true });
 
-    if(msg) msg.textContent = "✅ Account created!";
-   setTimeout(() => window.renderHome?.(),350);
+    await sendEmailVerification(cred.user);
 
+    document.getElementById("container").innerHTML = `
+      <div class="card">
+        <h2 style="margin-top:0;">✅ Check your email</h2>
+        <p style="opacity:0.8; line-height:1.5;">
+          We sent a verification link to:<br>
+          <b>${cred.user.email}</b><br><br>
+          1) Open your inbox (check Spam too)<br>
+          2) Click the verification link<br>
+          3) Come back here and log in
+        </p>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; justify-content:center;">
+          <button onclick="window.renderHome?.()">GO HOME</button>
+        </div>
+      </div>
+    `;
+
+    await signOut(auth);
   }catch(e){
     if(msg) msg.textContent = "❌ " + (e?.message || e);
   }
@@ -2214,33 +2202,26 @@ async function loadOrCreateUser(uid){
   }
 
   const data = snap.data();
- if (auth.currentUser && auth.currentUser.email === "gaeunking08@gmail.com") {
-  data.role = "owner";
-  data.plan = "premium";
 
-  await setDoc(doc(db, "users", auth.currentUser.uid), {
-    role: "owner",
-    plan: "premium",
-    subscriptionStatus: "active",
-    billingType: "owner",
-    updatedAt: serverTimestamp()
-  }, { merge: true });
-}
+  if (auth.currentUser && auth.currentUser.email === "gaeunking08@gmail.com") {
+    data.role = "owner";
+    data.plan = "premium";
 
-  if(!data.plan) data.plan = "free";
-
-  currentPlan = data.plan;
-  localStorage.setItem("currentPlan", currentPlan);
-
-  return data;
-}
-
-  const data = snap.data();
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
+      role: "owner",
+      plan: "premium",
+      subscriptionStatus: "active",
+      billingType: "owner",
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  }
 
   if(!data.unlocked) data.unlocked = { en:1, de:1, es:1, sv:1, nl:1 };
   if(typeof data.fsd !== "number") data.fsd = safeInt(data.fsd, 0);
   if(!data.plan) data.plan = "free";
   if(!data.subscriptionStatus) data.subscriptionStatus = "inactive";
+  if(!("billingType" in data)) data.billingType = null;
+  if(!("paypalSubscriptionId" in data)) data.paypalSubscriptionId = null;
 
   currentPlan = data.plan;
   localStorage.setItem("currentPlan", currentPlan);
@@ -2408,6 +2389,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
