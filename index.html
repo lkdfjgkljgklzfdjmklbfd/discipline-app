@@ -1092,7 +1092,8 @@ function isLoggedIn(){
 window.setAuthUser = function(u){
   authUser = u;
 };
- function isPremium(){
+function isPremium(){
+  if (window._isMasterUser && window._isMasterUser()) return true;
   return currentPlan === "premium";
 }
 
@@ -2183,6 +2184,9 @@ if(pendingPlan){
   // ===== Firestore user progress (optional but you already built it) =====
   let currentUser = null;
   let userData = null;
+ window._isMasterUser = function(){
+  return !!(userData && (userData.role === "owner"));
+};
 
   function safeInt(x, fallback = 0){
     const n = parseInt(x, 10);
@@ -2210,6 +2214,18 @@ async function loadOrCreateUser(uid){
   }
 
   const data = snap.data();
+ if (auth.currentUser && auth.currentUser.email === "gaeunking08@gmail.com") {
+  data.role = "owner";
+  data.plan = "premium";
+
+  await setDoc(doc(db, "users", auth.currentUser.uid), {
+    role: "owner",
+    plan: "premium",
+    subscriptionStatus: "active",
+    billingType: "owner",
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+}
 
   if(!data.plan) data.plan = "free";
 
@@ -2392,6 +2408,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
