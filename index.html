@@ -4,7 +4,7 @@
 
 <title>KONTRIJAL</title>
 
-<meta name="description" content="If you're comfortable being average, this isn't for you. Learn languages through self-improvement.">
+<meta name="description" content="Learn languages through powerful self-improvement sentences.">
 
 <link rel="icon" type="image/png" href="/brand.png">
 
@@ -651,6 +651,7 @@ body.intro #intro h1{ margin:0 !important; }
 body.intro #intro h2{ margin-top:10px !important; }
  
 </style>
+ <script src="https://www.paypal.com/sdk/js?client-id=AY5zuWEoSAeqnJTXb2BZqCF9A20T80rTUuSafI_XkmxHx8LV47PlAXyadbkQ9tu-QJxUQy791psVlPAu&vault=true&intent=subscription"></script>
 </head>
 
 <body class="intro">
@@ -710,7 +711,7 @@ body.intro #intro h2{ margin-top:10px !important; }
     <div class="intro-wrap">
       <div class="intro-center">
         <h1>KONTRIJAL</h1>
-        <h2>Learn languages through<br>self-improvement</h2>
+        <h2>Learn languages through powerful<br>self-improvement sentences</h2>
         <div class="terminal-line"></div>
         <button onclick="startGame()">START SESSION →</button>
       </div>
@@ -1077,6 +1078,10 @@ let score = 0;
 let mistakes = 0;
 let audio = null;
 let learningLang = localStorage.getItem("learningLang") || "en";
+ let currentPlan = localStorage.getItem("currentPlan") || "free";
+ const PAYPAL_MONTHLY_PLAN_ID = "P-5NN18088UF354174FNGXEK4Q";
+const PAYPAL_YEARLY_PLAN_ID = "P-906056741C9183831NGXEQLA";
+
 window.learningLang = learningLang;
   let authUser = null;
 
@@ -1087,6 +1092,23 @@ function isLoggedIn(){
 window.setAuthUser = function(u){
   authUser = u;
 };
+ function isPremium(){
+  return currentPlan === "premium";
+}
+
+function maxAllowedLevel(){
+  return isPremium() ? 20 : 3;
+}
+
+function canAccessLanguage(lang){
+  if (isPremium()) return true;
+  return lang === "en";
+}
+
+function setPlan(plan){
+  currentPlan = plan;
+  localStorage.setItem("currentPlan", plan);
+}
 
 
 /* =========================
@@ -1269,9 +1291,10 @@ ${(() => {
   LEVELS.forEach(lv => {
   const n = levelNum(lv.id);
 
-  const lockedByProgress = n > unlocked;
-  const lockedByLogin = (n >= 2 && !isLoggedIn());
-  const locked = lockedByProgress || lockedByLogin;
+const lockedByProgress = n > unlocked;
+const lockedByLogin = (n >= 2 && !isLoggedIn());
+const lockedByPlan = n > maxAllowedLevel();
+const locked = lockedByProgress || lockedByLogin || lockedByPlan;
 
   const isCurrent = (!locked && n === currentPlayable);
 
@@ -1291,17 +1314,26 @@ ${(() => {
   }
 
 // Button text (NO more "(LOGIN)")
-btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
-
+if(lockedByPlan){
+  btn.innerHTML = `🔒 ${lv.name}`;
+} else {
+  btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
+}
   btn.disabled = locked;
 
-  btn.onclick = () => {
-    if(lockedByLogin){
-      alert("Login to access Level 2+");
-      return;
-    }
-    startLevel(lv.id);
-  };
+ btn.onclick = () => {
+  if(lockedByLogin){
+    alert("Login to access Level 2+");
+    return;
+  }
+
+  if(lockedByPlan){
+    showPlanScreen();
+    return;
+  }
+
+  startLevel(lv.id);
+};
 
   grid.appendChild(btn);
 
@@ -1316,13 +1348,153 @@ btn.innerHTML = locked ? `🔒 ${lv.name}` : `💰 ${lv.name}`;
 });
 }
 
-  function setLearningLang(lang){
+function setLearningLang(lang){
+  if (!canAccessLanguage(lang)) {
+    showPlanScreen();
+    return;
+  }
+
   learningLang = lang;
   window.learningLang = lang;
   localStorage.setItem("learningLang", lang);
   showMiniStreak();
+}
+
+function showPlanScreen(){
+  document.getElementById("container").classList.remove("scrollable");
+  document.getElementById("container").innerHTML = `
+    <div class="card" id="planScreen">
+      <h2 style="margin-top:0; letter-spacing:1px;">CHOOSE YOUR PLAN</h2>
+      <p style="opacity:0.75; margin-top:6px;">Pick how you want to use KONTRIJAL.</p>
+
+      <div class="choice" onclick="chooseFreePlan()">
+        <div style="font-size:22px; font-weight:900;">FREE PLAN</div>
+        <div style="margin-top:6px; opacity:0.85;">
+          English only · Up to Level 3
+        </div>
+        <div style="margin-top:10px; font-weight:900;">$0</div>
+      </div>
+
+      <div class="choice" style="cursor:default;">
+        <div style="font-size:22px; font-weight:900;">PREMIUM MONTHLY</div>
+        <div style="margin-top:6px; opacity:0.85;">
+          Full access to all languages · Full levels
+        </div>
+        <div style="margin-top:10px; font-weight:900;">$9 / month</div>
+        <div id="paypal-monthly-button" style="margin-top:14px;"></div>
+      </div>
+
+      <div class="choice" style="cursor:default;">
+        <div style="font-size:22px; font-weight:900;">PREMIUM YEARLY</div>
+        <div style="margin-top:6px; opacity:0.85;">
+          Full access to all languages · Full levels
+        </div>
+        <div style="margin-top:10px; font-weight:900;">$90 / year</div>
+        <div id="paypal-yearly-button" style="margin-top:14px;"></div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button onclick="renderHome()">BACK</button>
+      </div>
+    </div>
+  `;
+
+  renderPayPalSubscriptionButtons();
+}
+
+function renderPayPalSubscriptionButtons(){
+  if(!isLoggedIn()){
+    document.getElementById("paypal-monthly-button").innerHTML =
+      '<button onclick="showLoginPage()">LOG IN TO SUBSCRIBE →</button>';
+    document.getElementById("paypal-yearly-button").innerHTML =
+      '<button onclick="showLoginPage()">LOG IN TO SUBSCRIBE →</button>';
+    return;
+  }
+
+  if(typeof paypal === "undefined"){
+    alert("PayPal did not load. Refresh the page.");
+    return;
+  }
+
+  document.getElementById("paypal-monthly-button").innerHTML = "";
+  document.getElementById("paypal-yearly-button").innerHTML = "";
+
+  paypal.Buttons({
+    createSubscription: function(data, actions) {
+      return actions.subscription.create({
+        plan_id: PAYPAL_MONTHLY_PLAN_ID
+      });
+    },
+    onApprove: async function(data) {
+      await activateSubscriptionOnServer(data.subscriptionID, "monthly");
+    },
+    onError: function(err) {
+      console.error("PayPal monthly error:", err);
+      alert("Monthly subscription failed.");
+    }
+  }).render("#paypal-monthly-button");
+
+  paypal.Buttons({
+    createSubscription: function(data, actions) {
+      return actions.subscription.create({
+        plan_id: PAYPAL_YEARLY_PLAN_ID
+      });
+    },
+    onApprove: async function(data) {
+      await activateSubscriptionOnServer(data.subscriptionID, "yearly");
+    },
+    onError: function(err) {
+      console.error("PayPal yearly error:", err);
+      alert("Yearly subscription failed.");
+    }
+  }).render("#paypal-yearly-button");
+}
+ async function activateSubscriptionOnServer(subscriptionID, billingType){
+  try{
+    const user = window._currentUser && window._currentUser();
+    if(!user){
+      alert("You must be logged in.");
+      return;
+    }
+
+    const token = await user.getIdToken();
+
+    const res = await fetch("/api/paypal-subscription-activate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        subscriptionID,
+        billingType
+      })
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+      throw new Error(data.error || "Could not activate subscription.");
+    }
+
+    setPlan("premium");
+    alert("Premium unlocked.");
+    renderHome();
+  }catch(err){
+    console.error(err);
+    alert("Subscription was approved, but premium could not be unlocked yet.");
+  }
+}
+ 
+function chooseFreePlan(){
+  setPlan("free");
   renderHome();
 }
+
+
+
+
+ 
 function startLevel(levelId){
   document.getElementById("container").classList.remove("scrollable");
   activeLevel = levelId;
@@ -1745,10 +1917,13 @@ function toggleMiniModal(force){
     ? force
     : !modal.classList.contains("show");
 
-  if(open) modal.classList.add("show");
-  else modal.classList.remove("show");
+  if(open){
+    modal.classList.add("show");
+  } else {
+    modal.classList.remove("show");
+    showPlanScreen();
+  }
 }
-
 function closeMiniModal(e){
   if(e.target && e.target.id === "miniModal"){
     toggleMiniModal(false);
@@ -1976,7 +2151,13 @@ if(!u.emailVerified){
   alert("Please verify your email first. Check your inbox.");
   return;
 }
+const pendingPlan = localStorage.getItem("pendingPlan");
 
+if(pendingPlan){
+  localStorage.removeItem("pendingPlan");
+  showPlanScreen();
+  return;
+}
     if(msg) msg.textContent = "✅ Logged in!";
    setTimeout(() => window.renderHome?.(),350);
 
@@ -2008,26 +2189,48 @@ if(!u.emailVerified){
     return Number.isFinite(n) ? n : fallback;
   }
 
-  async function loadOrCreateUser(uid){
-    const ref = doc(db, "users", uid);
-    const snap = await getDoc(ref);
+async function loadOrCreateUser(uid){
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
 
-    if(!snap.exists()){
-      const initial = {
-        fsd: 0,
-        unlocked: { en: 1, de: 1, es: 1, sv: 1, nl: 1 },
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      };
-      await setDoc(ref, initial);
-      return initial;
-    }
+  if(!snap.exists()){
+    const initial = {
+      fsd: 0,
+      plan: "free",
+      subscriptionStatus: "inactive",
+      billingType: null,
+      paypalSubscriptionId: null,
+      unlocked: { en:1, de:1, es:1, sv:1, nl:1 },
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
 
-    const data = snap.data();
-    if(!data.unlocked) data.unlocked = { en:1, de:1, es:1, sv:1, nl:1 };
-    if(typeof data.fsd !== "number") data.fsd = safeInt(data.fsd, 0);
-    return data;
+    await setDoc(ref, initial);
+    return initial;
   }
+
+  const data = snap.data();
+
+  if(!data.plan) data.plan = "free";
+
+  currentPlan = data.plan;
+  localStorage.setItem("currentPlan", currentPlan);
+
+  return data;
+}
+
+  const data = snap.data();
+
+  if(!data.unlocked) data.unlocked = { en:1, de:1, es:1, sv:1, nl:1 };
+  if(typeof data.fsd !== "number") data.fsd = safeInt(data.fsd, 0);
+  if(!data.plan) data.plan = "free";
+  if(!data.subscriptionStatus) data.subscriptionStatus = "inactive";
+
+  currentPlan = data.plan;
+  localStorage.setItem("currentPlan", currentPlan);
+
+  return data;
+}
 
   let saveTimer = null;
   function scheduleSave(){
@@ -2138,9 +2341,22 @@ function updateHomeTopUI(){
   onAuthStateChanged(auth, async (user) => {
   currentUser = user || null;
   userData = null;
+   if(!currentUser){
+    currentPlan = "free";
+    localStorage.setItem("currentPlan", "free");
+  }
 
   // IMPORTANT: makes Level 2 unlock properly
   window.setAuthUser?.(currentUser);
+
+   if(currentUser){
+  const pendingPlan = localStorage.getItem("pendingPlan");
+  if(pendingPlan){
+    localStorage.removeItem("pendingPlan");
+    showPlanScreen();
+    return;
+  }
+}
 
   // ✅ If signed in but email NOT verified yet,
   // skip Firestore (prevents "insufficient permissions" popup during signup flow)
@@ -2176,6 +2392,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
