@@ -649,6 +649,24 @@ body.intro #intro button{
 /* Tight title spacing */
 body.intro #intro h1{ margin:0 !important; }
 body.intro #intro h2{ margin-top:10px !important; }
+
+/* Center simple menu/auth screens on mobile */
+@media (max-width: 520px){
+  #container.center-screen{
+    padding: 16px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100dvh !important;
+  }
+
+  #container.center-screen .card{
+    min-height: unset !important;
+    border-radius: 24px !important;
+    width: min(860px, 100%) !important;
+    padding: 28px 20px !important;
+    justify-content: center !important;
+  }
+}
  
 </style>
  <script src="https://www.paypal.com/sdk/js?client-id=AY5zuWEoSAeqnJTXb2BZqCF9A20T80rTUuSafI_XkmxHx8LV47PlAXyadbkQ9tu-QJxUQy791psVlPAu&vault=true&intent=subscription"></script>
@@ -1183,7 +1201,11 @@ function getCurrentSubscriptionStatus(){
    Screens
 ========================= */
 function startGame(){
-  document.getElementById("container").innerHTML = `
+  const container = document.getElementById("container");
+  container.classList.remove("scrollable");
+  container.classList.add("center-screen");
+
+  container.innerHTML = `
     <div class="card">
       <h2 style="margin-top:0;">${t("chooseNative")}</h2>
       <div style="margin-top:18px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
@@ -1201,8 +1223,11 @@ function chooseLang(lang){
   nativeLang = lang;
   localStorage.setItem("nativeLang", lang);
 
-  // NEW SCREEN: choose what to learn
-  document.getElementById("container").innerHTML = `
+  const container = document.getElementById("container");
+  container.classList.remove("scrollable");
+  container.classList.add("center-screen");
+
+  container.innerHTML = `
     <div class="card">
       <h2 style="margin-top:0;">Choose learning language</h2>
 
@@ -1219,8 +1244,10 @@ function chooseLang(lang){
 
 function showAuthMenu(){
   // full page auth menu
-  document.getElementById("container").classList.remove("scrollable");
-  document.getElementById("container").innerHTML = `
+  const container = document.getElementById("container");
+container.classList.remove("scrollable");
+container.classList.add("center-screen");
+container.innerHTML = `
     <div class="card" id="authMenu">
       <h2 style="margin-top:0; letter-spacing:1px;">ACCOUNT</h2>
       <p style="opacity:0.75; margin-top:6px;">Create an account or log in to save progress.</p>
@@ -1239,7 +1266,10 @@ function showAuthMenu(){
 }
 
 function showSignupPage(){
-  document.getElementById("container").innerHTML = `
+const container = document.getElementById("container");
+container.classList.remove("scrollable");
+container.classList.add("center-screen");
+container.innerHTML = `
     <div class="card" id="signupPage">
       <h2 style="margin-top:0; letter-spacing:1px;">SIGN UP</h2>
 
@@ -1264,7 +1294,10 @@ function showSignupPage(){
 }
 
 function showLoginPage(){
-  document.getElementById("container").innerHTML = `
+const container = document.getElementById("container");
+container.classList.remove("scrollable");
+container.classList.add("center-screen");
+container.innerHTML = `
     <div class="card" id="loginPage">
       <h2 style="margin-top:0; letter-spacing:1px;">LOG IN</h2>
 
@@ -1307,7 +1340,9 @@ function logout(){
   });
 }
 function renderHome(){
-  document.getElementById("container").classList.add("scrollable");
+ const container = document.getElementById("container");
+container.classList.remove("center-screen");
+container.classList.add("scrollable");
   const unlocked = getUnlockedLevel();
   let html = `
     <div class="card" id="home">
@@ -1432,6 +1467,7 @@ function showPlanScreen(){
   const container = document.getElementById("container");
   container.classList.remove("center-screen");
   container.classList.add("scrollable");
+ 
 
   const billingType = getCurrentBillingType();
   const subStatus = getCurrentSubscriptionStatus();
@@ -1651,7 +1687,9 @@ function chooseFreePlan(){
 
  
 function startLevel(levelId){
-  document.getElementById("container").classList.remove("scrollable");
+  const container = document.getElementById("container");
+container.classList.remove("scrollable");
+container.classList.remove("center-screen");
   activeLevel = levelId;
 
   const lv = LEVELS.find(x => x.id === levelId);
@@ -2546,6 +2584,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
