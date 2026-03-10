@@ -1163,6 +1163,21 @@ function setPlan(plan){
   localStorage.setItem("currentPlan", plan);
 }
 
+ function getCurrentBillingType(){
+  if (window._getUserData) {
+    const data = window._getUserData();
+    return data?.billingType || null;
+  }
+  return null;
+}
+
+function getCurrentSubscriptionStatus(){
+  if (window._getUserData) {
+    const data = window._getUserData();
+    return data?.subscriptionStatus || null;
+  }
+  return null;
+}
 
 /* =========================
    Screens
@@ -1414,11 +1429,40 @@ function setLearningLang(lang){
 }
 
 function showPlanScreen(){
-  document.getElementById("container").classList.add("scrollable");
-  document.getElementById("container").innerHTML = `
-    <div class="card" id="planScreen" style="max-height:90vh; overflow-y:auto;">
+  const container = document.getElementById("container");
+  container.classList.remove("center-screen");
+  container.classList.add("scrollable");
+
+  const billingType = getCurrentBillingType();
+  const subStatus = getCurrentSubscriptionStatus();
+  const isActiveSub = isPremium() && subStatus === "active";
+
+  const monthlyBadge = isActiveSub && billingType === "monthly"
+    ? `<div style="margin-top:10px; font-weight:900; color:#7dff9b;">✅ YOUR CURRENT SUBSCRIPTION</div>`
+    : ``;
+
+  const yearlyBadge = isActiveSub && billingType === "yearly"
+    ? `<div style="margin-top:10px; font-weight:900; color:#7dff9b;">✅ YOUR CURRENT SUBSCRIPTION</div>`
+    : ``;
+
+  const upgradeYearlyBox = isActiveSub && billingType === "monthly"
+    ? `<div style="margin-top:12px;">
+         <button onclick="upgradeToYearly()">UPGRADE TO YEARLY →</button>
+       </div>`
+    : ``;
+
+  container.innerHTML = `
+    <div class="card" id="planScreen">
       <h2 style="margin-top:0; letter-spacing:1px;">CHOOSE YOUR PLAN</h2>
-      <p style="opacity:0.75; margin-top:6px;">Pick how you want to use KONTRIJAL</p>
+      <p style="opacity:0.75; margin-top:6px;">Pick how you want to use KONTRIJAL.</p>
+
+      ${
+        isActiveSub
+          ? `<div style="margin:14px 0 18px; padding:12px 14px; border-radius:16px; background:rgba(20,20,20,0.75); border:1px solid rgba(255,255,255,0.10); font-weight:800;">
+               Current subscription: <b>${billingType === "yearly" ? "YEARLY PREMIUM" : "MONTHLY PREMIUM"}</b>
+             </div>`
+          : ``
+      }
 
       <div class="choice" onclick="chooseFreePlan()">
         <div style="font-size:22px; font-weight:900;">FREE PLAN</div>
@@ -1434,7 +1478,12 @@ function showPlanScreen(){
           Full access to all languages · Full levels
         </div>
         <div style="margin-top:10px; font-weight:900;">$9 / month</div>
-        <div id="paypal-monthly-button" style="margin-top:14px;"></div>
+        ${monthlyBadge}
+        ${
+          isActiveSub && billingType === "monthly"
+            ? ``
+            : `<div id="paypal-monthly-button" style="margin-top:14px;"></div>`
+        }
       </div>
 
       <div class="choice" style="cursor:default;">
@@ -1443,7 +1492,13 @@ function showPlanScreen(){
           Full access to all languages · Full levels
         </div>
         <div style="margin-top:10px; font-weight:900;">$90 / year</div>
-        <div id="paypal-yearly-button" style="margin-top:14px;"></div>
+        ${yearlyBadge}
+        ${upgradeYearlyBox}
+        ${
+          isActiveSub && billingType === "yearly"
+            ? ``
+            : `<div id="paypal-yearly-button" style="margin-top:14px;"></div>`
+        }
       </div>
 
       <div style="margin-top:16px;">
@@ -1452,7 +1507,19 @@ function showPlanScreen(){
     </div>
   `;
 
-  renderPayPalSubscriptionButtons();
+  if (!(isActiveSub && billingType === "monthly")) {
+    if (document.getElementById("paypal-monthly-button")) {
+      renderPayPalSubscriptionButtons();
+    }
+  } else {
+    if (document.getElementById("paypal-yearly-button")) {
+      renderPayPalSubscriptionButtons();
+    }
+  }
+
+  if (!isActiveSub || billingType === "yearly") {
+    renderPayPalSubscriptionButtons();
+  }
 }
 
 function renderPayPalSubscriptionButtons(){
@@ -1536,6 +1603,41 @@ function renderPayPalSubscriptionButtons(){
   }catch(err){
     console.error(err);
     alert("Subscription was approved, but premium could not be unlocked yet.");
+  }
+}
+
+ async function upgradeToYearly(){
+  try{
+    const user = window._currentUser && window._currentUser();
+    if(!user){
+      alert("You must be logged in.");
+      return;
+    }
+
+    const token = await user.getIdToken();
+
+    const res = await fetch("/api/paypal-subscription-upgrade", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        newPlanId: PAYPAL_YEARLY_PLAN_ID
+      })
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+      throw new Error(data.error || "Could not upgrade subscription.");
+    }
+
+    alert("Subscription upgraded to yearly.");
+    renderHome();
+  }catch(err){
+    console.error(err);
+    alert("Upgrade failed.");
   }
 }
  
@@ -2224,6 +2326,9 @@ if(pendingPlan){
   // ===== Firestore user progress (optional but you already built it) =====
   let currentUser = null;
   let userData = null;
+ window._getUserData = function(){
+  return userData;
+};
  window._isMasterUser = function(){
   return !!(userData && (userData.role === "owner"));
 };
@@ -2441,6 +2546,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
