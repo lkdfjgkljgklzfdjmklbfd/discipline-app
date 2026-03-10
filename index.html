@@ -1362,11 +1362,11 @@ function setLearningLang(lang){
 }
 
 function showPlanScreen(){
-  document.getElementById("container").classList.remove("scrollable");
+  document.getElementById("container").classList.add("scrollable");
   document.getElementById("container").innerHTML = `
-    <div class="card" id="planScreen">
+    <div class="card" id="planScreen" style="max-height:90vh; overflow-y:auto;">
       <h2 style="margin-top:0; letter-spacing:1px;">CHOOSE YOUR PLAN</h2>
-      <p style="opacity:0.75; margin-top:6px;">Pick how you want to use KONTRIJAL.</p>
+      <p style="opacity:0.75; margin-top:6px;">Pick how you want to use KONTRIJAL</p>
 
       <div class="choice" onclick="chooseFreePlan()">
         <div style="font-size:22px; font-weight:900;">FREE PLAN</div>
@@ -2389,6 +2389,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
