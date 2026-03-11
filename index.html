@@ -1126,7 +1126,10 @@ function nextRankInfo(v){
    Unlocks per language
 ========================= */
 function unlockKey(){ return "unlockedLevel_" + (learningLang || "en"); }
-function getUnlockedLevel(){ return parseInt(localStorage.getItem(unlockKey()) || "1"); }
+function getUnlockedLevel(){
+  if (isOwner()) return LEVELS.length;
+  return parseInt(localStorage.getItem(unlockKey()) || "1");
+}
 function setUnlockedLevel(n){ localStorage.setItem(unlockKey(), String(n)); }
 function levelNum(id){ return parseInt(id.replace("L",""),10); }
 function isUnlocked(levelId){ return levelNum(levelId) <= getUnlockedLevel(); }
@@ -1166,9 +1169,13 @@ function isPremium(){
   if (window._isMasterUser && window._isMasterUser()) return true;
   return currentPlan === "premium";
 }
+ function isOwner(){
+  return !!(window._isMasterUser && window._isMasterUser());
+}
 
 function maxAllowedLevel(){
-  return isPremium() ? 29 : 3;
+  if (isOwner()) return LEVELS.length;
+  return isPremium() ? LEVELS.length : 3;
 }
 
 function canAccessLanguage(lang){
@@ -1930,20 +1937,22 @@ function buildDrag(idx){
 /* =========================
    Level finish + rules
 ========================= */
-function finishLevel(){
+async function finishLevel(){
   const perfect = (score === activeItems.length) && (mistakes === 0);
 
   // unlock next level ONLY if perfect
   const currentNum = levelNum(activeLevel);
- if (perfect) {
+if (perfect) {
   const unlocked = getUnlockedLevel();
   const newUnlocked = Math.max(unlocked, currentNum + 1);
 
   if (newUnlocked <= LEVELS.length) {
     setUnlockedLevel(newUnlocked);
-
-    // extra safety for local save too
     localStorage.setItem("unlockedLevel_" + learningLang, String(newUnlocked));
+
+    if (window.forceSaveProgress) {
+      await window.forceSaveProgress();
+    }
   }
 }
 
@@ -2425,6 +2434,20 @@ async function loadOrCreateUser(uid){
 }
 
   let saveTimer = null;
+ window.forceSaveProgress = async function(){
+  if(!currentUser || !userData) return;
+
+  try{
+    const ref = doc(db, "users", currentUser.uid);
+    await updateDoc(ref, {
+      fsd: userData.fsd,
+      unlocked: userData.unlocked,
+      updatedAt: serverTimestamp()
+    });
+  }catch(e){
+    console.log("Force save failed:", e);
+  }
+};
   function scheduleSave(){
     if(!currentUser) return;
     if(saveTimer) return;
@@ -2468,12 +2491,16 @@ async function loadOrCreateUser(uid){
   };
 
   window.getUnlockedLevel = function(){
-    const lang = (window.learningLang || "en");
-    if(currentUser && userData){
-      return safeInt(userData.unlocked?.[lang] || 1, 1);
-    }
-    return safeInt(localStorage.getItem("unlockedLevel_" + lang) || "1", 1);
-  };
+  if (window._isMasterUser && window._isMasterUser()) {
+    return LEVELS.length;
+  }
+
+  const lang = (window.learningLang || "en");
+  if(currentUser && userData){
+    return safeInt(userData.unlocked?.[lang] || 1, 1);
+  }
+  return safeInt(localStorage.getItem("unlockedLevel_" + lang) || "1", 1);
+};
 
   window.setUnlockedLevel = function(n){
     const lang = (window.learningLang || "en");
@@ -2584,6 +2611,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
