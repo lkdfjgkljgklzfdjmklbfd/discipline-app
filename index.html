@@ -832,16 +832,34 @@ animateChart();
 ========================= */
 function updateStreak(){
   const today = new Date().toDateString();
-  const last = localStorage.getItem("lastDate");
-  let streak = parseInt(localStorage.getItem("streak") || "0");
+
+  const last = (typeof window.getLastDate === "function")
+    ? window.getLastDate()
+    : localStorage.getItem("lastDate");
+
+  let streak = (typeof window.getStreak === "function")
+    ? window.getStreak()
+    : parseInt(localStorage.getItem("streak") || "0");
+
   if(last !== today){
-    const y = new Date(); y.setDate(y.getDate()-1);
+    const y = new Date();
+    y.setDate(y.getDate() - 1);
+
     if(last === y.toDateString()) streak++;
     else streak = 1;
-    localStorage.setItem("streak", streak);
-    localStorage.setItem("lastDate", today);
+
+    if(typeof window.setStreak === "function") window.setStreak(streak);
+    else localStorage.setItem("streak", streak);
+
+    if(typeof window.setLastDate === "function") window.setLastDate(today);
+    else localStorage.setItem("lastDate", today);
   }
-  document.getElementById("streakBox").innerText = "🔥 Streak: " + (localStorage.getItem("streak") || 1);
+
+  const finalStreak = (typeof window.getStreak === "function")
+    ? window.getStreak()
+    : (localStorage.getItem("streak") || 1);
+
+  document.getElementById("streakBox").innerText = "🔥 Streak: " + finalStreak;
 }
 updateStreak();
 
@@ -1099,10 +1117,30 @@ function t(key){ return (UI[nativeLang] && UI[nativeLang][key]) || UI.en[key] ||
    Persistent FSD + ranks
 ========================= */
 const FSD_KEY = "fsd_forever";
-function getFSD(){ return parseInt(localStorage.getItem(FSD_KEY) || "0"); }
-function setFSD(v){ if(v<0) v=0; localStorage.setItem(FSD_KEY, String(v)); }
-function addFSD(delta){ const now = getFSD() + delta; setFSD(now); return getFSD(); }
 
+function getFSD(){
+  if (typeof window.getFSD === "function" && window.getFSD !== getFSD) {
+    return window.getFSD();
+  }
+  return parseInt(localStorage.getItem(FSD_KEY) || "0");
+}
+
+function setFSD(v){
+  if (typeof window.setFSD === "function" && window.setFSD !== setFSD) {
+    return window.setFSD(v);
+  }
+  if(v < 0) v = 0;
+  localStorage.setItem(FSD_KEY, String(v));
+}
+
+function addFSD(delta){
+  if (typeof window.addFSD === "function" && window.addFSD !== addFSD) {
+    return window.addFSD(delta);
+  }
+  const now = getFSD() + delta;
+  setFSD(now);
+  return getFSD();
+}
 const RANKS = [
   { name:"Loser",       min:0,    max:49 },
   { name:"NPC",         min:50,   max:149 },
@@ -1126,14 +1164,23 @@ function nextRankInfo(v){
    Unlocks per language
 ========================= */
 function unlockKey(){ return "unlockedLevel_" + (learningLang || "en"); }
+
 function getUnlockedLevel(){
-  if (isOwner()) return LEVELS.length;
+  if (typeof window.getUnlockedLevel === "function" && window.getUnlockedLevel !== getUnlockedLevel) {
+    return window.getUnlockedLevel();
+  }
   return parseInt(localStorage.getItem(unlockKey()) || "1");
 }
-function setUnlockedLevel(n){ localStorage.setItem(unlockKey(), String(n)); }
+
+function setUnlockedLevel(n){
+  if (typeof window.setUnlockedLevel === "function" && window.setUnlockedLevel !== setUnlockedLevel) {
+    return window.setUnlockedLevel(n);
+  }
+  localStorage.setItem(unlockKey(), String(n));
+}
+
 function levelNum(id){ return parseInt(id.replace("L",""),10); }
 function isUnlocked(levelId){ return levelNum(levelId) <= getUnlockedLevel(); }
-
 /* Bonus: 2 perfect levels in a row => +5 FSD */
 function noFailKey(){ return "noFailStreak_" + (learningLang || "en"); }
 function getNoFailStreak(){ return parseInt(localStorage.getItem(noFailKey()) || "0"); }
@@ -2392,6 +2439,8 @@ async function loadOrCreateUser(uid){
   if(!snap.exists()){
     const initial = {
       fsd: 0,
+      streak: 1,
+      lastDate: new Date().toDateString(),
       plan: "free",
       subscriptionStatus: "inactive",
       billingType: null,
@@ -2422,6 +2471,8 @@ async function loadOrCreateUser(uid){
 
   if(!data.unlocked) data.unlocked = { en:1, de:1, es:1, sv:1, nl:1 };
   if(typeof data.fsd !== "number") data.fsd = safeInt(data.fsd, 0);
+  if(typeof data.streak !== "number") data.streak = 1;
+  if(!data.lastDate) data.lastDate = new Date().toDateString();
   if(!data.plan) data.plan = "free";
   if(!data.subscriptionStatus) data.subscriptionStatus = "inactive";
   if(!("billingType" in data)) data.billingType = null;
@@ -2456,11 +2507,13 @@ async function loadOrCreateUser(uid){
       saveTimer = null;
       try{
         const ref = doc(db, "users", currentUser.uid);
-        await updateDoc(ref, {
-          fsd: userData.fsd,
-          unlocked: userData.unlocked,
-          updatedAt: serverTimestamp()
-        });
+      await updateDoc(ref, {
+  fsd: userData.fsd,
+  unlocked: userData.unlocked,
+  streak: userData.streak,
+  lastDate: userData.lastDate,
+  updatedAt: serverTimestamp()
+});
       }catch(e){
         console.log("Save failed:", e);
       }
@@ -2515,6 +2568,37 @@ async function loadOrCreateUser(uid){
     }
     localStorage.setItem("unlockedLevel_" + lang, String(n));
   };
+
+ window.getStreak = function(){
+  if(currentUser && userData) return safeInt(userData.streak, 1);
+  return safeInt(localStorage.getItem("streak") || "1", 1);
+};
+
+window.setStreak = function(n){
+  n = safeInt(n, 1);
+  if(n < 1) n = 1;
+
+  localStorage.setItem("streak", String(n));
+
+  if(currentUser && userData){
+    userData.streak = n;
+    scheduleSave();
+  }
+};
+
+window.getLastDate = function(){
+  if(currentUser && userData) return userData.lastDate || null;
+  return localStorage.getItem("lastDate");
+};
+
+window.setLastDate = function(dateStr){
+  localStorage.setItem("lastDate", dateStr);
+
+  if(currentUser && userData){
+    userData.lastDate = dateStr;
+    scheduleSave();
+  }
+};
 
   function setLoginStatusText(){
     const el = document.getElementById("loginStatus");
@@ -2611,6 +2695,7 @@ function updateHomeTopUI(){
 </script>
 </body>
 </html>
+
 
 
 
